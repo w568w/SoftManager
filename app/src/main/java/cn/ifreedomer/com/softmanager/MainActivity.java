@@ -12,6 +12,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
@@ -58,8 +59,9 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     private void initAllFragment() {
-        fragmentList.add(new SystemInstallFragment());
+
         fragmentList.add(new UserInstallFragment());
+        fragmentList.add(new SystemInstallFragment());
 
         // init view pager
         ViewPagerFragmentAdapter pagerAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), fragmentList);

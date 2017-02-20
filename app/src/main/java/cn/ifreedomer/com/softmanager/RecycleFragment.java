@@ -13,6 +13,8 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.ifreedomer.com.softmanager.adapter.AppAdapter;
+import cn.ifreedomer.com.softmanager.model.AppInfo;
 
 /**
  * @author:eavawu
@@ -23,6 +25,7 @@ import butterknife.InjectView;
 public class RecycleFragment extends Fragment {
     @InjectView(R.id.rv)
     RecyclerView rv;
+    AppAdapter appAdapter;
     private List<AppInfo> appInfoList = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,7 +37,8 @@ public class RecycleFragment extends Fragment {
 
     private void initRv() {
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv.setAdapter(new AppAdapter(getActivity(),R.layout.item_appinfo,appInfoList));
+        appAdapter = new AppAdapter(getActivity(),R.layout.item_appinfo,appInfoList);
+        rv.setAdapter(appAdapter);
     }
 
     public void setData(List<AppInfo> appInfos) {

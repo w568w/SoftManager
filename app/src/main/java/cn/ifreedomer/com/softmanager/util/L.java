@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager;
+package cn.ifreedomer.com.softmanager.util;
 
 import android.util.Log;
 

@@ -16,6 +16,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.util.L;
+
 /**
  * @author:eavawu
  * @date: 19/02/2017.
