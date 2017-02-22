@@ -51,6 +51,10 @@ public class RecycleFragment extends Fragment {
     }
 
 
+    public List<AppInfo> getData(){
+        return appInfoList;
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

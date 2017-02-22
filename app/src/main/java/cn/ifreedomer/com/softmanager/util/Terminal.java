@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.model.AppItem;
 import cn.ifreedomer.com.softmanager.model.ReceiverInfo;
 
@@ -173,11 +174,11 @@ public class Terminal {
 		}
 	}
 
-	public static boolean uninstallSystemApp(AppItem appItem) {
+	public static boolean uninstallSystemApp(AppInfo appItem) {
 		Terminal.RootCommand("mount -o remount rw /system");
 		Terminal.RootCommand("PATH='/system/bin';'mount' '-o' 'remount,rw' '' '/system'");
 		String command = "rm " + appItem.getCodePath() + "\n";
-		command += "pm uninstall " + appItem.getAppPackage() + "\n";
+		command += "pm uninstall " + appItem.getPackname() + "\n";
 		int code = Terminal.RootCommand(command);
 		return code == 0 ? true : false;
 	}

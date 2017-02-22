@@ -19,6 +19,7 @@ import cn.ifreedomer.com.softmanager.model.AppInfo;
  */
 public class AppAdapter extends CommonAdapter<AppInfo> {
     private OnUnInstallListener unInstallListener;
+
     public AppAdapter(Context context, int layoutId, List<AppInfo> datas) {
         super(context, layoutId, datas);
     }
@@ -31,6 +32,11 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
         this.unInstallListener = unInstallListener;
     }
 
+    public List<AppInfo> getData() {
+        return mDatas;
+    }
+
+
     @Override
     public void convert(ViewHolder holder, final AppInfo appInfo) {
         holder.setText(R.id.tv_appname, appInfo.getAppName());
@@ -39,9 +45,9 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
         holder.setOnClickListener(R.id.btn_uninstall, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    if (unInstallListener!=null){
-                        unInstallListener.onUninstall(appInfo);
-                    }
+                if (unInstallListener != null) {
+                    unInstallListener.onUninstall(appInfo);
+                }
             }
         });
         //  holder.setText(R.id.info_text,"helloworld");

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import cn.ifreedomer.com.softmanager.listener.OnUnInstallListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.util.Terminal;
 
 /**
  * @author:eavawu
@@ -27,7 +28,14 @@ public class SystemInstallFragment extends RecycleFragment {
         appAdapter.setUnInstallListener(new OnUnInstallListener() {
             @Override
             public void onUninstall(AppInfo appInfo) {
-
+                if (Terminal.hasRootPermission()) {
+                    if (Terminal.uninstallSystemApp(appInfo)) {
+                        appAdapter.getData().remove(appInfo);
+                        appAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    Terminal.grantRoot(getActivity());
+                }
             }
         });
     }

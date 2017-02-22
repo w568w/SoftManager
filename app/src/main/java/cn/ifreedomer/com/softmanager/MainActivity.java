@@ -1,9 +1,12 @@
 package cn.ifreedomer.com.softmanager;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -13,10 +16,14 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
+import cn.ifreedomer.com.softmanager.constant.ResultCodeConstant;
+import cn.ifreedomer.com.softmanager.util.L;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
-
-
+    private static final int MINE_INDEX = 0;
+    private static final int SYSTEM_INDEX = 1;
+    private static final int AUTOSTART_INDEX = 2;
+    public static final String TAG = MainActivity.class.getSimpleName();
     @InjectView(R.id.pb)
     ProgressBar pb;
     private List<RecycleFragment> fragmentList = new ArrayList<>();
@@ -72,6 +79,17 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             tab.getTabAt(i).setText(getString(tabIds[i]));
         }
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        L.e(TAG, "onActivityResult");
+        if (requestCode == ResultCodeConstant.UNINSTALL_SUCCESS) {
+            UserInstallFragment userInstallFragment = (UserInstallFragment) fragmentList.get(MINE_INDEX);
+            userInstallFragment.refreshUninstallData();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -86,6 +86,7 @@ public class PackageInfoManager {
                     if (info.sourceDir == null) {
                         continue;
                     }
+                    appInfo.setCodePath(info.sourceDir);
                     if (info.packageName.equals(context.getPackageName())) {
                         continue;
                     }

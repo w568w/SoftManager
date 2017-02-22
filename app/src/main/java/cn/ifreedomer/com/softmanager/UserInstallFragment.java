@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cn.ifreedomer.com.softmanager.constant.ResultCodeConstant;
 import cn.ifreedomer.com.softmanager.listener.OnUnInstallListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 
@@ -17,6 +18,8 @@ import cn.ifreedomer.com.softmanager.model.AppInfo;
  */
 
 public class UserInstallFragment extends RecycleFragment {
+    private AppInfo curUninstallApp = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -34,13 +37,22 @@ public class UserInstallFragment extends RecycleFragment {
                 intent.setAction("android.intent.action.DELETE");
                 intent.addCategory("android.intent.category.DEFAULT");
                 intent.setData(Uri.parse("package:" + appInfo.getPackname()));
-                getActivity().startActivity(intent);
-                //刷新数据
-                PackageInfoManager.getInstance().getUserApps().remove(appInfo);
-                setData(PackageInfoManager.getInstance().getUserApps());
+                curUninstallApp = appInfo;
+                getActivity().startActivityForResult(intent, ResultCodeConstant.UNINSTALL_SUCCESS);
+
 
 
             }
         });
+    }
+
+    public void refreshUninstallData() {
+        //刷新数据
+        if (curUninstallApp == null) {
+            return;
+        }
+        PackageInfoManager.getInstance().getUserApps().remove(curUninstallApp);
+        setData(PackageInfoManager.getInstance().getUserApps());
+        curUninstallApp = null;
     }
 }

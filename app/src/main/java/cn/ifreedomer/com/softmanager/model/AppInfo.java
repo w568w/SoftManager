@@ -9,9 +9,17 @@ public class AppInfo {
 	private String version;
     private long pkgSize;
 	private int uid;
-	
-	
-	
+	private String codePath;
+
+
+	public String getCodePath() {
+		return codePath;
+	}
+
+	public void setCodePath(String codePath) {
+		this.codePath = codePath;
+	}
+
 	public int getUid() {
 		return uid;
 	}
