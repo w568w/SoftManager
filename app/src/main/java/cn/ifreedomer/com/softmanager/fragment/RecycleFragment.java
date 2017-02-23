@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager;
+package cn.ifreedomer.com.softmanager.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.adapter.AppAdapter;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 

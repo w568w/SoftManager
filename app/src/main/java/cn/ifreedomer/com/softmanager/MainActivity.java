@@ -1,12 +1,11 @@
 package cn.ifreedomer.com.softmanager;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -17,6 +16,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
 import cn.ifreedomer.com.softmanager.constant.ResultCodeConstant;
+import cn.ifreedomer.com.softmanager.fragment.AutoStartFragment;
+import cn.ifreedomer.com.softmanager.fragment.RecycleFragment;
+import cn.ifreedomer.com.softmanager.fragment.SystemInstallFragment;
+import cn.ifreedomer.com.softmanager.fragment.UserInstallFragment;
 import cn.ifreedomer.com.softmanager.util.L;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
@@ -26,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     public static final String TAG = MainActivity.class.getSimpleName();
     @InjectView(R.id.pb)
     ProgressBar pb;
-    private List<RecycleFragment> fragmentList = new ArrayList<>();
-    private int[] tabIds = new int[]{R.string.mine, R.string.system};
+    private List<Fragment> fragmentList = new ArrayList<>();
+    private int[] tabIds = new int[]{R.string.mine, R.string.system,R.string.auto_start};
     @InjectView(R.id.tab)
     TabLayout tab;
     @InjectView(R.id.viewpager)
@@ -59,8 +62,11 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             @Override
             public void loadFinish() {
                 pb.setVisibility(View.GONE);
-                fragmentList.get(0).setData(PackageInfoManager.getInstance().getUserApps());
-                fragmentList.get(1).setData(PackageInfoManager.getInstance().getSystemApps());
+                RecycleFragment mineFragment = (RecycleFragment) fragmentList.get(MINE_INDEX);
+                RecycleFragment systemFragment = (RecycleFragment) fragmentList.get(SYSTEM_INDEX);
+
+                mineFragment.setData(PackageInfoManager.getInstance().getUserApps());
+                systemFragment.setData(PackageInfoManager.getInstance().getSystemApps());
             }
         });
     }
@@ -69,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         fragmentList.add(new UserInstallFragment());
         fragmentList.add(new SystemInstallFragment());
-
+        fragmentList.add(new AutoStartFragment());
         // init view pager
         ViewPagerFragmentAdapter pagerAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), fragmentList);
         viewpager.setAdapter(pagerAdapter);

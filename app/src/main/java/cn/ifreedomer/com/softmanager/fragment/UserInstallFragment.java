@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager;
+package cn.ifreedomer.com.softmanager.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.constant.ResultCodeConstant;
 import cn.ifreedomer.com.softmanager.listener.OnUnInstallListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
