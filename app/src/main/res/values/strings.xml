@@ -9,4 +9,5 @@
     <string name="base">测试</string>
     <string name="uninstall">卸载</string>
     <string name="auto_start">自启动</string>
+    <string name="no_root">没有root权限</string>
 </resources>

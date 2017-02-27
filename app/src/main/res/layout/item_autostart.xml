@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"/>
         </LinearLayout>
         <Switch
-
+           
             android:id="@+id/swith_auto"
             android:layout_margin="13dp"
             android:layout_centerVertical="true"

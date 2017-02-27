@@ -97,4 +97,12 @@ public class AutoStartInfo {
     public void setPackageReceiver(String packageReceiver) {
         this.packageReceiver = packageReceiver;
     }
+
+    @Override
+    public String toString() {
+        return "AutoStartInfo{" +
+                "isenable=" + isenable +
+                ", label='" + label + '\'' +
+                '}'+"\n";
+    }
 }
