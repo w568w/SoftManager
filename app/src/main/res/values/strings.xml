@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SoftManager</string>
+    <string name="app_name">系统软件卸载大师</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,4 +10,6 @@
     <string name="uninstall">卸载</string>
     <string name="auto_start">自启动</string>
     <string name="no_root">没有root权限</string>
+    <string name="edit">编辑</string>
+    <string name="uninstall_master">卸载大师</string>
 </resources>

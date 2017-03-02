@@ -38,13 +38,14 @@ public class AutoStartAdapter extends com.zhy.base.adapter.recyclerview.CommonAd
        ;
         holder.setText(R.id.tv_appname, autoStartInfo.getLabel());
         holder.setImageDrawable(R.id.iv_icon, autoStartInfo.getIcon());
-        holder.setText(R.id.tv_appcache, autoStartInfo.getDesc() + "");
+//        holder.setText(R.id.tv_appcache, autoStartInfo.getPackageName() + "");
         final Switch switchWidget = holder.getView(R.id.swith_auto);
 
         holder.setOnClickListener(R.id.swith_auto, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!ShellUtils.checkRootPermission()){
+                    switchWidget.setChecked(!switchWidget.isChecked());
                     Toast.makeText(mContext, R.string.no_root,Toast.LENGTH_SHORT).show();
                     return;
                 }

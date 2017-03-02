@@ -2,18 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:id="@+id/itemroot"
-                android:layout_height="85dp"
+                android:layout_height="@dimen/item_height"
                 android:orientation="horizontal">
 
     <ImageView
-        android:padding="30dp"
+        android:padding="@dimen/icon_padding"
         android:id="@+id/iv_icon"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
+        android:layout_width="@dimen/item_height"
+        android:layout_height="@dimen/item_height"
         android:layout_centerVertical="true"
         android:src="@mipmap/ic_launcher"/>
 
     <RelativeLayout
+        android:layout_marginLeft="@dimen/margin_icon_left"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/iv_icon">
@@ -23,7 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
         <TextView
-            android:textColor="#757575"
+            android:textColor="@color/primary_text"
             android:textSize="18sp"
             android:id="@+id/tv_appname"
             android:text="这是app名称"
@@ -32,25 +33,27 @@
 
         <TextView
             android:id="@+id/tv_appcache"
-            android:textColor="#b2b2b2"
+            android:textColor="@color/secondary_text"
             android:layout_below="@+id/tv_appname"
             android:layout_centerVertical="true"
             android:text="这是app缓存"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         </LinearLayout>
-        <Button
-            android:id="@+id/btn_uninstall"
-            android:layout_margin="3dp"
+        <ImageView
+            android:src="@mipmap/ic_delete_black_24dp"
+            android:id="@+id/iv_uninstall"
+            android:alpha="0.5"
+            android:padding="5dp"
+            android:layout_marginRight="@dimen/icon_marginright"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:text="@string/uninstall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
         <View
             android:layout_alignParentBottom="true"
             android:background="#eaeaea"
             android:layout_width="match_parent"
-            android:layout_height="1.5dp"/>
+            android:layout_height="@dimen/devider_height"/>
     </RelativeLayout>
 </RelativeLayout>

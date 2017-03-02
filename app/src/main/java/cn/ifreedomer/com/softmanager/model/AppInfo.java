@@ -7,7 +7,7 @@ public class AppInfo {
 	private String appName;
 	private String packname;
 	private String version;
-    private long pkgSize;
+    private float pkgSize;
 	private int uid;
 	private String codePath;
 
@@ -28,11 +28,11 @@ public class AppInfo {
 		this.uid = uid;
 	}
 
-    public long getPkgSize() {
+    public float getPkgSize() {
         return pkgSize;
     }
 
-    public void setPkgSize(long pkgSize) {
+    public void setPkgSize(float pkgSize) {
         this.pkgSize = pkgSize;
     }
 

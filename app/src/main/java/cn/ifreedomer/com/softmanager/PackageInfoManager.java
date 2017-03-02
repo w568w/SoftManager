@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.os.RemoteException;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,9 +109,9 @@ public class PackageInfoManager {
                     } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
                         flag = true;
                     }
-                    if (flag){
+                    if (flag) {
                         userAppInfos.add(appInfo);
-                    }else{
+                    } else {
                         systemAppInfos.add(appInfo);
                     }
                     String appName = packInfo.applicationInfo.loadLabel(pm).toString();
@@ -127,7 +128,8 @@ public class PackageInfoManager {
                                     @Override
                                     public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
                                         synchronized (appInfo) {
-                                            appInfo.setPkgSize(pStats.cacheSize + pStats.codeSize + pStats.dataSize);
+                                            BigDecimal b = new BigDecimal((float) (pStats.cacheSize + pStats.codeSize + pStats.dataSize) / (float) (1000 * 1000));
+                                            appInfo.setPkgSize(b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
 
                                         }
                                     }
@@ -169,7 +171,6 @@ public class PackageInfoManager {
                         loadStateCallback.loadFinish();
                     }
                 });
-
 
 
             }
