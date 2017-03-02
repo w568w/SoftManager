@@ -12,4 +12,13 @@
     <string name="no_root">没有root权限</string>
     <string name="edit">编辑</string>
     <string name="uninstall_master">卸载大师</string>
+    <string name="send">发送</string>
+    <string name="sender">发件人:</string>
+    <string name="valid_email">邮箱地址</string>
+    <string name="topic">主题:</string>
+    <string name="feedback_topic">AndroidGuide意见反馈</string>
+    <string name="describe_problem">请描述您遇到的问题</string>
+    <string name="common_point">评分</string>
+    <string name="select_fill">选填</string>
+    <string name="feedback">意见反馈</string>
 </resources>

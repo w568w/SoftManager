@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -55,6 +56,14 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     private void initView() {
         toolbar.inflateMenu(R.menu.action_menu);
+        toolbar.getMenu().findItem(R.id.m_item_edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(MainActivity.this, FeedBackActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
         toolbar.setTitle(getString(R.string.uninstall_master));
         toolbar.setLogo(R.mipmap.ic_launcher);
     }
@@ -104,11 +113,11 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         super.onResume();
         MobclickAgent.onResume(this);       //统计时长
     }
+
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
 
 
     @Override

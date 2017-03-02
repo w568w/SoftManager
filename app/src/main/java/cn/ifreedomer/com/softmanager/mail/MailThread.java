@@ -1,12 +1,11 @@
 
 package cn.ifreedomer.com.softmanager.mail;
-
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.text.TextUtils;
-import android.util.Log;
 
+import javax.activation.CommandMap;
+import javax.activation.MailcapCommandMap;
 
 /**
  * 该类用于发送邮件给指定的邮箱
@@ -15,141 +14,64 @@ import android.util.Log;
  * @creation 2015年8月26日
  */
 public class MailThread extends Thread {
-    private final Context mContext;
-    private boolean mValidate = true;
-    private String mMailContent;
-    private String mSubject;
-    private String mHost;
-    private String mHostPort;
-    private String mUserName;
-    private String mPassword;
-    private String mFromAddr;
-    private String[] mToAddrList;
-    private String mProtocol = "smtp";
+    private final Context ctx;
+    private final String content;
+    private final String tag;
+    private final String sender;
+    private final String[] toAddressSet = new String[]{
+            "3383813446@qq.com"
+    };
 
     /**
      * 发送邮件线程
      *
      * @param ctx
+     * @param content 邮件主题内容
      */
-    public MailThread(Context ctx) {
-        mContext = ctx;
-    }
-
-    public MailThread setSubject(String subject) {
-        mSubject = subject;
-        return this;
-    }
-
-    public MailThread setContent(String content) {
-        mMailContent = content;
-        return this;
-    }
-
-    public MailThread setHost(String host) {
-        mHost = host;
-        return this;
-    }
-
-    public MailThread setHostPort(String hostPort) {
-        mHostPort = hostPort;
-        return this;
-    }
-
-    public MailThread setValidate(boolean validate) {
-        mValidate = validate;
-        return this;
-    }
-
-    public MailThread setUserName(String userName) {
-        mUserName = userName;
-        return this;
-    }
-
-    public MailThread setPassword(String pwd) {
-        mPassword = pwd;
-        return this;
-    }
-
-    public MailThread setFromAddress(String fromAddr) {
-        mFromAddr = fromAddr;
-        return this;
-    }
-
-    public MailThread setToAddressList(String[] toAddrList) {
-        mToAddrList = toAddrList;
-        return this;
-    }
-
-    public MailThread setProtocol(String protocol) {
-        mProtocol = protocol;
-        return this;
-    }
-
-    private boolean mailInfoReady() {
-        if (TextUtils.isEmpty(mHost) || TextUtils.isEmpty(mHostPort)
-                || TextUtils.isEmpty(mUserName) || TextUtils.isEmpty(mPassword)
-                || TextUtils.isEmpty(mFromAddr)
-                || mToAddrList == null || mToAddrList.length == 0) {
-
-            Log.e("MailThread", "mail cannot be sent as missing key param: "
-                    + "host: " + mHost + ", port: " + mHostPort + ", username: " + mUserName
-                    + ", password is null? : " + TextUtils.isEmpty(mPassword)
-                    + ", dest addr is null? : " + (mToAddrList == null || mToAddrList.length == 0));
-
-            return false;
-        }
-        return true;
-    }
-
-    private static final String EXMAIL_QQ_SMTP_HOST = "smtp.exmail.qq.com";
-    private static final String EXMAIL_PORT = "25";
-
-    /**
-     * 获取Imap协议发送的senderinfo，该对象封装了腾讯企业邮箱的host、port还有协议为imap
-     *
-     * @return
-     */
-    public MailThread initIMAPInfo() {
-        this.mHost = EXMAIL_QQ_SMTP_HOST;
-        this.mHostPort = EXMAIL_PORT;
-        this.mProtocol = "imap";
-        return this;
+    public MailThread(Context ctx, String TAG, String content,String sender) {
+        this.ctx = ctx;
+        this.tag = TAG;
+        this.content = content;
+        this.sender = sender;
     }
 
     private void sendEmail() {
-        if (!mailInfoReady())
-            return;
-
         try {
             MailSenderInfo mailInfo = new MailSenderInfo();
-            mailInfo.setSubject(mSubject);
-            mailInfo.setMailServerHost(mHost);
-            mailInfo.setMailServerPort(mHostPort);
-            mailInfo.setValidate(mValidate);
-            mailInfo.setUserName(mUserName);
-            mailInfo.setPassword(mPassword);
-            mailInfo.setFromAddress(mFromAddr);
-            mailInfo.setToAddressList(mToAddrList);
-            mailInfo.setProtocol(mProtocol);
-
+            mailInfo.setMailServerHost("smtp.163.com");
+            mailInfo.setMailServerPort("25");
+            mailInfo.setValidate(true);
+            mailInfo.setUserName("moonvsky888@163.com");
+            mailInfo.setPassword("wd613923");
+            mailInfo.setFromAddress("moonvsky888@163.com");
+            mailInfo.setToAddressList(toAddressSet);
+            mailInfo.setSubject(tag);
             try {
-                mailInfo.setContent("device_model:"
+                mailInfo.setContent("title=>"+tag+"\n\ncontent=>"+content+"\n\nsender="+sender+"\n\ndevice_model:"
                         + Build.MODEL
                         + "\nversion_release:"
                         + Build.VERSION.RELEASE
+                        + "\nUserID:"
                         + "\nVersion:"
-                        + mContext.getPackageManager().getPackageInfo(
-                                mContext.getPackageName(), 0).versionName
-                        + "\nPackageName:" + mContext.getPackageName()
-                        + "\nLogInfo:" + mMailContent);
+                        + ctx.getPackageManager().getPackageInfo(
+                        ctx.getPackageName(), 0).versionName
+                        + "\nPackageName:" + ctx.getPackageName()
+                        + "\nLogInfo:" + content);
             } catch (NameNotFoundException e) {
                 mailInfo.setContent("device_model:" + Build.MODEL
                         + "\nversion_release:" + Build.VERSION.RELEASE
                         + "\nVersion:unKnown" + "\nPackageName:"
-                        + mContext.getPackageName() + "\nLogInfo:" + mMailContent);
+                        + ctx.getPackageName() + "\nLogInfo:" + content);
             }
             SimpleMailSender sms = new SimpleMailSender();
+            MailcapCommandMap mc = (MailcapCommandMap) CommandMap
+                    .getDefaultCommandMap();
+            mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+            mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+            mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+            mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+            mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+            CommandMap.setDefaultCommandMap(mc);
             sms.sendTextMail(mailInfo);
         } catch (Exception e) {
             e.getStackTrace();

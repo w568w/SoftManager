@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+   >
+
+    <include layout="@layout/toolbar"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x10"
+        android:hint="@string/select_fill"
+        android:layout_marginTop="@dimen/x20"
+        android:text="@string/sender"/>
+
+
+    <EditText
+        android:paddingLeft="@dimen/dp10"
+        android:id="@+id/sender_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp20"
+        android:background="@color/whiteColor"
+        android:hint="@string/valid_email"
+        android:inputType="text"
+        android:minHeight="@dimen/dp50"
+        android:textSize="@dimen/sp15"/>
+
+    <TextView
+        android:id="@+id/topic_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp10"
+        android:layout_marginTop="@dimen/dp20"
+        android:text="@string/topic"/>
+
+
+    <EditText
+        android:paddingLeft="@dimen/dp10"
+        android:id="@+id/topic_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp15"
+        android:background="@color/whiteColor"
+        android:inputType="text"
+        android:minHeight="@dimen/dp50"
+        android:textSize="@dimen/sp15"
+        android:hint="标题"/>
+
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp10"
+        android:layout_marginTop="@dimen/dp20"
+        android:text="@string/topic"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp20"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp150"
+        android:background="@color/whiteColor"
+        >
+        <EditText
+            android:paddingLeft="@dimen/dp10"
+            android:id="@+id/content_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="@string/describe_problem"
+            android:inputType="text"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+</LinearLayout>

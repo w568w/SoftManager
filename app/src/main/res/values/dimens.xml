@@ -3,9 +3,22 @@
     <dimen name="activity_horizontal_margin">@dimen/x8</dimen>
     <dimen name="activity_vertical_margin">@dimen/y8</dimen>
     <dimen name="devider_height">0.8dp</dimen>
-    <dimen name="item_height">@dimen/y35</dimen>
-    <dimen name="margin_icon_left">@dimen/x8</dimen>
-    <dimen name="icon_padding">@dimen/x10</dimen>
-    <dimen name="item_margin_right">@dimen/x5</dimen>
-    <dimen name="icon_marginright">@dimen/x6</dimen>
+    <dimen name="item_height">65dp</dimen>
+    <dimen name="margin_icon_left">16dp</dimen>
+    <dimen name="icon_padding">10dp</dimen>
+    <dimen name="item_margin_right">10dp</dimen>
+    <dimen name="icon_marginright">12dp</dimen>
+    <dimen name="dp50">50dp</dimen>
+    <dimen name="dp15">15dp</dimen>
+    <dimen name="dp180">180dp</dimen>
+    <dimen name="dp280">280dp</dimen>
+    <dimen name="dp195">195dp</dimen>
+    <dimen name="dp200">200dp</dimen>
+    <dimen name="dp20">20dp</dimen>
+    <dimen name="dp100">100dp</dimen>
+    <dimen name="dp150">150dp</dimen>
+    <dimen name="dp30">30dp</dimen>
+    <dimen name="dp10">10dp</dimen>
+    <dimen name="dp5">5dp</dimen>
+    <dimen name="sp15">15sp</dimen>
 </resources>
