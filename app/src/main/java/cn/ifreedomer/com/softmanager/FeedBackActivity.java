@@ -7,9 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.ifreedomer.com.softmanager.mail.MailStateListener;
 import cn.ifreedomer.com.softmanager.mail.MailThread;
 
 public class FeedBackActivity extends AppCompatActivity {
@@ -37,7 +39,18 @@ public class FeedBackActivity extends AppCompatActivity {
         toolbar.getMenu().findItem(R.id.f_item_send).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                new MailThread(FeedBackActivity.this,topicEt.getText().toString(),contentEt.getText().toString(),senderEt.getText().toString()).start();
+                MailThread mailThread = new MailThread(FeedBackActivity.this, topicEt.getText().toString(), contentEt.getText().toString(), senderEt.getText().toString());
+                mailThread.setMailStateListener(new MailStateListener() {
+                    @Override
+                    public void onSuccess() {
+                        FeedBackActivity.this.finish();
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(FeedBackActivity.this, R.string.feedback_failed,Toast.LENGTH_SHORT).show();
+                    }
+                });
                 return false;
             }
         });

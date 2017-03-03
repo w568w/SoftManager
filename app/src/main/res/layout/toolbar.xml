@@ -3,6 +3,6 @@
     android:id="@+id/toolbar"
     android:background="@color/colorPrimary"
     android:layout_width="match_parent"
-    style="@style/ActionButton.Overflow.ZhiHu"
+    android:theme="@style/Theme.ToolBar.ZhiHu"
     android:layout_height="wrap_content"
     />

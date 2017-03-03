@@ -6,11 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
+
     </style>
     <style name="Theme.ToolBar.ZhiHu" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow.ZhiHu</item>
-        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
     <style name="ActionButton.Overflow.ZhiHu" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">

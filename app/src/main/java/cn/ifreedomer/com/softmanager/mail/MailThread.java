@@ -14,9 +14,19 @@ import javax.activation.MailcapCommandMap;
  * @creation 2015年8月26日
  */
 public class MailThread extends Thread {
+    private MailStateListener mailStateListener;
     private final Context ctx;
     private final String content;
     private final String tag;
+
+    public MailStateListener getMailStateListener() {
+        return mailStateListener;
+    }
+
+    public void setMailStateListener(MailStateListener mailStateListener) {
+        this.mailStateListener = mailStateListener;
+    }
+
     private final String sender;
     private final String[] toAddressSet = new String[]{
             "3383813446@qq.com"
@@ -73,7 +83,13 @@ public class MailThread extends Thread {
             mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
             CommandMap.setDefaultCommandMap(mc);
             sms.sendTextMail(mailInfo);
+            if (mailStateListener!=null){
+                mailStateListener.onSuccess();
+            }
         } catch (Exception e) {
+            if (mailStateListener!=null){
+                mailStateListener.onError();
+            }
             e.getStackTrace();
         }
 
