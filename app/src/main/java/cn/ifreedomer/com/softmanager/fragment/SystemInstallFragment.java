@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import cn.ifreedomer.com.softmanager.PackageInfoManager;
+import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.listener.OnUnInstallListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.Terminal;
@@ -36,6 +38,7 @@ public class SystemInstallFragment extends RecycleFragment {
                     }
                 } else {
                     Terminal.grantRoot(getActivity());
+                    Toast.makeText(getActivity(), getString(R.string.no_permission),Toast.LENGTH_SHORT).show();;
                 }
             }
         });

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
             }
         });
         toolbar.setTitle(getString(R.string.uninstall_master));
-        toolbar.setLogo(R.mipmap.ic_launcher);
+
     }
 
     private void initData() {
