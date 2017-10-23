@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
+
     <style name="Theme.ToolBar.ZhiHu" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
@@ -16,5 +17,15 @@
 
     </style>
 
+
+    <style name="navigationTitleTextStyle">
+        <item name="android:textSize">@dimen/sp25</item>
+        <item name="android:textColor">@color/whiteTextColor</item>
+    </style>
+
+    <style name="navigationSubTitleTextStyle">
+        <item name="android:textSize">@dimen/sp15</item>
+        <item name="android:textColor">@color/whiteHintColor</item>
+    </style>
 
 </resources>

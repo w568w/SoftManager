@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.fragment.RecycleFragment;
-
 public class ViewPagerFragmentAdapter extends FragmentStatePagerAdapter {
     List<Fragment> list;
     public ViewPagerFragmentAdapter(FragmentManager fm, List<Fragment> list) {

@@ -17,14 +17,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     signingConfigs {
+        debug {
+            keyAlias 'tuling123'
+            keyPassword 'guangnian2016'
+            storeFile file('tuling123.keystore')
+            storePassword 'guangnian2016'
+        }
+
         release {
-            storeFile file("ifreedomer.jks")
-            storePassword "123456"
-            keyAlias "ifreedomer"
-            keyPassword "123456"
+            keyAlias 'tuling123'
+            keyPassword 'guangnian2016'
+            storeFile file('tuling123.keystore')
+            storePassword 'guangnian2016'
         }
     }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -32,7 +41,7 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
         debug {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -43,13 +52,13 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.jakewharton:butterknife:6.0.0'
-    compile 'com.android.support:design:23.0.0'
-    compile 'com.android.support:support-v4:23.0.0'
-    compile 'com.android.support:cardview-v7:23.0.0'
-    compile 'com.android.support:recyclerview-v7:23.0.0'
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:cardview-v7:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.zhy:base-adapter:2.0.0'
     testCompile 'junit:junit:4.12'
 }

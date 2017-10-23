@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.model.AppInfo;
-import cn.ifreedomer.com.softmanager.util.L;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author:eavawu
@@ -55,7 +55,7 @@ public class PackageInfoManager {
 
             @Override
             protected List<AppInfo> doInBackground(Object... params) {
-                L.d("loadData1");
+                LogUtil.d("loadData1");
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -77,7 +77,7 @@ public class PackageInfoManager {
                 List<PackageInfo> packInfos = pm.getInstalledPackages(0);
 
                 List<AppInfo> appinfos = new ArrayList<AppInfo>();
-                L.d("loadData2");
+                LogUtil.d("loadData2");
                 for (PackageInfo packInfo : packInfos) {
                     publishProgress(++mAppCount, packInfos.size());
                     final AppInfo appInfo = new AppInfo();
@@ -140,7 +140,7 @@ public class PackageInfoManager {
 
                     appinfos.add(appInfo);
                 }
-                L.d("loadData3");
+                LogUtil.d("loadData3");
                 return appinfos;
             }
 

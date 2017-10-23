@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager.fragment;
+package cn.ifreedomer.com.softmanager.fragment.soft;
 
 import android.content.Intent;
 import android.net.Uri;

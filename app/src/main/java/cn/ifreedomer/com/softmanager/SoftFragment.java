@@ -2,13 +2,16 @@ package cn.ifreedomer.com.softmanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.umeng.analytics.MobclickAgent;
@@ -20,17 +23,17 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
 import cn.ifreedomer.com.softmanager.constant.ResultCodeConstant;
-import cn.ifreedomer.com.softmanager.fragment.AutoStartFragment;
-import cn.ifreedomer.com.softmanager.fragment.RecycleFragment;
-import cn.ifreedomer.com.softmanager.fragment.SystemInstallFragment;
-import cn.ifreedomer.com.softmanager.fragment.UserInstallFragment;
-import cn.ifreedomer.com.softmanager.util.L;
+import cn.ifreedomer.com.softmanager.fragment.soft.AutoStartFragment;
+import cn.ifreedomer.com.softmanager.fragment.soft.RecycleFragment;
+import cn.ifreedomer.com.softmanager.fragment.soft.SystemInstallFragment;
+import cn.ifreedomer.com.softmanager.fragment.soft.UserInstallFragment;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
-public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
+public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
     private static final int MINE_INDEX = 0;
     private static final int SYSTEM_INDEX = 1;
     private static final int AUTOSTART_INDEX = 2;
-    public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = SoftFragment.class.getSimpleName();
     @InjectView(R.id.pb)
     ProgressBar pb;
     @InjectView(R.id.toolbar)
@@ -42,24 +45,23 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @InjectView(R.id.viewpager)
     ViewPager viewpager;
 
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_soft, null);
         initAllFragment();
         initView();
         initData();
-
+        return view;
     }
+
 
     private void initView() {
         toolbar.inflateMenu(R.menu.action_menu);
         toolbar.getMenu().findItem(R.id.m_item_edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(MainActivity.this, FeedBackActivity.class);
+                Intent intent = new Intent(getActivity(), FeedBackActivity.class);
                 startActivity(intent);
                 return false;
             }
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     private void initData() {
-        PackageInfoManager.getInstance().loadData(this, new LoadStateCallback() {
+        PackageInfoManager.getInstance().loadData(getActivity(), new LoadStateCallback() {
             @Override
             public void loadBegin() {
                 pb.setVisibility(View.VISIBLE);
@@ -77,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
             @Override
             public void loadProgress(int current, int max) {
-
             }
 
             @Override
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         fragmentList.add(new SystemInstallFragment());
         fragmentList.add(new AutoStartFragment());
         // init view pager
-        ViewPagerFragmentAdapter pagerAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), fragmentList);
+        ViewPagerFragmentAdapter pagerAdapter = new ViewPagerFragmentAdapter(getChildFragmentManager(), fragmentList);
         viewpager.setAdapter(pagerAdapter);
         viewpager.setOffscreenPageLimit(3);
         viewpager.addOnPageChangeListener(this);
@@ -109,26 +110,16 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     }
 
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);       //统计时长
-    }
 
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        L.e(TAG, "onActivityResult");
-        if (requestCode == ResultCodeConstant.UNINSTALL_SUCCESS) {
-            UserInstallFragment userInstallFragment = (UserInstallFragment) fragmentList.get(MINE_INDEX);
-            userInstallFragment.refreshUninstallData();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        LogUtil.e(TAG, "onActivityResult");
+//        if (requestCode == ResultCodeConstant.UNINSTALL_SUCCESS) {
+//            UserInstallFragment userInstallFragment = (UserInstallFragment) fragmentList.get(MINE_INDEX);
+//            userInstallFragment.refreshUninstallData();
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {

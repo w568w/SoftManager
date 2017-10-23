@@ -11,4 +11,7 @@
 
     <color name="whiteColor">#FFFFFFFF</color>
     <color name="whiteHintColor">#88FFFFFF</color>
+
+
+    <color name="whiteTextColor">#FFFFFFFF</color>
 </resources>

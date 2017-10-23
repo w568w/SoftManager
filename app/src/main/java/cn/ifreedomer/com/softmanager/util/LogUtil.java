@@ -8,7 +8,7 @@ import android.util.Log;
  * @author way
  * 
  */
-public class L {
+public class LogUtil {
 	public static boolean isDebug = true;// 是否需要打印bug，
 	private static final String TAG = "sage";
 

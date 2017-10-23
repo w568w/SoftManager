@@ -3,21 +3,17 @@ package cn.ifreedomer.com.softmanager.adapter;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.zhy.base.adapter.ViewHolder;
-import com.zhy.base.adapter.abslistview.CommonAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
-import cn.ifreedomer.com.softmanager.fragment.AutoStartFragment;
 import cn.ifreedomer.com.softmanager.util.AutoStartInfo;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
-import cn.ifreedomer.com.softmanager.util.Terminal;
 
 
 /**

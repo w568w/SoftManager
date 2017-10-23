@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager.fragment;
+package cn.ifreedomer.com.softmanager.fragment.soft;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

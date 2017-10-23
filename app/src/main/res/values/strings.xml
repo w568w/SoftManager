@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">系统软件卸载大师</string>
+    <string name="app_name">简.管理</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -23,4 +23,7 @@
     <string name="feedback">意见反馈</string>
     <string name="no_permission">您没有系统权限哦</string>
     <string name="feedback_failed">反馈失败咯，再试试吧</string>
+    <string name="please_login_in">please login</string>
+    <string name="navigation_drawer_open">开启</string>
+    <string name="navigation_drawer_close">关闭</string>
 </resources>
