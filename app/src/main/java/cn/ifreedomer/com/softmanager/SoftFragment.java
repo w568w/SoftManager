@@ -36,8 +36,7 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
     public static final String TAG = SoftFragment.class.getSimpleName();
     @InjectView(R.id.pb)
     ProgressBar pb;
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
+
     private List<Fragment> fragmentList = new ArrayList<>();
     private int[] tabIds = new int[]{R.string.mine, R.string.system, R.string.auto_start};
     @InjectView(R.id.tab)
@@ -48,7 +47,8 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_soft, null);
+        View view = inflater.inflate(R.layout.fragment_soft, container, false);
+        ButterKnife.inject(this,view);
         initAllFragment();
         initView();
         initData();
@@ -57,16 +57,16 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
 
     private void initView() {
-        toolbar.inflateMenu(R.menu.action_menu);
-        toolbar.getMenu().findItem(R.id.m_item_edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(getActivity(), FeedBackActivity.class);
-                startActivity(intent);
-                return false;
-            }
-        });
-        toolbar.setTitle(getString(R.string.uninstall_master));
+//        toolbar.inflateMenu(R.menu.action_menu);
+//        toolbar.getMenu().findItem(R.id.m_item_edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Intent intent = new Intent(getActivity(), FeedBackActivity.class);
+//                startActivity(intent);
+//                return false;
+//            }
+//        });
+//        toolbar.setTitle(getString(R.string.uninstall_master));
 
     }
 

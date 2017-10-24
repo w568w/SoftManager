@@ -9,6 +9,11 @@ import cn.ifreedomer.com.softmanager.model.AppInfo;
  */
 
 public interface OnUnInstallListener {
+    /**
+     * 下载完成回调
+     *
+     * @param appInfo app信息
+     */
     void onUninstall(AppInfo appInfo);
 
 }

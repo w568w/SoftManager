@@ -16,20 +16,7 @@
         <FrameLayout
             android:id="@+id/frame_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycleview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/ad_root_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:orientation="vertical" />
-        </FrameLayout>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
@@ -37,13 +24,7 @@
         android:layout_width="@dimen/dp280"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/navigation_header">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/navigationmenu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp195" />
-    </android.support.design.widget.NavigationView>
+        app:headerLayout="@layout/navigation_header"
+        app:menu="@menu/home_menu" />
 
 </android.support.v4.widget.DrawerLayout>

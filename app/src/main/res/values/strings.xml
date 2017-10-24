@@ -26,4 +26,6 @@
     <string name="please_login_in">please login</string>
     <string name="navigation_drawer_open">开启</string>
     <string name="navigation_drawer_close">关闭</string>
+    <string name="soft_manager">软件管理</string>
+    <string name="hardware_info">硬件信息</string>
 </resources>
