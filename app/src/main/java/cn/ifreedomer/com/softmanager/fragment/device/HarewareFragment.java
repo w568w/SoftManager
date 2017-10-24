@@ -15,7 +15,7 @@ import cn.ifreedomer.com.softmanager.R;
  * @todo
  */
 
-public class DeviceFragment extends Fragment{
+public class HarewareFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
