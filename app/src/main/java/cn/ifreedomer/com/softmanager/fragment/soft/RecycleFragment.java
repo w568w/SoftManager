@@ -28,6 +28,7 @@ public class RecycleFragment extends Fragment {
     RecyclerView rv;
     AppAdapter appAdapter;
     private List<AppInfo> appInfoList = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyecle_fragment, container, false);
@@ -38,21 +39,19 @@ public class RecycleFragment extends Fragment {
 
     private void initRv() {
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        appAdapter = new AppAdapter(getActivity(),R.layout.item_appinfo,appInfoList);
+        appAdapter = new AppAdapter(getActivity(), R.layout.item_appinfo, appInfoList);
         rv.setAdapter(appAdapter);
     }
 
     public void setData(List<AppInfo> appInfos) {
         appInfoList.clear();
         appInfoList.addAll(appInfos);
-        if (rv!=null&&rv.getAdapter()!=null){
-            rv.getAdapter().notifyDataSetChanged();
-        }
+        rv.getAdapter().notifyDataSetChanged();
 
     }
 
 
-    public List<AppInfo> getData(){
+    public List<AppInfo> getData() {
         return appInfoList;
     }
 

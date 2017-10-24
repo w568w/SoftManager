@@ -1,21 +1,9 @@
 package cn.ifreedomer.com.softmanager;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import cn.ifreedomer.com.softmanager.factory.DefaultThreadFactory;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
-
 /**
  * @author wuyihua
  * @Date 2017/10/24
@@ -24,7 +12,7 @@ import cn.ifreedomer.com.softmanager.util.ShellUtils;
 
 public class GlobalDataManager {
 
-    ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5,
+    private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5,
             new DefaultThreadFactory());
 
 
