@@ -46,6 +46,9 @@ public class RecycleFragment extends Fragment {
     public void setData(List<AppInfo> appInfos) {
         appInfoList.clear();
         appInfoList.addAll(appInfos);
+        if (rv==null||rv.getAdapter()==null){
+            return;
+        }
         rv.getAdapter().notifyDataSetChanged();
 
     }
