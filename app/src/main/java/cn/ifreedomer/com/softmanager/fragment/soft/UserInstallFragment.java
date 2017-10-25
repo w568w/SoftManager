@@ -94,6 +94,9 @@ public class UserInstallFragment extends RecycleFragment {
     private class UninstallReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (curUninstallApp==null){
+                return;
+            }
             Log.e(TAG, "onReceive: "+intent.getDataString()+"     curUninstallApp="+curUninstallApp.getPackname() );
 
             if (!TextUtils.isEmpty(intent.getDataString())&&intent.getDataString().contains(curUninstallApp.getPackname())) {

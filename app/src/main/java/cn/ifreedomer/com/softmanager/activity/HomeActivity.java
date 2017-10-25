@@ -3,9 +3,11 @@ package cn.ifreedomer.com.softmanager.activity;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,14 +16,14 @@ import android.widget.FrameLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
-import cn.ifreedomer.com.softmanager.fragment.device.HarewareFragment;
+import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
 
 /**
  * @author HomorSmith
  */
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
-
+    private static final String TAG = HomeActivity.class.getSimpleName();
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -48,7 +50,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private void initFragments() {
         softFragment = new SoftFragment();
-        hardwareFragment = new HarewareFragment();
+        hardwareFragment = new DeviceInfoFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.frame_content,softFragment,SOFT_TAG).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.frame_content,hardwareFragment,HARDWARE_TAG).commit();
 
@@ -73,26 +75,29 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private void initNavView() {
         navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, softFragment).commit();
+        getSupportFragmentManager().beginTransaction().show(softFragment).hide(hardwareFragment).commit();
     }
 
     private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
-            getSupportFragmentManager().beginTransaction().hide(softFragment).commit();
-            getSupportFragmentManager().beginTransaction().hide(hardwareFragment).commit();
+            Log.e(TAG, "onNavigationItemSelected: 0000" );
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             switch (menuItem.getItemId()) {
                 case R.id.soft:
-                    getSupportFragmentManager().beginTransaction().show(softFragment).commit();
+                    fragmentTransaction.hide(hardwareFragment);
+                    fragmentTransaction.show(softFragment);
                     break;
                 case R.id.hardware:
-                    getSupportFragmentManager().beginTransaction().show(hardwareFragment).commit();
+                    Log.e(TAG, "onNavigationItemSelected: 1111");
+                    fragmentTransaction.hide(softFragment);
+                    fragmentTransaction.show(hardwareFragment);
                     break;
                 default:
                     break;
             }
-
+            fragmentTransaction.commit();
             drawerLayout.closeDrawers();
             return false;
         }

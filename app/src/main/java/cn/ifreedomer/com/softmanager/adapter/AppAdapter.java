@@ -3,8 +3,8 @@ package cn.ifreedomer.com.softmanager.adapter;
 import android.content.Context;
 import android.view.View;
 
-import com.zhy.base.adapter.ViewHolder;
-import com.zhy.base.adapter.recyclerview.CommonAdapter;
+import com.zhy.adapter.recyclerview.CommonAdapter;
+import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.util.List;
 
@@ -24,6 +24,8 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
         super(context, layoutId, datas);
     }
 
+
+
     public OnUnInstallListener getUnInstallListener() {
         return unInstallListener;
     }
@@ -38,7 +40,7 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
 
 
     @Override
-    public void convert(ViewHolder holder, final AppInfo appInfo) {
+    protected void convert(ViewHolder holder, final AppInfo appInfo, int position) {
         holder.setText(R.id.tv_appname, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         holder.setText(R.id.tv_appcache, appInfo.getPkgSize() + "M");

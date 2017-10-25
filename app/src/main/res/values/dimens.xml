@@ -22,4 +22,16 @@
     <dimen name="dp5">5dp</dimen>
     <dimen name="sp15">15sp</dimen>
     <dimen name="sp25">25sp</dimen>
+    <dimen name="dp40">40dp</dimen>
+    <dimen name="sp40">40sp</dimen>
+
+
+
+
+    <!-- Preference fragment padding, bottom -->
+    <dimen name="preference_fragment_padding_bottom">0dp</dimen>
+    <!-- Preference fragment padding, sides -->
+    <dimen name="preference_fragment_padding_side">16dp</dimen>
+
+    <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>

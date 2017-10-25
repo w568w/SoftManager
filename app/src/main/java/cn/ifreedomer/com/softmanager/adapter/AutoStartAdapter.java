@@ -6,7 +6,8 @@ import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.zhy.base.adapter.ViewHolder;
+import com.zhy.adapter.recyclerview.CommonAdapter;
+import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +23,16 @@ import cn.ifreedomer.com.softmanager.util.ShellUtils;
  * @Date 2017/2/23
  */
 
-public class AutoStartAdapter extends com.zhy.base.adapter.recyclerview.CommonAdapter<AutoStartInfo> {
+public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
 
     public AutoStartAdapter(Context context, int layoutId, List<AutoStartInfo> datas) {
         super(context, layoutId, datas);
     }
 
+
+
     @Override
-    public void convert(ViewHolder holder, final AutoStartInfo autoStartInfo) {
-        final int position = holder.getPosition();
+    public void convert(ViewHolder holder, final AutoStartInfo autoStartInfo, final int position) {
         Log.e("position", position + "");
         holder.setText(R.id.tv_appname, autoStartInfo.getLabel());
         holder.setImageDrawable(R.id.iv_icon, autoStartInfo.getIcon());

@@ -29,4 +29,14 @@
     <string name="soft_manager">软件管理</string>
     <string name="hardware_info">硬件信息</string>
     <string name="uninstall_success">卸载成功!</string>
+    <string name="system_version">系统版本: Android </string>
+
+
+
+    <!--  Strings for possible PreferenceActivity Back/Next buttons -->
+    <string name="back_button_label">Back</string>
+    <string name="next_button_label">Next</string>
+
+    <!-- Optional button to Skip a PreferenceActivity [CHAR LIMIT=20] -->
+    <string name="skip_button_label">Skip</string>
 </resources>
