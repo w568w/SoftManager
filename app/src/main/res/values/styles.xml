@@ -28,4 +28,21 @@
         <item name="android:textColor">@color/whiteHintColor</item>
     </style>
 
+
+    <style name="deviceItemRootStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp50</item>
+        <item name="android:paddingLeft">@dimen/dp30</item>
+        <item name="android:paddingRight">@dimen/dp30</item>
+    </style>
+
+    <style name="deviceValueTextStyle">
+        <item name="android:textColor">#C1C1C1</item>
+        <item name="android:textSize">@dimen/sp10</item>
+    </style>
+
+    <!--android:paddingRight="@dimen/dp30"-->
+    <!--android:text="right"-->
+    <!--android:textColor="#C1C1C1"-->
+    <!--android:textSize="@dimen/sp10"-->
 </resources>

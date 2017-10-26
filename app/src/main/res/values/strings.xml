@@ -39,4 +39,25 @@
 
     <!-- Optional button to Skip a PreferenceActivity [CHAR LIMIT=20] -->
     <string name="skip_button_label">Skip</string>
+    <string name="basic_info">基本信息</string>
+    <string name="last_launch">上次启动</string>
+    <string name="run_time">运行时间</string>
+    <string name="network_info">网络信息</string>
+    <string name="hard_title">硬件特性</string>
+    <string name="processor">处理器</string>
+    <string name="size">尺寸</string>
+    <string name="weight">重量</string>
+    <string name="density">密度</string>
+    <string name="battery">电池容量</string>
+    <string name="wifi">WIFI</string>
+    <string name="back_camera">后置摄像头</string>
+    <string name="fore_camera">前置摄像头</string>
+    <string name="gyro">三轴陀螺仪</string>
+    <string name="has">有</string>
+    <string name="direction_sensor">方向传感器</string>
+    <string name="distance_sensor">距离传感器</string>
+    <string name="light_sensor">光线传感器</string>
+    <string name="touchid_sensor">指纹识别传感器</string>
+    <string name="barometer">气压计</string>
+    <string name="bluetooth">蓝牙</string>
 </resources>
