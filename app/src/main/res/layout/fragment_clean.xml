@@ -1,45 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        style="@style/topBackgrounStyle"
+        android:layout_height="@dimen/dp300"
+        >
+
+        <LinearLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_clean"
+                android:layout_width="@dimen/dp50"
+                android:layout_height="@dimen/dp50"
+                android:layout_gravity="center_horizontal"
+                android:src="@mipmap/clean_garbage_big"/>
+
+            <Button
+                android:layout_width="@dimen/dp120"
+                android:layout_height="@dimen/dp40"
+                android:layout_below="@id/iv_clean"
+                android:layout_marginTop="@dimen/dp40"
+                android:background="#D6D7D7"
+                android:text="@string/clean_garbage"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/rv_clean"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/>-->
 
 
-    <ImageView
-        android:id="@+id/iv_clean"
-        android:layout_width="@dimen/dp100"
-        android:layout_height="@dimen/dp100"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp150"
-        android:src="@mipmap/clean_garbage_big"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/card_normal"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_garbage_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_clean"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp30"
-        android:text="58.2MB"
-        android:textColor="@color/whiteColor"
-        android:textSize="@dimen/sp40"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:orientation="horizontal">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_garbage_size"
-        android:layout_centerHorizontal="true"
-        android:background="@null"
-        android:text="@string/see_detail"/>
+            <RelativeLayout
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp40"
-        android:layout_marginLeft="@dimen/dp30"
-        android:layout_marginRight="@dimen/dp30"
-        android:background="#D6D7D7"
-        android:text="@string/clean_garbage"/>
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
 
-</RelativeLayout>
+                <cn.ifreedomer.com.softmanager.widget.ItemCardView
+                    android:id="@+id/qq_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    />
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1.0px"
+                android:layout_height="fill_parent"
+                android:background="#19000000"/>
+
+            <RelativeLayout
+
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
+
+
+                <cn.ifreedomer.com.softmanager.widget.ItemCardView
+                    android:id="@+id/big_file_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.0px"
+            android:background="#19000000"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
+
+
+                <cn.ifreedomer.com.softmanager.widget.ItemCardView
+                    android:id="@+id/garbage_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1.0px"
+                android:layout_height="fill_parent"
+                android:background="#19000000"/>
+
+            <RelativeLayout
+
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
+
+
+                <cn.ifreedomer.com.softmanager.widget.ItemCardView
+                    android:id="@+id/deep_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.0px"
+            android:background="#19000000"/>
+
+    </LinearLayout>
+</LinearLayout>

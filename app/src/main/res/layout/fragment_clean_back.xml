@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary">
+
+
+    <ImageView
+        android:id="@+id/iv_clean"
+        android:layout_width="@dimen/dp100"
+        android:layout_height="@dimen/dp100"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp150"
+        android:src="@mipmap/clean_garbage_big"/>
+
+    <TextView
+        android:id="@+id/tv_garbage_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_clean"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp30"
+        android:text="58.2MB"
+        android:textColor="@color/whiteColor"
+        android:textSize="@dimen/sp40"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_garbage_size"
+        android:layout_centerHorizontal="true"
+        android:background="@null"
+        android:text="@string/see_detail"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp40"
+        android:layout_marginLeft="@dimen/dp30"
+        android:layout_marginRight="@dimen/dp30"
+        android:background="#D6D7D7"
+        android:text="@string/clean_garbage"/>
+
+</RelativeLayout>

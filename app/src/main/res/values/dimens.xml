@@ -11,6 +11,8 @@
     <dimen name="dp50">50dp</dimen>
     <dimen name="dp15">15dp</dimen>
     <dimen name="dp180">180dp</dimen>
+    <dimen name="dp140">140dp</dimen>
+    <dimen name="dp130">130dp</dimen>
     <dimen name="dp280">280dp</dimen>
     <dimen name="dp195">195dp</dimen>
     <dimen name="dp200">200dp</dimen>
@@ -26,8 +28,6 @@
     <dimen name="sp40">40sp</dimen>
 
 
-
-
     <!-- Preference fragment padding, bottom -->
     <dimen name="preference_fragment_padding_bottom">0dp</dimen>
     <!-- Preference fragment padding, sides -->
@@ -36,6 +36,10 @@
     <dimen name="sp16">16sp</dimen>
     <dimen name="sp10">10sp</dimen>
     <dimen name="dp80">80dp</dimen>
+    <dimen name="dp120">120dp</dimen>
+    <dimen name="dp250">250dp</dimen>
+    <dimen name="dp35">35dp</dimen>
+    <dimen name="dp300">300dp</dimen>
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>

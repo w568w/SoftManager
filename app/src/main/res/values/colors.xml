@@ -14,4 +14,5 @@
 
 
     <color name="whiteTextColor">#FFFFFFFF</color>
+    <color name="card_normal">#19000000</color>
 </resources>
