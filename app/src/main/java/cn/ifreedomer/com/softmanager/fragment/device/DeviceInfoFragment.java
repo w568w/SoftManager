@@ -1,14 +1,13 @@
 package cn.ifreedomer.com.softmanager.fragment.device;
 
 import android.hardware.Sensor;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,7 @@ import cn.ifreedomer.com.softmanager.util.ScreenUtil;
 import cn.ifreedomer.com.softmanager.util.SystemUtil;
 import cn.ifreedomer.com.softmanager.widget.HardwareHeadView;
 
-import static cn.ifreedomer.com.softmanager.util.CameraUtils.CAMERA_FACING_BACK;
+import static android.content.Context.TELEPHONY_SERVICE;
 
 
 /**
@@ -99,7 +98,7 @@ public class DeviceInfoFragment extends Fragment {
         //WIFI网络和IP地址
         boolean wifiConnected = NetworkUtil.isWifiConnected(getContext());
         String connectStr = wifiConnected ? getString(R.string.has_connected) : getString(R.string.not_connected);
-        String wifiIp = IPAddressUtil.getMobileIP();
+        String wifiIp = IPAddressUtil.getIPAddress(true );
         DeviceInfoWrap<FourValue> wifiNetworkFourWrap = DeviceInfoWrap.createFourValue(getString(R.string.wifi_network), connectStr, getString(R.string.ip_address), wifiIp);
         list.add(wifiNetworkFourWrap);
 
@@ -128,18 +127,18 @@ public class DeviceInfoFragment extends Fragment {
 
 
         //电池容量
-        String batteryValue = HardwareUtil.getBatteryCapacity(getContext())+" mAh";
+        String batteryValue = HardwareUtil.getBatteryCapacity(getContext()) + " mAh";
         String batteryTitle = getString(R.string.battery);
         DeviceInfoWrap<TwoValue> batteryWrap = DeviceInfoWrap.createTwoValue(batteryTitle, batteryValue);
         list.add(batteryWrap);
 
 
-        //WIFI
-        String wifiValue = WifiConfiguration.Protocol.RSN+"";
-        String wifiTitle = getString(R.string.wifi);
-        DeviceInfoWrap<TwoValue> wifiWrap = DeviceInfoWrap.createTwoValue(wifiTitle, wifiValue);
-        list.add(wifiWrap);
-
+        //IMEI
+        String imeiValue = ((TelephonyManager) getContext().getSystemService(TELEPHONY_SERVICE))
+                .getDeviceId();
+        String imeiTitle = getString(R.string.imei);
+        DeviceInfoWrap<TwoValue> imeiWrap = DeviceInfoWrap.createTwoValue(imeiTitle, imeiValue);
+        list.add(imeiWrap);
 
 
         //后置摄像头
@@ -157,7 +156,7 @@ public class DeviceInfoFragment extends Fragment {
 
 
         //三轴陀螺仪
-        String gyroValue = HardwareUtil.hasSensor(getContext(), Sensor.TYPE_GYROSCOPE)?getString(R.string.has):getString(R.string.do_has);
+        String gyroValue = HardwareUtil.hasSensor(getContext(), Sensor.TYPE_GYROSCOPE) ? getString(R.string.has) : getString(R.string.do_has);
         String gyroTitle = getString(R.string.gyro);
 
         DeviceInfoWrap<TwoValue> gyroWrap = DeviceInfoWrap.createTwoValue(gyroTitle, gyroValue);
@@ -165,34 +164,31 @@ public class DeviceInfoFragment extends Fragment {
 
 
         //方向传感器
-        String directionSensorValue =HardwareUtil.hasSensor(getContext(), Sensor.TYPE_ORIENTATION)?getString(R.string.has):getString(R.string.do_has);;
+        String directionSensorValue = HardwareUtil.hasSensor(getContext(), Sensor.TYPE_ORIENTATION) ? getString(R.string.has) : getString(R.string.do_has);
+        ;
         String directionSensorTitle = getString(R.string.direction_sensor);
         DeviceInfoWrap<TwoValue> directionSensorWrap = DeviceInfoWrap.createTwoValue(directionSensorTitle, directionSensorValue);
         list.add(directionSensorWrap);
 
 
         //距离传感器
-        String distanceValue = getString(R.string.has);
+        String distanceValue = HardwareUtil.hasSensor(getContext(), Sensor.TYPE_PROXIMITY) ? getString(R.string.has) : getString(R.string.do_has);
+        ;
         String distanceTitle = getString(R.string.distance_sensor);
         DeviceInfoWrap<TwoValue> distanceSensorWrap = DeviceInfoWrap.createTwoValue(distanceTitle, distanceValue);
         list.add(distanceSensorWrap);
 
         //环境光线传感器
-        String lightSensorValue = getString(R.string.has);
+        String lightSensorValue = HardwareUtil.hasSensor(getContext(), Sensor.TYPE_LIGHT) ? getString(R.string.has) : getString(R.string.do_has);
+        ;
         String lightSensorTitle = getString(R.string.light_sensor);
         DeviceInfoWrap<TwoValue> lightSensorWrap = DeviceInfoWrap.createTwoValue(lightSensorTitle, lightSensorValue);
         list.add(lightSensorWrap);
 
 
-        //环境光线传感器
-        String touchIdSensorValue = getString(R.string.has);
-        String touchIdSensorTitle = getString(R.string.touchid_sensor);
-        DeviceInfoWrap<TwoValue> touchIdSensorWrap = DeviceInfoWrap.createTwoValue(touchIdSensorTitle, touchIdSensorValue);
-        list.add(touchIdSensorWrap);
-
-
         //气压计
-        String barometerValue = getString(R.string.has);
+        String barometerValue = HardwareUtil.hasSensor(getContext(), Sensor.TYPE_PRESSURE) ? getString(R.string.has) : getString(R.string.do_has);
+        ;
         String barometerTitle = getString(R.string.barometer);
         DeviceInfoWrap<TwoValue> barometerWrap = DeviceInfoWrap.createTwoValue(barometerTitle, barometerValue);
         list.add(barometerWrap);

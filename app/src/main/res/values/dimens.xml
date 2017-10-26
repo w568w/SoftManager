@@ -35,6 +35,7 @@
     <dimen name="sp20">20sp</dimen>
     <dimen name="sp16">16sp</dimen>
     <dimen name="sp10">10sp</dimen>
+    <dimen name="dp80">80dp</dimen>
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>

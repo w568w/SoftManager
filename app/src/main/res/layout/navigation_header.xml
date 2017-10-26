@@ -28,7 +28,7 @@
         android:layout_below="@+id/header_tv"
         android:layout_marginLeft="@dimen/dp30"
         android:layout_marginTop="@dimen/dp15"
-        android:text="@string/please_login_in"/>
+        android:text="@string/for_given"/>
 
     <ImageView
         android:id="@+id/setting_iv"
@@ -39,13 +39,5 @@
         android:layout_margin="@dimen/dp15"
         android:src="@mipmap/setting"/>
 
-    <ImageView
-        android:id="@+id/buy_iv"
-        android:layout_width="@dimen/dp30"
-        android:layout_height="@dimen/dp30"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp15"
-        android:layout_marginRight="@dimen/dp5"
-        android:layout_toLeftOf="@+id/setting_iv"
-        android:src="@mipmap/buy"/>
+
 </RelativeLayout>

@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
 
@@ -35,8 +36,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     DrawerLayout drawerLayout;
     private Fragment softFragment;
     private Fragment hardwareFragment;
+    private Fragment cleanFragment;
     private static final String SOFT_TAG = "soft";
     public static final String HARDWARE_TAG = "hardware";
+    public static final String CLEAN_TAG = "clean";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private void initFragments() {
         softFragment = new SoftFragment();
         hardwareFragment = new DeviceInfoFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_content,softFragment,SOFT_TAG).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_content,hardwareFragment,HARDWARE_TAG).commit();
+        cleanFragment = new CleanFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, softFragment, SOFT_TAG).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, cleanFragment, HARDWARE_TAG).commit();
+        getSupportFragmentManager().beginTransaction().show(softFragment).hide(hardwareFragment).hide(cleanFragment).commit();
 
     }
 
@@ -67,32 +73,38 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         //设置支持Toobar
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.whiteColor));
-//        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.menu);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.soft_manager));
+        }
     }
 
     private void initNavView() {
         navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
-        getSupportFragmentManager().beginTransaction().show(softFragment).hide(hardwareFragment).commit();
     }
 
     private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
-            Log.e(TAG, "onNavigationItemSelected: 0000" );
+            Log.e(TAG, "onNavigationItemSelected: 0000");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.hide(hardwareFragment);
+            fragmentTransaction.hide(softFragment);
+            fragmentTransaction.hide(cleanFragment);
             switch (menuItem.getItemId()) {
                 case R.id.soft:
-                    fragmentTransaction.hide(hardwareFragment);
                     fragmentTransaction.show(softFragment);
+                    getSupportActionBar().setTitle(getString(R.string.soft_manager));
                     break;
                 case R.id.hardware:
                     Log.e(TAG, "onNavigationItemSelected: 1111");
-                    fragmentTransaction.hide(softFragment);
+                    getSupportActionBar().setTitle(getString(R.string.hardware_info));
                     fragmentTransaction.show(hardwareFragment);
+                    break;
+                case R.id.clean:
+                    Log.e(TAG, "onNavigationItemSelected: 1111");
+                    getSupportActionBar().setTitle(getString(R.string.clean_garbage));
+                    fragmentTransaction.show(cleanFragment);
                     break;
                 default:
                     break;
@@ -117,7 +129,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_menu, menu);
+//        getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
     }
 

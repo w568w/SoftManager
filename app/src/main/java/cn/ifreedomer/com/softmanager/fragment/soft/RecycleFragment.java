@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.adapter.AppAdapter;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
+
+import static cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment.TAG;
 
 /**
  * @author:eavawu
@@ -45,8 +48,9 @@ public class RecycleFragment extends Fragment {
 
     public void setData(List<AppInfo> appInfos) {
         appInfoList.clear();
-        appInfoList.addAll(appInfos);
-        if (rv==null||rv.getAdapter()==null){
+        appInfoList.addAll( appInfos);
+        Log.e(TAG, "setData: "+appInfoList.size() );
+        if (rv == null || rv.getAdapter() == null) {
             return;
         }
         rv.getAdapter().notifyDataSetChanged();

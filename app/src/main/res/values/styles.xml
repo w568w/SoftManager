@@ -41,6 +41,16 @@
         <item name="android:textSize">@dimen/sp10</item>
     </style>
 
+    <style name="topBackgrounStyle" >
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp200</item>
+    </style>
+
+    <!--android:layout_height="@dimen/dp200"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:paddingLeft="@dimen/dp30"-->
+
     <!--android:paddingRight="@dimen/dp30"-->
     <!--android:text="right"-->
     <!--android:textColor="#C1C1C1"-->

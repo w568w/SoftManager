@@ -25,7 +25,7 @@ import cn.ifreedomer.com.softmanager.model.AppInfo;
  */
 
 public class UserInstallFragment extends RecycleFragment {
-    private static final String TAG =  UserInstallFragment.class.getSimpleName();
+    private static final String TAG = UserInstallFragment.class.getSimpleName();
     private AppInfo curUninstallApp = null;
     private BroadcastReceiver uninstallReceiver;
 
@@ -56,12 +56,12 @@ public class UserInstallFragment extends RecycleFragment {
     public void refreshUninstallData() {
         //刷新数据
         if (curUninstallApp == null) {
-            Log.e(TAG, "refreshUninstallData: curUninstallApp is null" );
+            Log.e(TAG, "refreshUninstallData: curUninstallApp is null");
             return;
         }
-        Log.e(TAG, "refreshUninstallData=: "+ PackageInfoManager.getInstance().getUserApps().size());
+        Log.e(TAG, "refreshUninstallData=: " + PackageInfoManager.getInstance().getUserApps().size());
         PackageInfoManager.getInstance().getUserApps().remove(curUninstallApp);
-        Log.e(TAG, "refreshUninstallData: "+ PackageInfoManager.getInstance().getUserApps().size());
+        Log.e(TAG, "refreshUninstallData: " + PackageInfoManager.getInstance().getUserApps().size());
         setData(PackageInfoManager.getInstance().getUserApps());
         curUninstallApp = null;
     }
@@ -88,18 +88,18 @@ public class UserInstallFragment extends RecycleFragment {
         uninstallReceiver = new UninstallReceiver();
         IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
         filter.addDataScheme("package");
-        getContext().registerReceiver(uninstallReceiver,filter);
+        getContext().registerReceiver(uninstallReceiver, filter);
     }
 
     private class UninstallReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (curUninstallApp==null){
+            if (curUninstallApp == null) {
                 return;
             }
-            Log.e(TAG, "onReceive: "+intent.getDataString()+"     curUninstallApp="+curUninstallApp.getPackname() );
+            Log.e(TAG, "onReceive: " + intent.getDataString() + "     curUninstallApp=" + curUninstallApp.getPackname());
 
-            if (!TextUtils.isEmpty(intent.getDataString())&&intent.getDataString().contains(curUninstallApp.getPackname())) {
+            if (!TextUtils.isEmpty(intent.getDataString()) && intent.getDataString().contains(curUninstallApp.getPackname())) {
                 refreshUninstallData();
             }
         }

@@ -3,11 +3,16 @@
     <item
         android:id="@+id/soft"
         android:icon="@mipmap/soft"
-        android:title="@string/soft_manager" />
+        android:title="@string/soft_manager"/>
     <item
         android:id="@+id/hardware"
         android:icon="@mipmap/device"
-        android:title="@string/hardware_info" />
+        android:title="@string/hardware_info"/>
+
+    <item
+        android:id="@+id/clean"
+        android:icon="@mipmap/clean"
+        android:title="@string/clean_garbage"/>
     <!--<item-->
     <!--android:id="@+id/photo"-->
     <!--android:icon="@mipmap/ic_launcher"-->
