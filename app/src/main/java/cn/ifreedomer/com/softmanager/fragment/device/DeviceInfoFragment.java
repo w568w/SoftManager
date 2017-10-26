@@ -1,5 +1,8 @@
 package cn.ifreedomer.com.softmanager.fragment.device;
 
+import android.hardware.Sensor;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -26,9 +29,16 @@ import cn.ifreedomer.com.softmanager.bean.TwoValue;
 import cn.ifreedomer.com.softmanager.fragment.device.item.DeviceInfoFourValueItemDelegate;
 import cn.ifreedomer.com.softmanager.fragment.device.item.DeviceInfoTitleItemDelegate;
 import cn.ifreedomer.com.softmanager.fragment.device.item.DeviceInfoTwoValueItemDelegate;
+import cn.ifreedomer.com.softmanager.util.CameraUtils;
 import cn.ifreedomer.com.softmanager.util.DateUtil;
+import cn.ifreedomer.com.softmanager.util.HardwareUtil;
+import cn.ifreedomer.com.softmanager.util.IPAddressUtil;
+import cn.ifreedomer.com.softmanager.util.NetworkUtil;
+import cn.ifreedomer.com.softmanager.util.ScreenUtil;
 import cn.ifreedomer.com.softmanager.util.SystemUtil;
 import cn.ifreedomer.com.softmanager.widget.HardwareHeadView;
+
+import static cn.ifreedomer.com.softmanager.util.CameraUtils.CAMERA_FACING_BACK;
 
 
 /**
@@ -85,12 +95,12 @@ public class DeviceInfoFragment extends Fragment {
         DeviceInfoWrap<Title> networkInfoWrap = DeviceInfoWrap.createTitle(getString(R.string.network_info));
         list.add(networkInfoWrap);
 
-        //移动网络和IP地址
-        DeviceInfoWrap<FourValue> networkFourWrap = DeviceInfoWrap.createFourValue("移动网络", "已连接", "IP地址", "192.168.0.1");
-        list.add(networkFourWrap);
 
         //WIFI网络和IP地址
-        DeviceInfoWrap<FourValue> wifiNetworkFourWrap = DeviceInfoWrap.createFourValue("WIFI网络", "已连接", "IP地址", "192.168.0.1");
+        boolean wifiConnected = NetworkUtil.isWifiConnected(getContext());
+        String connectStr = wifiConnected ? getString(R.string.has_connected) : getString(R.string.not_connected);
+        String wifiIp = IPAddressUtil.getMobileIP();
+        DeviceInfoWrap<FourValue> wifiNetworkFourWrap = DeviceInfoWrap.createFourValue(getString(R.string.wifi_network), connectStr, getString(R.string.ip_address), wifiIp);
         list.add(wifiNetworkFourWrap);
 
         //硬件特性
@@ -99,71 +109,63 @@ public class DeviceInfoFragment extends Fragment {
 
         //处理器
         String processorTitle = getString(R.string.processor);
-        String processorValue = "Apple 8";
+        String processorValue = HardwareUtil.getCpuName();
         DeviceInfoWrap<TwoValue> processorWrap = DeviceInfoWrap.createTwoValue(processorTitle, processorValue);
         list.add(processorWrap);
 
         //尺寸
-        String sizeValue = "138.01x6.9x0.1";
+        String sizeValue = ScreenUtil.getRealHeight(getActivity()) + " x " + ScreenUtil.getRealWidth(getActivity());
         String sizeTitle = getString(R.string.size);
         DeviceInfoWrap<TwoValue> sizeWrap = DeviceInfoWrap.createTwoValue(sizeTitle, sizeValue);
         list.add(sizeWrap);
 
-        //重量
-        String weightValue = "129g";
-        String weightTitle = getString(R.string.weight);
-        DeviceInfoWrap<TwoValue> weightWrap = DeviceInfoWrap.createTwoValue(weightTitle, weightValue);
-        list.add(weightWrap);
 
         //像素密度
-        String densityValue = "326dpi";
+        String densityValue = ScreenUtil.getDensityDpi(getActivity()) + "";
         String densityTitle = getString(R.string.density);
         DeviceInfoWrap<TwoValue> densityWrap = DeviceInfoWrap.createTwoValue(densityTitle, densityValue);
         list.add(densityWrap);
 
 
         //电池容量
-        String batteryValue = "1810 mAh";
+        String batteryValue = HardwareUtil.getBatteryCapacity(getContext())+" mAh";
         String batteryTitle = getString(R.string.battery);
         DeviceInfoWrap<TwoValue> batteryWrap = DeviceInfoWrap.createTwoValue(batteryTitle, batteryValue);
         list.add(batteryWrap);
 
 
         //WIFI
-        String wifiValue = "802.11a/b/g/n/ac";
+        String wifiValue = WifiConfiguration.Protocol.RSN+"";
         String wifiTitle = getString(R.string.wifi);
         DeviceInfoWrap<TwoValue> wifiWrap = DeviceInfoWrap.createTwoValue(wifiTitle, wifiValue);
         list.add(wifiWrap);
 
-        //bluetooth
-        String bluetoothValue = "4.0";
-        String bluetoothTitle = getString(R.string.bluetooth);
-        DeviceInfoWrap<TwoValue> bluetoothWrap = DeviceInfoWrap.createTwoValue(bluetoothTitle, bluetoothValue);
-        list.add(bluetoothWrap);
+
 
         //后置摄像头
-        String backCameraValue = "8.0 MP";
+        String backCameraValue = CameraUtils.getCameraPixels(CameraUtils.CAMERA_FACING_BACK);
         String backCameraTitle = getString(R.string.back_camera);
         DeviceInfoWrap<TwoValue> backCameraWrap = DeviceInfoWrap.createTwoValue(backCameraTitle, backCameraValue);
         list.add(backCameraWrap);
 
 
         //后置摄像头
-        String foreCameraValue = "12.0 MP";
+        String foreCameraValue = CameraUtils.getCameraPixels(CameraUtils.CAMERA_FACING_FRONT);
         String foreCameraTitle = getString(R.string.fore_camera);
         DeviceInfoWrap<TwoValue> foreCameraWrap = DeviceInfoWrap.createTwoValue(foreCameraTitle, foreCameraValue);
         list.add(foreCameraWrap);
 
 
         //三轴陀螺仪
-        String gyroValue = getString(R.string.has);
+        String gyroValue = HardwareUtil.hasSensor(getContext(), Sensor.TYPE_GYROSCOPE)?getString(R.string.has):getString(R.string.do_has);
         String gyroTitle = getString(R.string.gyro);
+
         DeviceInfoWrap<TwoValue> gyroWrap = DeviceInfoWrap.createTwoValue(gyroTitle, gyroValue);
         list.add(gyroWrap);
 
 
         //方向传感器
-        String directionSensorValue = getString(R.string.has);
+        String directionSensorValue =HardwareUtil.hasSensor(getContext(), Sensor.TYPE_ORIENTATION)?getString(R.string.has):getString(R.string.do_has);;
         String directionSensorTitle = getString(R.string.direction_sensor);
         DeviceInfoWrap<TwoValue> directionSensorWrap = DeviceInfoWrap.createTwoValue(directionSensorTitle, directionSensorValue);
         list.add(directionSensorWrap);
