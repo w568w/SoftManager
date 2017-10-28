@@ -32,7 +32,6 @@
     <string name="system_version">系统版本: Android </string>
 
 
-
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
     <string name="back_button_label">Back</string>
     <string name="next_button_label">Next</string>

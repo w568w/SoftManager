@@ -47,6 +47,7 @@
             android:name="UMENG_CHANNEL"
             android:value="xiaomi" />
 
+        <!--<activity android:name=".activity.TestActivity"></activity>-->
     </application>
 
 </manifest>
