@@ -73,4 +73,7 @@
     <string name="big_file">大文件清理</string>
     <string name="deep_clean">深度清理</string>
     <string name="garbage_clean">垃圾清理</string>
+    <string name="big_file_clean">大文件清理</string>
+    <string name="scanning">正在扫描</string>
+    <string name="scan_finish">扫描完成</string>
 </resources>

@@ -7,11 +7,20 @@ package cn.ifreedomer.com.softmanager.bean;
  */
 
 public class FileInfo {
-    public static final long BIG_FILE_SIZE = 1024;
+    public static final long BIG_FILE_SIZE = 1024*1024*10;
     private String path;
     private String name;
     private String type;
-    private double size;
+    private float size;
+    private boolean isChecked;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public String getName() {
         return name;
@@ -37,17 +46,22 @@ public class FileInfo {
         this.type = type;
     }
 
-    public void setSize(double size) {
+    public void setSize(float size) {
         this.size = size;
     }
 
     @Override
     public String toString() {
         return "FileInfo{" +
-                "name='" + name + '\'' +
-                ", path='" + path + '\'' +
+                "path='" + path + '\'' +
+                ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", size=" + size +
+                ", isChecked=" + isChecked +
                 '}';
+    }
+
+    public float getSize() {
+        return size;
     }
 }

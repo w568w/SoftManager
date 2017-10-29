@@ -1,7 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">@dimen/x8</dimen>
-    <dimen name="activity_vertical_margin">@dimen/y8</dimen>
+    <dimen name="activity_horizontal_margin">@dimen/dp10</dimen>
+    <dimen name="activity_vertical_margin">@dimen/dp10</dimen>
     <dimen name="devider_height">0.8dp</dimen>
     <dimen name="item_height">65dp</dimen>
     <dimen name="margin_icon_left">16dp</dimen>
@@ -40,6 +40,7 @@
     <dimen name="dp250">250dp</dimen>
     <dimen name="dp35">35dp</dimen>
     <dimen name="dp300">300dp</dimen>
+    <dimen name="dp60">60dp</dimen>
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>
