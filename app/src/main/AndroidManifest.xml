@@ -49,13 +49,23 @@
             android:value="xiaomi"/>
 
         <!-- <activity android:name=".activity.TestActivity"></activity> -->
-        <activity android:name=".activity.clean.BigFileCleanActivity">
+        <activity
+            android:name=".activity.clean.BigFileCleanActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
-        <activity android:name=".activity.clean.QQCleanActivity">
+        <activity
+            android:name=".activity.clean.QQCleanActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
-        <activity android:name=".activity.clean.DeepCleanActivity">
+        <activity
+            android:name=".activity.clean.DeepCleanActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.clean.GarbageActivity">
+        <activity
+            android:name=".activity.clean.GarbageActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <service

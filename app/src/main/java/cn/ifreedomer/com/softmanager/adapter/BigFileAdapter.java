@@ -33,12 +33,13 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
         mimeTypeMap.put("application/octet-stream", R.mipmap.unknow_file);
         mimeTypeMap.put("application/vnd.android.package-archive", R.mipmap.apk_file);
         mimeTypeMap.put("audio/mpeg", R.mipmap.music_file);
+        mimeTypeMap.put("video/mp4", R.mipmap.video_file);
     }
 
     @Override
     protected void convert(ViewHolder holder, final FileInfo fileInfo, int position) {
         holder.setText(R.id.tv_name, fileInfo.getName());
-        holder.setText(R.id.tv_path, fileInfo.getSize() + " MB");
+        holder.setText(R.id.tv_size, fileInfo.getSize() + " MB");
         LogUtil.e(TAG, fileInfo.toString());
         int icon = R.mipmap.unknow_file;
         if (!TextUtils.isEmpty(fileInfo.getType())) {

@@ -79,4 +79,5 @@
     <string name="shortvideo">聊天视频</string>
     <string name="garbage_file">垃圾文件</string>
     <string name="not_install_qq">您似乎没有安装QQ啊...</string>
+    <string name="recv_files">接收文件</string>
 </resources>

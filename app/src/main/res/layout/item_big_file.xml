@@ -28,7 +28,7 @@
             android:text="hello.mp3"/>
 
         <TextView
-            android:id="@+id/tv_path"
+            android:id="@+id/tv_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="hello.mp3"/>

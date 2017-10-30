@@ -30,7 +30,7 @@
                 android:src="@mipmap/qq_stoke"/>
 
             <TextView
-
+                android:id="@+id/tv_scan_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -58,7 +58,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rel_top"
-        android:layout_marginBottom="@dimen/dp60"/>
+        android:layout_marginBottom="@dimen/dp60"
+        android:divider="@null"
+        android:childDivider="#eaeaea"
+        android:groupIndicator="@null"/>
 
 
     <Button
