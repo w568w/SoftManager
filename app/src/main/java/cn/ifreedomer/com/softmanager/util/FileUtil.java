@@ -4,7 +4,6 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -125,15 +124,8 @@ public class FileUtil {
 
     public static void processBigFile(File curFile, List<FileInfo> fileInfoList) {
         if (curFile.length() > FileInfo.BIG_FILE_SIZE) {
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setName(curFile.getName());
-            fileInfo.setPath(curFile.getPath());
-            String mimeType = getMimeType(curFile.getPath());
-            fileInfo.setType(mimeType);
-            BigDecimal b = new BigDecimal(curFile.length() / (MB));
-            
-            int roundingMode = 4;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等
-            fileInfo.setSize(b.setScale(2, roundingMode).floatValue());
+            FileInfo fileInfo = FileInfo.getFileInfo(curFile);
+            fileInfo.setSize(DataTypeUtil.getTwoFloat(fileInfo.getSize() / (MB)));
             fileInfoList.add(fileInfo);
         }
     }
@@ -146,5 +138,31 @@ public class FileUtil {
         }
         return type;
     }
+
+
+    public static List<FileInfo> getFolderFiles(String folderPath, List<FileInfo> fileInfoList) {
+        File folder = new File(folderPath);
+        if (!folder.exists() || folder.list().length == 0) {
+            Log.e(TAG, "getFolderFiles: " + folder.list().length);
+            return null;
+        }
+        for (int i = 0; i < folder.list().length; i++) {
+            File[] files = folder.listFiles();
+            if (files[i].getName().startsWith(".")) {
+                continue;
+            }
+            if (files[i].isDirectory()) {
+                getFolderFiles(files[i].getPath(), fileInfoList);
+            } else {
+
+                FileInfo fileInfo = FileInfo.getFileInfo(folder.listFiles()[i]);
+                fileInfoList.add(fileInfo);
+                LogUtil.e(TAG, fileInfo.toString());
+            }
+        }
+        return fileInfoList;
+    }
+
+    ;
 
 }

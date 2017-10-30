@@ -6,9 +6,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cn.ifreedomer.com.softmanager.activity.clean.QQCleanActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rel_top"
+        style="@style/topBackgrounStyle"
+        android:layout_below="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dp60"
+                android:layout_height="@dimen/dp60"
+                android:src="@mipmap/qq_stoke"/>
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="18.20"
+                android:textColor="@color/whiteColor"
+                android:textSize="@dimen/sp50"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MB"
+                android:textColor="@color/whiteColor"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp5"
+            android:text="已选择 128KB"
+            android:textColor="@color/whiteColor"/>
+    </RelativeLayout>
+
+    <ExpandableListView
+        android:id="@+id/expand_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rel_top"
+        android:layout_marginBottom="@dimen/dp60"/>
+
+
+    <Button
+        android:id="@+id/btn_clean"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp20"
+        android:layout_marginLeft="@dimen/dp30"
+        android:layout_marginRight="@dimen/dp30"
+        android:background="#D6D7D7"
+        android:text="@string/clean_garbage"
+        />
 </RelativeLayout>

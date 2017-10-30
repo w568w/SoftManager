@@ -1,5 +1,9 @@
 package cn.ifreedomer.com.softmanager.bean;
 
+import java.io.File;
+
+import cn.ifreedomer.com.softmanager.util.FileUtil;
+
 /**
  * @author wuyihua
  * @Date 2017/10/27
@@ -7,7 +11,7 @@ package cn.ifreedomer.com.softmanager.bean;
  */
 
 public class FileInfo {
-    public static final long BIG_FILE_SIZE = 1024*1024*10;
+    public static final long BIG_FILE_SIZE = 1024 * 1024 * 10;
     private String path;
     private String name;
     private String type;
@@ -59,6 +63,15 @@ public class FileInfo {
                 ", size=" + size +
                 ", isChecked=" + isChecked +
                 '}';
+    }
+
+    public static FileInfo getFileInfo(File file) {
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setName(file.getName());
+        fileInfo.setPath(file.getPath());
+        fileInfo.setSize(file.length());
+        fileInfo.setType(FileUtil.getMimeType(file.getPath()));
+        return fileInfo;
     }
 
     public float getSize() {

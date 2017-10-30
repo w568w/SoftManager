@@ -41,6 +41,8 @@
     <dimen name="dp35">35dp</dimen>
     <dimen name="dp300">300dp</dimen>
     <dimen name="dp60">60dp</dimen>
+    <dimen name="sp45">45sp</dimen>
+    <dimen name="sp50">50sp</dimen>
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>

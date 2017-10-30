@@ -76,4 +76,6 @@
     <string name="big_file_clean">大文件清理</string>
     <string name="scanning">正在扫描</string>
     <string name="scan_finish">扫描完成</string>
+    <string name="shortvideo">聊天视频</string>
+    <string name="garbage_file">垃圾文件</string>
 </resources>
