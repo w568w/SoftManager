@@ -32,7 +32,7 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
         super(context, layoutId, datas);
         mimeTypeMap.put("application/octet-stream", R.mipmap.unknow_file);
         mimeTypeMap.put("application/vnd.android.package-archive", R.mipmap.apk_file);
-
+        mimeTypeMap.put("audio/mpeg", R.mipmap.music_file);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
         LogUtil.e(TAG, fileInfo.toString());
         int icon = R.mipmap.unknow_file;
         if (!TextUtils.isEmpty(fileInfo.getType())) {
-            icon = mimeTypeMap.get(fileInfo.getType());
+            icon = mimeTypeMap.get(fileInfo.getType()) == null ? 0 : mimeTypeMap.get(fileInfo.getType());
         }
         holder.setImageResource(R.id.iv_icon, icon);
 

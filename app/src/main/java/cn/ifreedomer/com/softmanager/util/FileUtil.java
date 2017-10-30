@@ -143,7 +143,7 @@ public class FileUtil {
     public static List<FileInfo> getFolderFiles(String folderPath, List<FileInfo> fileInfoList) {
         File folder = new File(folderPath);
         if (!folder.exists() || folder.list().length == 0) {
-            Log.e(TAG, "getFolderFiles: " + folder.list().length);
+            Log.e(TAG, "getFolderFiles: ");
             return null;
         }
         for (int i = 0; i < folder.list().length; i++) {

@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".FeedBackActivity"
+            android:name=".activity.FeedBackActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.HomeActivity"

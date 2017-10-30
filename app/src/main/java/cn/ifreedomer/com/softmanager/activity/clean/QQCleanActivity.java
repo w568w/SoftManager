@@ -4,9 +4,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,24 +30,34 @@ public class QQCleanActivity extends BaseActivity {
     RelativeLayout mRelTop;
     @InjectView(R.id.expand_listview)
     ExpandableListView mExpandListview;
-    private String[] titles = new String[]{getString(R.string.garbage_file), getString(R.string.shortvideo)};
+    private String[] titles = null;
     private List<FileInfo> fileInfoList = new ArrayList<>();
     private List<List<FileInfo>> fileInfoGroupList = new ArrayList<>();
     private QQCleanAdapter qqCleanAdapter;
+    public static final String QQ_PATH = Environment.getExternalStorageDirectory().getPath() + "/tencent/";
+    public static final String QQ_FILE_RECV = QQ_PATH + "QQfile_recv";
+    public static final String QQ_SHORT_VIDEO = QQ_PATH + "MobileQQ/shortvideo/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qqclean);
         ButterKnife.inject(this);
+        initData();
         initTitleBar();
         initExpandbleListView();
+
         startScan();
+    }
+
+    private void initData() {
+        titles = new String[]{getString(R.string.garbage_file), getString(R.string.shortvideo)};
     }
 
     private void initExpandbleListView() {
         qqCleanAdapter = new QQCleanAdapter(this, titles, fileInfoGroupList);
         mExpandListview.setAdapter(qqCleanAdapter);
+        mExpandListview.setGroupIndicator(this.getResources().getDrawable(R.drawable.expandablelistviewselector));
 
     }
 
@@ -55,6 +67,12 @@ public class QQCleanActivity extends BaseActivity {
 
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QQCleanActivity.this.finish();
+            }
+        });
         getSupportActionBar().setTitle(getString(R.string.qq_clean));
     }
 
@@ -64,13 +82,21 @@ public class QQCleanActivity extends BaseActivity {
             List<FileInfo> shortVideoFiles = new ArrayList<>();
             FileUtil.getFolderFiles(Environment.getExternalStorageDirectory().getPath() + "/tencent/MobileQQ/shortvideo", shortVideoFiles);
             fileInfoGroupList.add(shortVideoFiles);
+
+
+            List<FileInfo> receiveFiles = new ArrayList<>();
+            FileUtil.getFolderFiles(QQ_FILE_RECV, receiveFiles);
             LogUtil.e(TAG, shortVideoFiles.toString());
-            return shortVideoFiles;
+            fileInfoGroupList.add(receiveFiles);
+
+
+            return null;
         }
 
         @Override
         protected void onPostExecute(List<FileInfo> fileInfoList) {
             qqCleanAdapter.notifyDataSetChanged();
+
         }
 
         @Override

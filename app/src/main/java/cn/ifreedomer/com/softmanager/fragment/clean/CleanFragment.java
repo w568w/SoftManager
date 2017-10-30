@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.File;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -17,6 +20,8 @@ import cn.ifreedomer.com.softmanager.activity.clean.DeepCleanActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.GarbageActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.QQCleanActivity;
 import cn.ifreedomer.com.softmanager.bean.CleanCardInfo;
+import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.util.PackageUtil;
 import cn.ifreedomer.com.softmanager.widget.ItemCardView;
 
 /**
@@ -86,6 +91,10 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(getActivity(), GarbageActivity.class);
                 break;
             case R.id.qq_card:
+                if (!PackageUtil.isAppInstalled(getActivity(), "com.tencent.mobileqq")) {
+                    Toast.makeText(getActivity(), R.string.not_install_qq, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 intent = new Intent(getActivity(), QQCleanActivity.class);
                 break;
             default:

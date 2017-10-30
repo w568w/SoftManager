@@ -34,7 +34,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="18.20"
                 android:textColor="@color/whiteColor"
                 android:textSize="@dimen/sp50"/>
 
@@ -51,7 +50,6 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp5"
-            android:text="已选择 128KB"
             android:textColor="@color/whiteColor"/>
     </RelativeLayout>
 
@@ -74,4 +72,6 @@
         android:background="#D6D7D7"
         android:text="@string/clean_garbage"
         />
+
+
 </RelativeLayout>
