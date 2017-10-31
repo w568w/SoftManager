@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/f_item_send"
-        android:icon="@mipmap/send"
+        android:drawable="@mipmap/send"
         android:title="@string/send"
         app:showAsAction="always"
         />

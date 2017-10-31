@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rel_top"
+        style="@style/topBackgrounStyle"
+        android:layout_below="@id/toolbar">
+
+        <TextView
+            android:id="@+id/tv_scan_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:text="50.13MB"
+            android:textColor="@color/whiteColor"
+            android:textSize="@dimen/sp50"/>
+
+
+        <TextView
+            android:id="@+id/tv_scanning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:text="正在扫描:mnt/sdcard/mobileqq"
+            android:textColor="@color/whiteColor"
+            android:textSize="@dimen/sp15"/>
+    </RelativeLayout>
+</LinearLayout>

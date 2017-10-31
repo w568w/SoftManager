@@ -171,7 +171,7 @@ public class BootStartUtils {
 //            } else {
 //                as.setSystem(false);
 //            }
-//            as.setIcon(resolveInfo.loadIcon(pm));
+//            as.setDrawable(resolveInfo.loadIcon(pm));
 //            as.setPackageName(resolveInfo.activityInfo.packageName);
 //            as.setLabel(resolveInfo.loadLabel(pm).toString());
 //            appList.add(as);

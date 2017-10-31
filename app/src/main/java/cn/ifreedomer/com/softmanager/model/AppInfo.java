@@ -3,30 +3,38 @@ package cn.ifreedomer.com.softmanager.model;
 import android.graphics.drawable.Drawable;
 
 public class AppInfo {
-	private Drawable appIcon;
-	private String appName;
-	private String packname;
-	private String version;
+    private Drawable appIcon;
+    private String appName;
+    private String packname;
+    private String version;
     private float pkgSize;
-	private int uid;
-	private String codePath;
+    private int uid;
+    private String codePath;
+    private float cacheSize;
 
+    public float getCacheSize() {
+        return cacheSize;
+    }
 
-	public String getCodePath() {
-		return codePath;
-	}
+    public void setCacheSize(float cacheSize) {
+        this.cacheSize = cacheSize;
+    }
 
-	public void setCodePath(String codePath) {
-		this.codePath = codePath;
-	}
+    public String getCodePath() {
+        return codePath;
+    }
 
-	public int getUid() {
-		return uid;
-	}
+    public void setCodePath(String codePath) {
+        this.codePath = codePath;
+    }
 
-	public void setUid(int uid) {
-		this.uid = uid;
-	}
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
 
     public float getPkgSize() {
         return pkgSize;
@@ -37,62 +45,61 @@ public class AppInfo {
     }
 
     /**
-	 * 应用程序可以被安装到不同的位置 , 手机内存 外部存储sd卡
-	 */
+     * 应用程序可以被安装到不同的位置 , 手机内存 外部存储sd卡
+     */
 
 
-	private boolean inRom;
-	
-	private boolean userApp;
+    private boolean inRom;
 
-	public Drawable getAppIcon() {
-		return appIcon;
-	}
+    private boolean userApp;
 
-	public void setAppIcon(Drawable appIcon) {
-		this.appIcon = appIcon;
-	}
+    public Drawable getAppIcon() {
+        return appIcon;
+    }
 
-	public String getAppName() {
-		return appName;
-	}
+    public void setAppIcon(Drawable appIcon) {
+        this.appIcon = appIcon;
+    }
 
-	public void setAppName(String appName) {
-		this.appName = appName;
-	}
+    public String getAppName() {
+        return appName;
+    }
 
-	public String getPackname() {
-		return packname;
-	}
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
 
-	public void setPackname(String packname) {
-		this.packname = packname;
-	}
+    public String getPackname() {
+        return packname;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public void setPackname(String packname) {
+        this.packname = packname;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public boolean isInRom() {
-		return inRom;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public void setInRom(boolean inRom) {
-		this.inRom = inRom;
-	}
+    public boolean isInRom() {
+        return inRom;
+    }
 
-	public boolean isUserApp() {
-		return userApp;
-	}
+    public void setInRom(boolean inRom) {
+        this.inRom = inRom;
+    }
 
-	public void setUserApp(boolean userApp) {
-		this.userApp = userApp;
-	}
-	
-	
-	
+    public boolean isUserApp() {
+        return userApp;
+    }
+
+    public void setUserApp(boolean userApp) {
+        this.userApp = userApp;
+    }
+
+
 }
