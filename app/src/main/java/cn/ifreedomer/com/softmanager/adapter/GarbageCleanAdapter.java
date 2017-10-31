@@ -8,9 +8,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.ifreedomer.com.softmanager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
@@ -24,39 +25,37 @@ import cn.ifreedomer.com.softmanager.util.FileUtil;
 
 public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     private String[] mTitles;
-    private List<List<GarbageInfo>> mFileInfoGroupList;
+    private List<List<GarbageInfo>> mGarbageInfoGroupList;
     private Context mContext;
-    private HashMap<String, Integer> mimeTypeMap = new HashMap<>();
-
+    private List<Boolean> checkState = new ArrayList<>();
     public GarbageCleanAdapter(Context context, String[] titles, List<List<GarbageInfo>> garbageInfoGroupList) {
         this.mTitles = titles;
-        this.mFileInfoGroupList = garbageInfoGroupList;
+        this.mGarbageInfoGroupList = garbageInfoGroupList;
         this.mContext = context;
-        mimeTypeMap.put("application/octet-stream", R.mipmap.unknow_file);
-        mimeTypeMap.put("application/vnd.android.package-archive", R.mipmap.apk_file);
-        mimeTypeMap.put("audio/mpeg", R.mipmap.music_file);
-        mimeTypeMap.put("video/mp4", R.mipmap.video_file);
+        for (int i = 0; i < mTitles.length; i++) {
+            checkState.add(false);
+        }
 
     }
 
     @Override
     public int getGroupCount() {
-        return mFileInfoGroupList.size();
+        return mGarbageInfoGroupList.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return mFileInfoGroupList.get(groupPosition).size();
+        return mGarbageInfoGroupList.get(groupPosition).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return mFileInfoGroupList.get(groupPosition);
+        return mGarbageInfoGroupList.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return mFileInfoGroupList.get(groupPosition).get(childPosition);
+        return mGarbageInfoGroupList.get(groupPosition).get(childPosition);
     }
 
     @Override
@@ -75,11 +74,26 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         View groupView = View.inflate(mContext, R.layout.item_garbage_group, null);
         ImageView iconIv = (ImageView) groupView.findViewById(R.id.iv_icon);
         TextView titleTv = (TextView) groupView.findViewById(R.id.tv_title);
         titleTv.setText(mTitles[groupPosition]);
+
+        final CheckBox cb = (CheckBox) groupView.findViewById(R.id.cb);
+        cb.setChecked(checkState.get(groupPosition));
+        cb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkState.set(groupPosition,!checkState.get(groupPosition));
+                List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
+                for (int i = 0; i <garbageInfos.size(); i++) {
+                    garbageInfos.get(i).setChecked(cb.isChecked());
+                }
+                notifyDataSetChanged();
+            }
+        });
+
 
         if (isExpanded) {
             iconIv.setBackgroundResource(R.mipmap.bottom_arrow);
@@ -93,7 +107,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final GarbageInfo garbageInfo = mFileInfoGroupList.get(groupPosition).get(childPosition);
+        final GarbageInfo garbageInfo = mGarbageInfoGroupList.get(groupPosition).get(childPosition);
         View childView = View.inflate(mContext, R.layout.item_qq_child, null);
         TextView nameTv = (TextView) childView.findViewById(R.id.tv_name);
         nameTv.setText(garbageInfo.getName());
@@ -124,25 +138,24 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     }
 
     public void removeCheckedItems() {
-//        for (List<GarbageInfo> fileInfoList : mFileInfoGroupList) {
-//            for (int i = fileInfoList.size() - 1; i >= 0; i--) {
-//                boolean checked = fileInfoList.get(i).isChecked();
-//                final FileInfo fileInfo = fileInfoList.get(i);
-//                if (checked) {
-//                    GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            File file = new File(fileInfo.getPath());
-//                            file.delete();
-//                        }
-//                    });
-//
-//                    fileInfoList.remove(i);
-//                }
-//
-//
-//            }
-//        }
+        for (List<GarbageInfo> fileInfoList : mGarbageInfoGroupList) {
+            for (int i = fileInfoList.size() - 1; i >= 0; i--) {
+                boolean checked = fileInfoList.get(i).isChecked();
+                final GarbageInfo fileInfo = fileInfoList.get(i);
+                if (checked) {
+                    GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    });
+
+                    fileInfoList.remove(i);
+                }
+
+
+            }
+        }
 
     }
 

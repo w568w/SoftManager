@@ -46,11 +46,15 @@ public class GarbageActivity extends AppCompatActivity {
                 case MSG_UPDATE_TOTAL_SIZE:
                     GarbageInfo garbageInfo = (GarbageInfo) msg.obj;
                     mTotalSize = mTotalSize + garbageInfo.getSize();
+                    mGarbageHeadView.setScanTotal(mTotalSize);
                     mGarbageHeadView.setScanningText(garbageInfo.getPath());
                     LogUtil.e(TAG, "mTotalSize:" + mTotalSize + "");
                     break;
                 case MSG_APP_SCAN_FINISH:
                     mGarbageCleanAdapter.notifyDataSetChanged();
+                    for (int i = 0; i < mGarbageInfoGroupList.size(); i++) {
+                        mExpandListview.expandGroup(i);
+                    }
                     mGarbageHeadView.setScanningText(getString(R.string.app_scaned));
                     break;
                 default:
