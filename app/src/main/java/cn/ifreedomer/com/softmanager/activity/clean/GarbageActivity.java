@@ -152,6 +152,7 @@ public class GarbageActivity extends AppCompatActivity {
                     if (cacheSize > 0) {
                         GarbageInfo garbageInfo = new GarbageInfo(appInfo.getAppName(), appInfo.getCodePath(), appInfo.getCacheSize(), appInfo.getAppIcon());
                         mGarbageInfoList.add(garbageInfo);
+                        garbageInfo.setPackageName(appInfo.getPackname());
                         sendGarbageMsg(garbageInfo);
 
                     }

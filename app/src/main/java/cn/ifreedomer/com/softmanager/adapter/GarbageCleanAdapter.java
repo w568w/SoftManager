@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
@@ -28,6 +29,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     private List<List<GarbageInfo>> mGarbageInfoGroupList;
     private Context mContext;
     private List<Boolean> checkState = new ArrayList<>();
+
     public GarbageCleanAdapter(Context context, String[] titles, List<List<GarbageInfo>> garbageInfoGroupList) {
         this.mTitles = titles;
         this.mGarbageInfoGroupList = garbageInfoGroupList;
@@ -85,9 +87,9 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkState.set(groupPosition,!checkState.get(groupPosition));
+                checkState.set(groupPosition, !checkState.get(groupPosition));
                 List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
-                for (int i = 0; i <garbageInfos.size(); i++) {
+                for (int i = 0; i < garbageInfos.size(); i++) {
                     garbageInfos.get(i).setChecked(cb.isChecked());
                 }
                 notifyDataSetChanged();
@@ -138,25 +140,31 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     }
 
     public void removeCheckedItems() {
-        for (List<GarbageInfo> fileInfoList : mGarbageInfoGroupList) {
-            for (int i = fileInfoList.size() - 1; i >= 0; i--) {
-                boolean checked = fileInfoList.get(i).isChecked();
-                final GarbageInfo fileInfo = fileInfoList.get(i);
-                if (checked) {
-                    GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-                        @Override
-                        public void run() {
-
-                        }
-                    });
-
-                    fileInfoList.remove(i);
+        List<String> packageNameList = new ArrayList<>();
+        for (List<GarbageInfo> garbageInfoList : mGarbageInfoGroupList) {
+            for (int i = garbageInfoList.size() - 1; i >= 0; i--) {
+                boolean checked = garbageInfoList.get(i).isChecked();
+                final GarbageInfo garbageInfo = garbageInfoList.get(i);
+                if (garbageInfo.getType() == GarbageInfo.TYPE_APP_CACHE) {
+                    packageNameList.add(garbageInfo.getPackageName());
                 }
-
-
+                if (checked) {
+                    garbageInfoList.remove(i);
+                }
             }
         }
+
+
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                PackageInfoManager.getInstance().clearCache("");
+            }
+        });
 
     }
 
 }
+
+
+

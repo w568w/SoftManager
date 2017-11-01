@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_test"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="cn.ifreedomer.com.softmanager.activity.TestActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_test"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="cn.ifreedomer.com.softmanager.activity.TestActivity">
 
 
     <Button
         android:id="@+id/btn_sdcard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="扫描SDCard耗时" />
-</RelativeLayout>
+        android:text="扫描SDCard耗时"/>
+
+    <Button
+        android:id="@+id/btn_delete_cache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_cache"/>
+</LinearLayout>

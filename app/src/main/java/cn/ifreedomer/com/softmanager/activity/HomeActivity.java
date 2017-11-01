@@ -1,5 +1,6 @@
 package cn.ifreedomer.com.softmanager.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,6 +42,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private static final String SOFT_TAG = "soft";
     public static final String HARDWARE_TAG = "hardware";
     public static final String CLEAN_TAG = "clean";
+    private ImageView mSettingIv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +58,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         softFragment = new SoftFragment();
         hardwareFragment = new DeviceInfoFragment();
         cleanFragment = new CleanFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, softFragment, SOFT_TAG).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, cleanFragment, HARDWARE_TAG).commit();
-        getSupportFragmentManager().beginTransaction().show(softFragment).hide(hardwareFragment).hide(cleanFragment).commit();
+        getSupportFragmentManager().beginTransaction().
+                add(R.id.frame_content, softFragment, SOFT_TAG).
+                add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).
+                add(R.id.frame_content, cleanFragment, HARDWARE_TAG).
+                show(softFragment).hide(hardwareFragment).
+                hide(cleanFragment).commit();
 
     }
 
@@ -80,6 +85,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private void initNavView() {
         navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
+        mSettingIv = (ImageView) navigationView.findViewById(R.id.setting_iv);
+        mSettingIv.setOnClickListener(this);
     }
 
     private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -135,6 +142,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.setting_iv:
+                startActivity(new Intent(this, FeedBackActivity.class));
+                break;
+        }
     }
 }

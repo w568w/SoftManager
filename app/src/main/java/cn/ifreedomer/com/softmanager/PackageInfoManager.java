@@ -1,17 +1,25 @@
 package cn.ifreedomer.com.softmanager;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.os.StatFs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +35,26 @@ import cn.ifreedomer.com.softmanager.util.LogUtil;
  */
 
 public class PackageInfoManager {
+    private String TAG = PackageInfoManager.class.getSimpleName();
     private static PackageInfoManager packageInfoManager = new PackageInfoManager();
+    private Context mContext;
+    private Method mFreeStorageAndNotify;
+    private StatFs mStat;
 
     private PackageInfoManager() {
 
+    }
+
+    public void init(Context context) {
+        this.mContext = context;
+        try {
+            mFreeStorageAndNotify = mContext.getPackageManager().getClass().getMethod(
+                    "mFreeStorageAndNotify", String.class, IPackageDataObserver.class);
+            mFreeStorageAndNotify.setAccessible(true);
+            mStat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     public static PackageInfoManager getInstance() {
@@ -49,8 +73,9 @@ public class PackageInfoManager {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public void loadData(final Context context, final LoadStateCallback loadStateCallback) {
-        AsyncTask task = new AsyncTask<Object, Integer, List<AppInfo>>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask<Object, Integer, List<AppInfo>>() {
             private int mAppCount = 0;
 
             @Override
@@ -181,4 +206,30 @@ public class PackageInfoManager {
 
     }
 
+    public void clearCache(String packageName) {
+        try {
+            mFreeStorageAndNotify.invoke(mContext.getPackageManager(),
+                    (long) mStat.getBlockCount() * (long) mStat.getBlockSize(),
+                    new IPackageDataObserver() {
+                        @Override
+                        public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
+                            LogUtil.e(TAG, "当前清理的包名:" + packageName);
+                            if (succeeded) {
+                                LogUtil.e(TAG, "清理成功！");
+                            } else {
+                                LogUtil.e(TAG, "清理失败！");
+                            }
+                        }
+
+                        @Override
+                        public IBinder asBinder() {
+                            return null;
+                        }
+                    });
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
 }

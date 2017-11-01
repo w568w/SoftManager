@@ -6,13 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
@@ -22,8 +22,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TAG = TestActivity.class.getSimpleName();
     @InjectView(R.id.btn_sdcard)
     Button btnSdcard;
-    @InjectView(R.id.activity_test)
-    RelativeLayout activityTest;
+
+    @InjectView(R.id.btn_delete_cache)
+    Button btnDeleteCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_test);
         ButterKnife.inject(this);
         btnSdcard.setOnClickListener(this);
+        btnDeleteCache.setOnClickListener(this);
     }
 
 
@@ -40,6 +42,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_sdcard:
                 GlobalDataManager.getInstance().getThreadPool().execute(scanSdcardRunnable);
                 break;
+            case R.id.btn_delete_cache:
+                PackageInfoManager.getInstance().clearCache("com.cleanmaster.mguard_cn");
+                break;
+
             default:
                 break;
         }
@@ -53,17 +59,17 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             FileUtil.scanSDCard4BigFile(Environment.getExternalStorageDirectory().toString(), new FileScanService.ScanListener() {
                 @Override
                 public void onScanStart() {
-                    Log.e(TAG, "onScanStart: " );
+                    Log.e(TAG, "onScanStart: ");
                 }
 
                 @Override
                 public void onScanProcess(float process) {
-                    Log.e(TAG, "onScanProcess: "+process );
+                    Log.e(TAG, "onScanProcess: " + process);
                 }
 
                 @Override
                 public void onScanFinish(float garbageSize, List<FileInfo> garbageList) {
-                    Log.e(TAG, "onScanFinish: garbageSize="+garbageSize+"MB    garbageList"+garbageList+toString() );
+                    Log.e(TAG, "onScanFinish: garbageSize=" + garbageSize + "MB    garbageList" + garbageList + toString());
                 }
             });
 

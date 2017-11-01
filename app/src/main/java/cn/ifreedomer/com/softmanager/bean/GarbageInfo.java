@@ -9,11 +9,24 @@ import android.graphics.drawable.Drawable;
  */
 
 public class GarbageInfo {
+    public static final int TYPE_APP_CACHE = 1;
+    public static final int TYPE_SYSTEM_GARBAGE = 2;
+    public static final int TYPE_AD_GARBAGE = 3;
     private String name;
     private String path;
     private float size;
     private Drawable drawable;
     private boolean isChecked;
+    private String packageName;
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
     private int type;
 
     public int getType() {

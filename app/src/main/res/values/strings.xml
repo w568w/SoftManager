@@ -83,4 +83,5 @@
     <string name="app_cache">应用缓存</string>
     <string name="ad_garbage">广告垃圾</string>
     <string name="app_scaned">App扫描完成</string>
+    <string name="delete_cache">清除缓存</string>
 </resources>
