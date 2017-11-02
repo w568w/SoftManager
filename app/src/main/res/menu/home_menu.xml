@@ -3,16 +3,28 @@
     <item
         android:id="@+id/soft"
         android:icon="@mipmap/soft"
-        android:title="@string/soft_manager" />
+        android:title="@string/soft_manager"/>
     <item
         android:id="@+id/hardware"
         android:icon="@mipmap/device"
-        android:title="@string/hardware_info" />
+        android:title="@string/hardware_info"/>
 
     <item
         android:id="@+id/clean"
         android:icon="@mipmap/clean"
-        android:title="@string/clean_garbage" />
+        android:title="@string/clean_garbage"/>
+
+
+    <item
+        android:id="@+id/broken_notify"
+        android:icon="@mipmap/broken_notify"
+        android:title="@string/broken_notify"/>
+
+
+    <item
+        android:id="@+id/permission"
+        android:icon="@mipmap/permission"
+        android:title="@string/permission_manager"/>
     <!--<item-->
     <!--android:id="@+id/photo"-->
     <!--android:drawable="@mipmap/ic_launcher"-->

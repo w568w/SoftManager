@@ -115,4 +115,6 @@
     <string name="update_knowleage">知识更新</string>
     <string name="upadte_content">不定期更新知识库.共同进步</string>
     <string name="support_money">支持一下|(任意金额均可)</string>
+    <string name="broken_notify">切断唤醒</string>
+    <string name="permission_manager">权限管理</string>
 </resources>
