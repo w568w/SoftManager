@@ -84,4 +84,35 @@
     <string name="ad_garbage">广告垃圾</string>
     <string name="app_scaned">App扫描完成</string>
     <string name="delete_cache">清除缓存</string>
+
+
+    <string name="check_update">检查更新</string>
+    <string name="remove_ad">去除广告</string>
+    <string name="set_theme">设置主题</string>
+    <string name="about">关于</string>
+    <string name="help">帮助</string>
+    <string name="quit">退出登陆</string>
+
+    <string name="close_send">关闭推送</string>
+    <string name="send_introduce">偶尔我可能会推段子,你可以关掉</string>
+    <string name="comment_introduce">你的鼓励让我做的更好</string>
+    <string name="app_introduce">App介绍</string>
+    <string name="setting">设置</string>
+
+
+    <string name="install_info">安装信息</string>
+    <string name="version">版本:</string>
+    <string name="visit">访问</string>
+    <string name="version_title">版本号:</string>
+    <string name="copyright">版权:</string>
+    <string name="email">wuyihua86@gmail.com</string>
+    <string name="github_content">https://github.com/HumorSmith</string>
+    <string name="gmail_title">Gmail:</string>
+    <string name="github_title">Github:</string>
+
+
+    <string name="support_ten_yuan">支持一波 | 10元</string>
+    <string name="update_knowleage">知识更新</string>
+    <string name="upadte_content">不定期更新知识库.共同进步</string>
+    <string name="support_money">支持一下|(任意金额均可)</string>
 </resources>

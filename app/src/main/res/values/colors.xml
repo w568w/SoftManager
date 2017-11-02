@@ -13,6 +13,8 @@
     <color name="whiteHintColor">#88FFFFFF</color>
 
 
+    <color name="blackHintColor">#88000000</color>
+    <color name="blackTextColor">#FF000000</color>
     <color name="whiteTextColor">#FFFFFFFF</color>
     <color name="card_normal">#19000000</color>
 </resources>

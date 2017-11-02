@@ -5,9 +5,11 @@
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -22,10 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.FeedBackActivity"
+            android:name=".activity.setting.FeedBackActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TestActivity"
+            android:name=".activity.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -61,6 +63,12 @@
             android:name=".activity.clean.GarbageActivity"
             android:screenOrientation="portrait">
         </activity>
+
+        <activity
+            android:name=".activity.setting.SettingActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activity.setting.HelpActivity"/>
 
         <service
             android:name=".service.FileScanService"

@@ -45,6 +45,7 @@
     <dimen name="sp50">50sp</dimen>
     <dimen name="dp45">45dp</dimen>
     <dimen name="dp90">90dp</dimen>
+    <dimen name="dp65">65dp</dimen>
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>

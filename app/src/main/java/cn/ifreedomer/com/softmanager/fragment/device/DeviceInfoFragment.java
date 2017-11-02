@@ -1,9 +1,12 @@
 package cn.ifreedomer.com.softmanager.fragment.device;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -98,7 +101,7 @@ public class DeviceInfoFragment extends Fragment {
         //WIFI网络和IP地址
         boolean wifiConnected = NetworkUtil.isWifiConnected(getContext());
         String connectStr = wifiConnected ? getString(R.string.has_connected) : getString(R.string.not_connected);
-        String wifiIp = IPAddressUtil.getIPAddress(true );
+        String wifiIp = IPAddressUtil.getIPAddress(true);
         DeviceInfoWrap<FourValue> wifiNetworkFourWrap = DeviceInfoWrap.createFourValue(getString(R.string.wifi_network), connectStr, getString(R.string.ip_address), wifiIp);
         list.add(wifiNetworkFourWrap);
 
@@ -134,6 +137,16 @@ public class DeviceInfoFragment extends Fragment {
 
 
         //IMEI
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         String imeiValue = ((TelephonyManager) getContext().getSystemService(TELEPHONY_SERVICE))
                 .getDeviceId();
         String imeiTitle = getString(R.string.imei);

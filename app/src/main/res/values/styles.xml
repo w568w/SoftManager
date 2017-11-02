@@ -7,8 +7,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+
+
+
+
     </style>
 
+
+    <style name="ToolbarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
     <style name="Theme.ToolBar.ZhiHu" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
@@ -41,10 +52,36 @@
         <item name="android:textSize">@dimen/sp10</item>
     </style>
 
-    <style name="topBackgrounStyle" >
+    <style name="topBackgrounStyle">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dp200</item>
+    </style>
+
+
+    <style name="setting_item_title">
+        <item name="android:textSize">@dimen/sp15</item>
+        <item name="android:textColor">@color/blackTextColor</item>
+    </style>
+
+    <style name="setting_item_subtitle">
+        <item name="android:textSize">@dimen/sp13</item>
+        <item name="android:textColor">@color/blackHintColor</item>
+    </style>
+
+
+    <style name="about_item_title">
+        <item name="android:textSize">@dimen/sp17</item>
+        <item name="android:textColor">@color/blackTextColor</item>
+    </style>
+
+    <style name="about_item_content">
+        <item name="android:textSize">@dimen/sp15</item>
+        <item name="android:textColor">@color/blackHintColor</item>
+    </style>
+
+    <style name="hintColorText">
+        <item name="android:textColor">@color/blackHintColor</item>
     </style>
 
     <!--android:layout_height="@dimen/dp200"-->
@@ -55,4 +92,6 @@
     <!--android:text="right"-->
     <!--android:textColor="#C1C1C1"-->
     <!--android:textSize="@dimen/sp10"-->
+    <dimen name="sp13">13sp</dimen>
+    <dimen name="sp17">17sp</dimen>
 </resources>

@@ -25,6 +25,7 @@
                 android:src="@mipmap/clean_garbage_big"/>
 
             <Button
+                android:id="@+id/btn_clean"
                 android:layout_width="@dimen/dp120"
                 android:layout_height="@dimen/dp40"
                 android:layout_below="@id/iv_clean"

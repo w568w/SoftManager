@@ -12,7 +12,6 @@ import android.content.pm.PackageStats;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -49,9 +48,8 @@ public class PackageInfoManager {
         this.mContext = context;
         try {
             mFreeStorageAndNotify = mContext.getPackageManager().getClass().getMethod(
-                    "mFreeStorageAndNotify", String.class, IPackageDataObserver.class);
+                    "freeStorageAndNotify", long.class, IPackageDataObserver.class);
             mFreeStorageAndNotify.setAccessible(true);
-            mStat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -206,10 +204,10 @@ public class PackageInfoManager {
 
     }
 
-    public void clearCache(String packageName) {
+    public void clearCache() {
         try {
             mFreeStorageAndNotify.invoke(mContext.getPackageManager(),
-                    (long) mStat.getBlockCount() * (long) mStat.getBlockSize(),
+                    (long) Long.MAX_VALUE,
                     new IPackageDataObserver() {
                         @Override
                         public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
@@ -231,5 +229,24 @@ public class PackageInfoManager {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public PackageInfo getPackageInfo() {
+        String packageName = mContext.getPackageName();
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = mContext.getPackageManager().getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageInfo;
+    }
+
+    public int getVersionCode() {
+        PackageInfo packageInfo = getPackageInfo();
+        if (packageInfo == null) {
+            return 1;
+        }
+        return packageInfo.versionCode;
     }
 }

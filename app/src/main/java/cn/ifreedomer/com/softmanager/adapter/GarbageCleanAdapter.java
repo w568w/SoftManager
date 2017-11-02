@@ -158,7 +158,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
         GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                PackageInfoManager.getInstance().clearCache("");
+                PackageInfoManager.getInstance().clearCache();
             }
         });
 

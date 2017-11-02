@@ -1,5 +1,6 @@
 package cn.ifreedomer.com.softmanager.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -15,9 +16,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.tbruyelle.rxpermissions2.RxPermissions;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
@@ -49,9 +53,26 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.inject(this);
+
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.CAMERA,Manifest.permission.CLEAR_APP_CACHE)
+                .subscribe(granted -> {
+                    if (granted) {
+                        initApp();
+                        // All requested permissions are granted
+                    } else {
+                        initApp();
+                        // At least one permission is denied
+                    }
+                });
+
+    }
+
+
+    private void initApp() {
         initFragments();
         initView();
-
     }
 
     private void initFragments() {
@@ -85,7 +106,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private void initNavView() {
         navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
-        mSettingIv = (ImageView) navigationView.findViewById(R.id.setting_iv);
+        mSettingIv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.setting_iv);
         mSettingIv.setOnClickListener(this);
     }
 
@@ -144,7 +165,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.setting_iv:
-                startActivity(new Intent(this, FeedBackActivity.class));
+                startActivity(new Intent(this, SettingActivity.class));
                 break;
         }
     }

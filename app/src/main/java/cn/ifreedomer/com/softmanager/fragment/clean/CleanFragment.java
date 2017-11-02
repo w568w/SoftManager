@@ -7,20 +7,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.File;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.clean.BigFileCleanActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.DeepCleanActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.GarbageActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.QQCleanActivity;
 import cn.ifreedomer.com.softmanager.bean.CleanCardInfo;
-import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.PackageUtil;
 import cn.ifreedomer.com.softmanager.widget.ItemCardView;
 
@@ -41,6 +40,8 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
     ItemCardView garbageCardView;
     @InjectView(R.id.deep_card)
     ItemCardView deepCardView;
+    @InjectView(R.id.btn_clean)
+    Button mBtnClean;
 
 
     @Nullable
@@ -58,6 +59,7 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
         bigFileCardView.setOnClickListener(this);
         deepCardView.setOnClickListener(this);
         qqCardView.setOnClickListener(this);
+        mBtnClean.setOnClickListener(this);
         garbageCardView.setOnClickListener(this);
     }
 
@@ -83,12 +85,15 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.big_file_card:
                 intent = new Intent(getActivity(), BigFileCleanActivity.class);
+                startActivity(intent);
                 break;
             case R.id.deep_card:
                 intent = new Intent(getActivity(), DeepCleanActivity.class);
+                startActivity(intent);
                 break;
             case R.id.garbage_card:
                 intent = new Intent(getActivity(), GarbageActivity.class);
+                startActivity(intent);
                 break;
             case R.id.qq_card:
                 if (!PackageUtil.isAppInstalled(getActivity(), "com.tencent.mobileqq")) {
@@ -96,10 +101,14 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 intent = new Intent(getActivity(), QQCleanActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_clean:
+                PackageInfoManager.getInstance().clearCache();
                 break;
             default:
                 break;
         }
-        startActivity(intent);
+
     }
 }

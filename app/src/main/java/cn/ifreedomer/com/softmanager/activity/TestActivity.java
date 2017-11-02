@@ -43,7 +43,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 GlobalDataManager.getInstance().getThreadPool().execute(scanSdcardRunnable);
                 break;
             case R.id.btn_delete_cache:
-                PackageInfoManager.getInstance().clearCache("com.cleanmaster.mguard_cn");
+                PackageInfoManager.getInstance().clearCache();
                 break;
 
             default:
