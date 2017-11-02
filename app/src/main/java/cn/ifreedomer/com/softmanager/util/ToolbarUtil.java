@@ -16,6 +16,6 @@ public class ToolbarUtil {
     public static void setTitleBarWhiteBack(AppCompatActivity context, Toolbar toolbar) {
         context.setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(context.getResources().getColor(R.color.whiteColor));
-        toolbar.setNavigationIcon(R.mipmap.back);
+//        toolbar.setNavigationIcon(R.mipmap.back);
     }
 }

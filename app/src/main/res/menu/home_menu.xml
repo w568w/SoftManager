@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/soft"
-        android:drawable="@mipmap/soft"
-        android:title="@string/soft_manager"/>
+        android:icon="@mipmap/soft"
+        android:title="@string/soft_manager" />
     <item
         android:id="@+id/hardware"
-        android:drawable="@mipmap/device"
-        android:title="@string/hardware_info"/>
+        android:icon="@mipmap/device"
+        android:title="@string/hardware_info" />
 
     <item
         android:id="@+id/clean"
-        android:drawable="@mipmap/clean"
-        android:title="@string/clean_garbage"/>
+        android:icon="@mipmap/clean"
+        android:title="@string/clean_garbage" />
     <!--<item-->
     <!--android:id="@+id/photo"-->
     <!--android:drawable="@mipmap/ic_launcher"-->

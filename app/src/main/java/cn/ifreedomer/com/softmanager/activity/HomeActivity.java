@@ -25,6 +25,7 @@ import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author HomorSmith
@@ -51,19 +52,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        ButterKnife.inject(this);
+
 
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions
-                .request(Manifest.permission.CAMERA,Manifest.permission.CLEAR_APP_CACHE)
+                .request(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE)
                 .subscribe(granted -> {
                     if (granted) {
                         initApp();
-                        // All requested permissions are granted
                     } else {
                         initApp();
-                        // At least one permission is denied
+                        LogUtil.e(TAG, "没有获取权限");
                     }
                 });
 
@@ -71,6 +70,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
 
     private void initApp() {
+        setContentView(R.layout.activity_home);
+        ButterKnife.inject(this);
         initFragments();
         initView();
     }
