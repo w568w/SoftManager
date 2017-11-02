@@ -20,6 +20,7 @@ public class CleanCardAdapter  extends CommonAdapter<CleanCardInfo> {
         super(context, layoutId, datas);
     }
 
+
     @Override
     protected void convert(ViewHolder holder, CleanCardInfo cleanCardInfo, int position) {
 

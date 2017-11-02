@@ -52,6 +52,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
 
 
         RxPermissions rxPermissions = new RxPermissions(this);
@@ -59,9 +60,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 .request(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE)
                 .subscribe(granted -> {
                     if (granted) {
-                        initApp();
+                        initApp(savedInstanceState);
                     } else {
-                        initApp();
+                        initApp(savedInstanceState);
                         LogUtil.e(TAG, "没有获取权限");
                     }
                 });
@@ -69,8 +70,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    private void initApp() {
-        setContentView(R.layout.activity_home);
+    private void initApp(Bundle savedInstanceState) {
+
         ButterKnife.inject(this);
         initFragments();
         initView();

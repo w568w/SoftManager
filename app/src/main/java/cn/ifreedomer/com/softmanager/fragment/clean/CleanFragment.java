@@ -104,7 +104,7 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_clean:
-                PackageInfoManager.getInstance().clearCache();
+//                PackageInfoManager.getInstance().clearCache();
                 break;
             default:
                 break;

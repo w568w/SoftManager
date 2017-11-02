@@ -17,6 +17,7 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author:eavawu
@@ -25,6 +26,7 @@ import cn.ifreedomer.com.softmanager.util.FileUtil;
  */
 
 public class GarbageCleanAdapter extends BaseExpandableListAdapter {
+    private static final String TAG = GarbageCleanAdapter.class.getSimpleName();
     private String[] mTitles;
     private List<List<GarbageInfo>> mGarbageInfoGroupList;
     private Context mContext;
@@ -84,16 +86,13 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
         final CheckBox cb = (CheckBox) groupView.findViewById(R.id.cb);
         cb.setChecked(checkState.get(groupPosition));
-        cb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkState.set(groupPosition, !checkState.get(groupPosition));
-                List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
-                for (int i = 0; i < garbageInfos.size(); i++) {
-                    garbageInfos.get(i).setChecked(cb.isChecked());
-                }
-                notifyDataSetChanged();
+        cb.setOnClickListener(v -> {
+            checkState.set(groupPosition, !checkState.get(groupPosition));
+            List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
+            for (int i = 0; i < garbageInfos.size(); i++) {
+                garbageInfos.get(i).setChecked(cb.isChecked());
             }
+            notifyDataSetChanged();
         });
 
 
@@ -121,12 +120,9 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
         final CheckBox cb = (CheckBox) childView.findViewById(R.id.cb);
         cb.setChecked(garbageInfo.isChecked());
-        cb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                garbageInfo.setChecked(!garbageInfo.isChecked());
-                notifyDataSetChanged();
-            }
+        cb.setOnClickListener(v -> {
+            garbageInfo.setChecked(!garbageInfo.isChecked());
+            notifyDataSetChanged();
         });
 
 
@@ -140,6 +136,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     }
 
     public void removeCheckedItems() {
+        LogUtil.e(TAG, "removeCheckedItems");
         List<String> packageNameList = new ArrayList<>();
         for (List<GarbageInfo> garbageInfoList : mGarbageInfoGroupList) {
             for (int i = garbageInfoList.size() - 1; i >= 0; i--) {
@@ -153,12 +150,12 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 }
             }
         }
+        notifyDataSetChanged();
+        GlobalDataManager.getInstance().getThreadPool().execute(() ->
+        {
+            for (int i = 0; i < packageNameList.size(); i++) {
+                PackageInfoManager.getInstance().clearCache(packageNameList.get(i));
 
-
-        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                PackageInfoManager.getInstance().clearCache();
             }
         });
 

@@ -37,7 +37,7 @@ public class PackageInfoManager {
     private String TAG = PackageInfoManager.class.getSimpleName();
     private static PackageInfoManager packageInfoManager = new PackageInfoManager();
     private Context mContext;
-    private Method mFreeStorageAndNotify;
+    private Method mDeleteApplicationCacheFiles;
     private StatFs mStat;
 
     private PackageInfoManager() {
@@ -47,9 +47,9 @@ public class PackageInfoManager {
     public void init(Context context) {
         this.mContext = context;
         try {
-            mFreeStorageAndNotify = mContext.getPackageManager().getClass().getMethod(
-                    "freeStorageAndNotify", long.class, IPackageDataObserver.class);
-            mFreeStorageAndNotify.setAccessible(true);
+            mDeleteApplicationCacheFiles = mContext.getPackageManager().getClass().getMethod(
+                    "deleteApplicationCacheFiles", String.class, IPackageDataObserver.class);
+            mDeleteApplicationCacheFiles.setAccessible(true);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -204,10 +204,10 @@ public class PackageInfoManager {
 
     }
 
-    public void clearCache() {
+    public void clearCache(String packageName) {
         try {
-            mFreeStorageAndNotify.invoke(mContext.getPackageManager(),
-                    (long) Long.MAX_VALUE,
+            mDeleteApplicationCacheFiles.invoke(mContext.getPackageManager(),
+                    packageName,
                     new IPackageDataObserver() {
                         @Override
                         public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
