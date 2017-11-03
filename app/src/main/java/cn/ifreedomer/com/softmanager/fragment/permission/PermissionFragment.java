@@ -49,7 +49,7 @@ public class PermissionFragment extends Fragment {
                 if (PermissionManager.getInstance().checkOrRequestedRootPermission()) {
 
                 } else {
-
+                    PermissionManager.getInstance().startSetting(getActivity(), PackageInfoManager.getInstance().getUserApps().get(position).getPackname());
                 }
             }
 
