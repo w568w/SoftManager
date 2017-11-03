@@ -24,6 +24,7 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
+import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
@@ -32,6 +33,7 @@ import cn.ifreedomer.com.softmanager.util.LogUtil;
  */
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = HomeActivity.class.getSimpleName();
+    private static final String PERMISSION_TAG = "permission";
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -44,6 +46,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private Fragment softFragment;
     private Fragment hardwareFragment;
     private Fragment cleanFragment;
+    private Fragment permissionFragment;
     private static final String SOFT_TAG = "soft";
     public static final String HARDWARE_TAG = "hardware";
     public static final String CLEAN_TAG = "clean";
@@ -81,11 +84,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         softFragment = new SoftFragment();
         hardwareFragment = new DeviceInfoFragment();
         cleanFragment = new CleanFragment();
+        permissionFragment = new PermissionFragment();
         getSupportFragmentManager().beginTransaction().
                 add(R.id.frame_content, softFragment, SOFT_TAG).
                 add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).
                 add(R.id.frame_content, cleanFragment, HARDWARE_TAG).
-                show(softFragment).hide(hardwareFragment).
+                add(R.id.frame_content, permissionFragment, PERMISSION_TAG).
+                show(softFragment).hide(hardwareFragment).hide(permissionFragment).
                 hide(cleanFragment).commit();
 
     }
@@ -121,20 +126,23 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             fragmentTransaction.hide(hardwareFragment);
             fragmentTransaction.hide(softFragment);
             fragmentTransaction.hide(cleanFragment);
+            fragmentTransaction.hide(permissionFragment);
             switch (menuItem.getItemId()) {
                 case R.id.soft:
                     fragmentTransaction.show(softFragment);
                     getSupportActionBar().setTitle(getString(R.string.soft_manager));
                     break;
                 case R.id.hardware:
-                    Log.e(TAG, "onNavigationItemSelected: 1111");
                     getSupportActionBar().setTitle(getString(R.string.hardware_info));
                     fragmentTransaction.show(hardwareFragment);
                     break;
                 case R.id.clean:
-                    Log.e(TAG, "onNavigationItemSelected: 1111");
                     getSupportActionBar().setTitle(getString(R.string.clean_garbage));
                     fragmentTransaction.show(cleanFragment);
+                    break;
+                case R.id.permission:
+                    getSupportActionBar().setTitle(getString(R.string.permission_manager));
+                    fragmentTransaction.show(permissionFragment);
                     break;
                 default:
                     break;

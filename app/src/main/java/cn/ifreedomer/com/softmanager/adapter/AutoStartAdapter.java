@@ -14,6 +14,7 @@ import java.util.List;
 
 import cn.ifreedomer.com.softmanager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.util.AutoStartInfo;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
 
@@ -30,7 +31,6 @@ public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
     }
 
 
-
     @Override
     public void convert(ViewHolder holder, final AutoStartInfo autoStartInfo, final int position) {
         Log.e("position", position + "");
@@ -41,7 +41,7 @@ public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
         holder.setOnClickListener(R.id.swith_auto, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!GlobalDataManager.getInstance().checkOrRequestedRootPermission()) {
+                if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                     switchWidget.setChecked(!switchWidget.isChecked());
                     Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
                     return;
@@ -83,7 +83,6 @@ public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
                 ShellUtils.CommandResult mCommandResult = ShellUtils.execCommand(mSring, true, true);
             }
         });
-
 
 
         // T.showLong(mContext, mCommandResult.result + "" + mCommandResult.errorMsg + mCommandResult.successMsg);
