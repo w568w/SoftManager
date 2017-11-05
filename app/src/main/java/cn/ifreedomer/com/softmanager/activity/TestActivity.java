@@ -12,11 +12,13 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.GlobalDataManager;
-import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
+import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
+import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = TestActivity.class.getSimpleName();
@@ -25,6 +27,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     @InjectView(R.id.btn_delete_cache)
     Button btnDeleteCache;
+    @InjectView(R.id.btn_get_permission)
+    Button btnGetPermission;
+    @InjectView(R.id.btn_parse_permission_xml)
+    Button btnParsePermissionXml;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.inject(this);
         btnSdcard.setOnClickListener(this);
         btnDeleteCache.setOnClickListener(this);
+        btnGetPermission.setOnClickListener(this);
+        btnParsePermissionXml.setOnClickListener(this);
     }
 
 
@@ -45,7 +53,15 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_delete_cache:
 //                PackageInfoManager.getInstance().clearCache();
                 break;
-
+            case R.id.btn_get_permission:
+                List<PermissionDetail> allPermission = PermissionManager.getInstance().getAllPermission("com.tencent.qqpimsecure");
+                for (int i = 0; i < allPermission.size(); i++) {
+                    LogUtil.e(TAG, allPermission.get(i).toString());
+                }
+                break;
+            case R.id.btn_parse_permission_xml:
+                PermissionManager.getInstance().loadPermissionConfig();
+                break;
             default:
                 break;
         }

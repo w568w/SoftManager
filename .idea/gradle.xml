@@ -8,7 +8,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AdbLib" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/opsxlib" />
+            <option value="$PROJECT_DIR$/opsxpro" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

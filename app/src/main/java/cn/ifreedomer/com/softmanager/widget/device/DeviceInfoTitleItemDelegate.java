@@ -1,11 +1,11 @@
-package cn.ifreedomer.com.softmanager.fragment.device.item;
+package cn.ifreedomer.com.softmanager.widget.device;
 
 import com.zhy.adapter.recyclerview.base.ItemViewDelegate;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.DeviceInfoWrap;
-import cn.ifreedomer.com.softmanager.bean.Title;
+import cn.ifreedomer.com.softmanager.bean.DeviceTitle;
 
 /**
  * @author:eavawu
@@ -13,19 +13,19 @@ import cn.ifreedomer.com.softmanager.bean.Title;
  * TODO:
  */
 
-public class DeviceInfoTitleItemDelegate implements ItemViewDelegate<DeviceInfoWrap<Title>> {
+public class DeviceInfoTitleItemDelegate implements ItemViewDelegate<DeviceInfoWrap<DeviceTitle>> {
     @Override
     public int getItemViewLayoutId() {
         return R.layout.deviceinfo_title_view;
     }
 
     @Override
-    public boolean isForViewType(DeviceInfoWrap<Title> item, int position) {
+    public boolean isForViewType(DeviceInfoWrap<DeviceTitle> item, int position) {
         return item.getType() == DeviceInfoWrap.TITLE;
     }
 
     @Override
-    public void convert(ViewHolder holder, DeviceInfoWrap<Title> titleDeviceInfoWrap, int position) {
+    public void convert(ViewHolder holder, DeviceInfoWrap<DeviceTitle> titleDeviceInfoWrap, int position) {
         holder.setText(R.id.tv_title, titleDeviceInfoWrap.getData().getTitle());
     }
 }

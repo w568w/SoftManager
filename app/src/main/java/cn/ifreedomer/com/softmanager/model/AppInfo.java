@@ -2,6 +2,11 @@ package cn.ifreedomer.com.softmanager.model;
 
 import android.graphics.drawable.Drawable;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
+
 public class AppInfo {
     private Drawable appIcon;
     private String appName;
@@ -11,6 +16,15 @@ public class AppInfo {
     private int uid;
     private String codePath;
     private float cacheSize;
+    private List<PermissionDetail> permissionDetailList = new ArrayList<>();
+
+    public List<PermissionDetail> getPermissionDetailList() {
+        return permissionDetailList;
+    }
+
+    public void setPermissionDetailList(List<PermissionDetail> permissionDetailList) {
+        this.permissionDetailList = permissionDetailList;
+    }
 
     public float getCacheSize() {
         return cacheSize;

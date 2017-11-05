@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager.fragment.device.item;
+package cn.ifreedomer.com.softmanager.widget.device;
 
 import com.zhy.adapter.recyclerview.base.ItemViewDelegate;
 import com.zhy.adapter.recyclerview.base.ViewHolder;

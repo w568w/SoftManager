@@ -22,12 +22,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.DeviceInfoWrap;
+import cn.ifreedomer.com.softmanager.bean.DeviceTitle;
 import cn.ifreedomer.com.softmanager.bean.FourValue;
-import cn.ifreedomer.com.softmanager.bean.Title;
 import cn.ifreedomer.com.softmanager.bean.TwoValue;
-import cn.ifreedomer.com.softmanager.fragment.device.item.DeviceInfoFourValueItemDelegate;
-import cn.ifreedomer.com.softmanager.fragment.device.item.DeviceInfoTitleItemDelegate;
-import cn.ifreedomer.com.softmanager.fragment.device.item.DeviceInfoTwoValueItemDelegate;
 import cn.ifreedomer.com.softmanager.util.CameraUtils;
 import cn.ifreedomer.com.softmanager.util.DateUtil;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
@@ -36,6 +33,9 @@ import cn.ifreedomer.com.softmanager.util.NetworkUtil;
 import cn.ifreedomer.com.softmanager.util.ScreenUtil;
 import cn.ifreedomer.com.softmanager.util.SystemUtil;
 import cn.ifreedomer.com.softmanager.widget.HardwareHeadView;
+import cn.ifreedomer.com.softmanager.widget.device.DeviceInfoFourValueItemDelegate;
+import cn.ifreedomer.com.softmanager.widget.device.DeviceInfoTitleItemDelegate;
+import cn.ifreedomer.com.softmanager.widget.device.DeviceInfoTwoValueItemDelegate;
 
 import static android.content.Context.TELEPHONY_SERVICE;
 
@@ -75,7 +75,7 @@ public class DeviceInfoFragment extends Fragment {
         hardwareRv.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //基本信息
-        DeviceInfoWrap<Title> basicInfoWrap = DeviceInfoWrap.createTitle(getString(R.string.basic_info));
+        DeviceInfoWrap<DeviceTitle> basicInfoWrap = DeviceInfoWrap.createTitle(getString(R.string.basic_info));
         list.add(basicInfoWrap);
 
         //启动时间
@@ -91,7 +91,7 @@ public class DeviceInfoFragment extends Fragment {
         list.add(runTimeWrap);
 
         //网络信息
-        DeviceInfoWrap<Title> networkInfoWrap = DeviceInfoWrap.createTitle(getString(R.string.network_info));
+        DeviceInfoWrap<DeviceTitle> networkInfoWrap = DeviceInfoWrap.createTitle(getString(R.string.network_info));
         list.add(networkInfoWrap);
 
 
@@ -103,7 +103,7 @@ public class DeviceInfoFragment extends Fragment {
         list.add(wifiNetworkFourWrap);
 
         //硬件特性
-        DeviceInfoWrap<Title> hardwareWrap = DeviceInfoWrap.createTitle(getString(R.string.hard_title));
+        DeviceInfoWrap<DeviceTitle> hardwareWrap = DeviceInfoWrap.createTitle(getString(R.string.hard_title));
         list.add(hardwareWrap);
 
         //处理器

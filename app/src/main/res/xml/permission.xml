@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grouplist>
+    <permission_group name="资费">
+        <permission
+            name="android.permission.SEND_SMS"
+            des="直接发送短信"
+            icon="perm_group_sms.xml"
+            title="发送短信"/>
+
+        <permission
+            name="android.permission.CALL_PHONE"
+            des="直接打电话"
+            icon="perm_group_phone_calls.xml"
+            title="电话"/>
+
+        <permission
+            name="android.permission.INTERNET"
+            des="访问网络,消耗流量"
+            icon="perm_group_phone_calls.xml"
+            title="网络访问"/>
+
+
+    </permission_group>
+
+
+    <permission_group name="隐私相关">
+        <permission
+            name="android.permission.WRITE_SMS"
+            des="写入/删除短信"
+            icon="perm_group_sms.xml"
+            title="修改短信"/>
+
+        <permission
+            name="android.permission.RECEIVE_SMS"
+            des="写入/删除短信"
+            icon="perm_group_sms.xml"
+            title="修改短信"/>
+
+        <permission
+            name="android.permission.READ_SMS"
+            des="读取短信"
+            icon="perm_group_sms.xml"
+            title="读取短信"/>
+
+
+        <permission
+            name="android.permission.READ_PHONE_STATE"
+            des="监听电话、挂断电话"
+            icon="perm_group_phone_calls.xml"
+            title="监听电话"/>
+
+
+        <permission
+            name="android.permission.WRITE_CONTACTS"
+            des="写入/删除联系人"
+            icon="perm_group_contacts.xml"
+            title="修改联系人"/>
+
+
+        <permission
+            name="android.permission.READ_CONTACTS"
+            des="读取联系人"
+            icon="perm_group_contacts.xml"
+            title="读取联系人"/>
+
+        <permission
+            name="android.permission.WRITE_CALL_LOG"
+            des="写入/删除通话记录"
+            icon="perm_group_contacts.xml"
+            title="修改通话记录"/>
+
+
+        <permission
+            name="android.permission.READ_CALL_LOG"
+            des="读取通话记录"
+            icon="perm_group_contacts.xml"
+            title="读取通话记录"/>
+
+
+        <permission
+            name="android.permission.ACCESS_FINE_LOCATION"
+            des="通过网络或者卫星对您的手机定位"
+            icon="perm_group_location.xml"
+            title="定位"/>
+
+
+        <permission
+            name="android.permission.READ_PHONE_STATE"
+            des="获取手机号码、IMEI、MISI权限"
+            icon="perm_group_device.xml"
+            title="获取手机信息"/>
+
+        <permission
+            name="android.permission.READ_CALENDAR"
+            des="访问日历"
+            icon="perm_group_calendar.xml"
+            title="访问日历"/>
+
+        <permission
+            name="android.permission.GET_ACCOUNTS"
+            des="获取手机的账户列表"
+            icon="perm_group_other.xml"
+            title="访问手机账户"/>
+
+
+    </permission_group>
+
+
+    <permission_group name="多媒体相关">
+        <permission
+            name="android.permission.CAMERA"
+            des="拍照、录像和闪光灯"
+            icon="perm_group_camera.xml"
+            title="相机"/>
+
+        <permission
+            name="android.permission.RECORD_AUDIO"
+            des="通话录音和本地录音"
+            icon="perm_group_microphone.xml"
+            title="录音"/>
+
+
+        <permission
+            name="android.permission.WRITE_EXTERNAL_STORAGE"
+            des="读写手机存储"
+            icon="perm_group_storage.xml"
+            title="读写手机存储"/>
+
+        <permission
+            name="android.permission.READ_EXTERNAL_STORAGE"
+            des="读手机存储"
+            icon="perm_group_storage.xml"
+            title="读手机存储"/>
+
+
+    </permission_group>
+
+
+    <permission_group name="设置相关">
+        <permission
+            name="android.permission.WRITE_SETTINGS"
+            des="修改系统设置"
+            icon="perm_group_settings.xml"
+            title="系统设置"/>
+
+        <permission
+            name="android.permission.CHANGE_WIFI_STATE"
+            des="开启WIFI"
+            icon="perm_group_wifi.xml"
+            title="开启WIFI"/>
+
+
+        <permission
+            name="android.permission.BLUETOOTH"
+            des="开启蓝牙"
+            icon="perm_group_device.xml"
+            title="开启蓝牙"/>
+
+
+        <permission
+            name="com.android.launcher.permission.INSTALL_SHORTCUT"
+            des="添加桌面快捷方式"
+            icon="perm_group_other.xml"
+            title="桌面快捷方式"/>
+
+
+        <permission
+            name="android.permission.WAKE_LOCK"
+            des="允许应用在锁屏上显示"
+            icon="perm_group_other.xml"
+            title="锁屏显示"/>
+
+        <permission
+            name="android.permission.SYSTEM_ALERT_WINDOW"
+            des="显示悬浮窗"
+            icon="perm_group_other.xml"
+            title="显示悬浮窗"/>
+
+    </permission_group>
+</grouplist>

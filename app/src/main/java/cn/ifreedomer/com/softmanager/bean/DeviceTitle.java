@@ -6,7 +6,7 @@ package cn.ifreedomer.com.softmanager.bean;
  * TODO:
  */
 
-public class Title {
+public class DeviceTitle {
     private String title;
 
     public String getTitle() {
@@ -17,8 +17,8 @@ public class Title {
         this.title = title;
     }
 
-    public static Title create(String titleStr) {
-        Title title = new Title();
+    public static DeviceTitle create(String titleStr) {
+        DeviceTitle title = new DeviceTitle();
         title.title = titleStr;
         return title;
     }

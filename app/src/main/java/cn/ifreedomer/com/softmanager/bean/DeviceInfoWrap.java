@@ -29,9 +29,9 @@ public class DeviceInfoWrap<T> {
         this.data = data;
     }
 
-    public static DeviceInfoWrap<Title> createTitle(String string) {
-        DeviceInfoWrap<Title> basicInfo = new DeviceInfoWrap<>();
-        Title title = Title.create(string);
+    public static DeviceInfoWrap<DeviceTitle> createTitle(String string) {
+        DeviceInfoWrap<DeviceTitle> basicInfo = new DeviceInfoWrap<>();
+        DeviceTitle title = DeviceTitle.create(string);
         basicInfo.setType(DeviceInfoWrap.TITLE);
         basicInfo.setData(title);
         return basicInfo;

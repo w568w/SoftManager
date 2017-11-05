@@ -19,7 +19,7 @@ import cn.ifreedomer.com.softmanager.service.FileScanService;
 
 public class FileUtil {
     public static final String TAG = FileUtil.class.getSimpleName();
-    public static final int MB = 1000 * 1000;
+    public static final float MB = 1000 * 1000.0f;
 //
 //    public static List<FileInfo> getBigFiles() {
 //        String sdCard = Environment.getExternalStorageDirectory().toString();

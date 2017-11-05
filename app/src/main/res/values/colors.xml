@@ -17,4 +17,12 @@
     <color name="blackTextColor">#FF000000</color>
     <color name="whiteTextColor">#FFFFFFFF</color>
     <color name="card_normal">#19000000</color>
+
+
+
+
+    <color name="expandable_item_indicator_color">#42000000</color>
+
+    <color name="fullColor">#FF000000</color>
+    <color name="list_margin_color">#E8E8E8</color>
 </resources>

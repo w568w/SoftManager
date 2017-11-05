@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GRANT_REVOKE_PERMISSIONS"/>
+    <uses-permission android:name="android.permission.GRANT_GRANT_PERMISSIONS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
@@ -11,6 +13,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.GET_APP_OPS_STATS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
     <application
         android:name="CleanApplication"
@@ -58,6 +63,7 @@
             android:name=".activity.setting.SettingActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.setting.HelpActivity"/>
+        <activity android:name=".activity.PermissionSetActivity"/>
 
         <service
             android:name=".service.FileScanService"

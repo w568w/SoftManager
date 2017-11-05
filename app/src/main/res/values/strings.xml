@@ -117,4 +117,14 @@
     <string name="support_money">支持一下|(任意金额均可)</string>
     <string name="broken_notify">切断唤醒</string>
     <string name="permission_manager">权限管理</string>
+    <string name="get_permission">获取敏感权限</string>
+    <string name="parse_permission_xml">解析permission.xml</string>
+    <string name="permission_count">项权限</string>
+    <string name="fee">资费</string>
+    <string name="privacy">隐私相关</string>
+    <string name="setting_about">设置相关</string>
+    <string name="no_permission_see">此应用没有权限可以查看</string>
+
+
+    <string name="log_empty">No logs</string>
 </resources>

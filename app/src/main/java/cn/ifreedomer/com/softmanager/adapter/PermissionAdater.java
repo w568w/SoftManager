@@ -26,6 +26,10 @@ public class PermissionAdater extends CommonAdapter<AppInfo> {
     protected void convert(ViewHolder holder, AppInfo appInfo, int position) {
         holder.setText(R.id.tv_appname, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
-        holder.setText(R.id.tv_appcache, appInfo.getPkgSize() + "M");
+        if (appInfo.getPermissionDetailList() != null) {
+            holder.setText(R.id.tv_permission_count, appInfo.getPermissionDetailList().size() + mContext.getString(R.string.permission_count));
+        } else {
+            holder.setText(R.id.tv_permission_count, 0 + mContext.getString(R.string.permission_count));
+        }
     }
 }

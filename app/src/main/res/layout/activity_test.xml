@@ -19,4 +19,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/delete_cache"/>
+    <Button
+        android:text="@string/get_permission"
+        android:id="@+id/btn_get_permission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:text="@string/parse_permission_xml"
+        android:id="@+id/btn_parse_permission_xml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

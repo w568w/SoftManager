@@ -23,8 +23,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
+import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
+import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
@@ -99,6 +102,9 @@ public class PackageInfoManager {
                 PackageManager pm = context.getPackageManager();
                 List<PackageInfo> packInfos = pm.getInstalledPackages(0);
 
+                //加载权限
+                PermissionManager.getInstance().loadPermissionConfig();
+
                 List<AppInfo> appinfos = new ArrayList<AppInfo>();
                 LogUtil.d("loadData2");
                 for (PackageInfo packInfo : packInfos) {
@@ -151,8 +157,8 @@ public class PackageInfoManager {
                                     @Override
                                     public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
                                         synchronized (appInfo) {
-                                            appInfo.setPkgSize(DataTypeUtil.getTwoFloat(pStats.cacheSize + pStats.codeSize + pStats.dataSize));
-                                            appInfo.setCacheSize(pStats.cacheSize);
+                                            appInfo.setPkgSize(DataTypeUtil.getTwoFloat((pStats.cacheSize + pStats.codeSize + pStats.dataSize) / FileUtil.MB));
+                                            appInfo.setCacheSize(DataTypeUtil.getTwoFloat(pStats.cacheSize / FileUtil.MB));
 
                                         }
                                     }
@@ -160,7 +166,8 @@ public class PackageInfoManager {
                         });
                     } catch (Exception e) {
                     }
-
+                    List<PermissionDetail> allPermission = PermissionManager.getInstance().getAllPermission(appInfo.getPackname());
+                    appInfo.setPermissionDetailList(allPermission);
                     appinfos.add(appInfo);
                 }
                 LogUtil.d("loadData3");

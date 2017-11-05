@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "cn.ifreedomer.com.softmanager"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -59,5 +59,5 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     compile 'com.zhy:base-rvadapter:3.0.3'
     testCompile 'junit:junit:4.12'
-
+    compile project(':opsxpro')
 }
