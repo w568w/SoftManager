@@ -9,6 +9,7 @@ import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author:eavawu
@@ -17,7 +18,7 @@ import cn.ifreedomer.com.softmanager.model.AppInfo;
  */
 
 public class PermissionAdater extends CommonAdapter<AppInfo> {
-
+    private static final String TAG = PermissionAdater.class.getSimpleName();
     public PermissionAdater(Context context, int layoutId, List<AppInfo> datas) {
         super(context, layoutId, datas);
     }
@@ -28,6 +29,7 @@ public class PermissionAdater extends CommonAdapter<AppInfo> {
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         if (appInfo.getPermissionDetailList() != null) {
             holder.setText(R.id.tv_permission_count, appInfo.getPermissionDetailList().size() + mContext.getString(R.string.permission_count));
+            LogUtil.e(TAG,"appName="+appInfo.getAppName()+"  permission="+appInfo.getPermissionDetailList());
         } else {
             holder.setText(R.id.tv_permission_count, 0 + mContext.getString(R.string.permission_count));
         }

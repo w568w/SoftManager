@@ -78,6 +78,13 @@ public class PermissionSetActivity extends BaseActivity {
         }
 
 
+        List<PermissionWrap> mediaPermissionWrapList = getPermissionListByGroup(getString(R.string.media_about));
+        if (mediaPermissionWrapList != null && mediaPermissionWrapList.size() > 0) {
+            permissionTitle = (PermissionTitle) mediaPermissionWrapList.get(0).getData();
+            permissionTitle.setShowPadding(true);
+            allPermissionWrap.addAll(mediaPermissionWrapList);
+        }
+
         List<PermissionWrap> settingPermissionWrap = getPermissionListByGroup(getString(R.string.setting_about));
         if (settingPermissionWrap != null && settingPermissionWrap.size() > 0) {
             permissionTitle = (PermissionTitle) settingPermissionWrap.get(0).getData();
