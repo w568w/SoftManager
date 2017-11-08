@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.GET_APP_OPS_STATS"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
 
     <application
         android:name="CleanApplication"
@@ -61,9 +61,11 @@
 
         <activity
             android:name=".activity.setting.SettingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.setting.HelpActivity"/>
-        <activity android:name=".activity.PermissionSetActivity"/>
+        <activity
+            android:name=".activity.PermissionSetActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".service.FileScanService"

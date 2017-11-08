@@ -7,12 +7,12 @@ import android.widget.Toast;
 import com.zhy.adapter.recyclerview.base.ItemViewDelegate;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
+import cn.ifreedomer.com.softmanager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.bean.PermissionWrap;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
-import cn.ifreedomer.com.softmanager.util.AppOpsHelper;
 
 /**
  * @author:eavawu
@@ -51,14 +51,8 @@ public class PermissionDetailItemDelegate implements ItemViewDelegate<Permission
         cb.setChecked(permissionDetail.isGranted());
         cb.setOnClickListener(v -> {
             if (PermissionManager.getInstance().checkOrRequestedRootPermission()) {
-                AppOpsHelper.setPermission(mContext, mAppInfo.getPackname(), permissionDetail.getPermission(), permissionDetail.isGranted());
-//                if (permissionDetail.isGranted()) {
-//                    PermissionManager.getInstance().revokePermission(mAppInfo.getPackname(), permissionDetail.getPermission());
-//                } else {
-//                    PermissionManager.getInstance().grantPermission(mAppInfo.getPackname(), permissionDetail.getPermission());
-//                }
+                GlobalDataManager.getInstance().getThreadPool().execute(() -> PermissionManager.getInstance().setPermission(mContext, mAppInfo.getPackname(), permissionDetail.getPermission(), permissionDetail.isGranted()));
                 permissionDetail.setGranted(!permissionDetail.isGranted());
-
             } else {
                 cb.setChecked(!cb.isChecked());
                 Toast.makeText(mContext, mContext.getString(R.string.no_root), Toast.LENGTH_SHORT).show();

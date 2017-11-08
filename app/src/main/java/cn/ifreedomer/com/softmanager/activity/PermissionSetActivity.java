@@ -18,7 +18,6 @@ import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.bean.PermissionTitle;
 import cn.ifreedomer.com.softmanager.bean.PermissionWrap;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
-import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
 import cn.ifreedomer.com.softmanager.widget.permission.PermissionDetailItemDelegate;
 import cn.ifreedomer.com.softmanager.widget.permission.PermissionTitleItemDelegate;
@@ -118,7 +117,7 @@ public class PermissionSetActivity extends BaseActivity {
                 permissionWrapList.add(permissionWrap);
             }
         }
-        LogUtil.e(TAG, "group=" + group + "    size=" + permissionWrapList.size());
+//        LogUtil.e(TAG, "group=" + group + "    size=" + permissionWrapList.size());
 
         if (permissionWrapList.size() > 0) {
             PermissionWrap<PermissionTitle> permissionTitlePermissionWrap = new PermissionWrap<>();

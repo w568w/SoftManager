@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
@@ -165,9 +164,10 @@ public class PackageInfoManager {
                                 }
                         });
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    List<PermissionDetail> allPermission = PermissionManager.getInstance().getAllPermission(appInfo.getPackname());
-                    appInfo.setPermissionDetailList(allPermission);
+                    PermissionManager.getInstance().loadAllPermission();
+                    appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
                     appinfos.add(appInfo);
                 }
                 LogUtil.d("loadData3");

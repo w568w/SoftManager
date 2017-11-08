@@ -2,6 +2,7 @@ package com.zzzmode.appopsx.common;
 
 import android.text.TextUtils;
 import android.util.Log;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class OpsDataTransfer {
   private boolean async = true;
 
   public OpsDataTransfer(OutputStream outputStream, InputStream inputStream,
-      OnRecvCallback callback) {
+                         OnRecvCallback callback) {
     this.outputStream = new DataOutputStream(outputStream);
     this.inputStream = new DataInputStream(inputStream);
     this.callback = callback;
@@ -55,6 +56,7 @@ public class OpsDataTransfer {
     if (msg != null) {
       outputStream.writeInt(msg.length);
       outputStream.write(msg);
+      Log.e(OpsDataTransfer.class.getSimpleName(),new String(msg));
       outputStream.flush();
     }
   }

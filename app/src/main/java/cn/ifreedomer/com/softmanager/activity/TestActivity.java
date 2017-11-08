@@ -14,11 +14,9 @@ import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
-import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
-import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = TestActivity.class.getSimpleName();
@@ -54,10 +52,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 //                PackageInfoManager.getInstance().clearCache();
                 break;
             case R.id.btn_get_permission:
-                List<PermissionDetail> allPermission = PermissionManager.getInstance().getAllPermission("com.tencent.qqpimsecure");
-                for (int i = 0; i < allPermission.size(); i++) {
-                    LogUtil.e(TAG, allPermission.get(i).toString());
-                }
+//                List<PermissionDetail> allPermission = PermissionManager.getInstance().loadAllPermission("com.tencent.qqpimsecure");
+//                for (int i = 0; i < allPermission.size(); i++) {
+//                    LogUtil.e(TAG, allPermission.get(i).toString());
+//                }
                 break;
             case R.id.btn_parse_permission_xml:
                 PermissionManager.getInstance().loadPermissionConfig();
