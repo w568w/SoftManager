@@ -42,6 +42,7 @@ public class PackageInfoManager {
     private Method mDeleteApplicationCacheFiles;
     private StatFs mStat;
 
+
     private PackageInfoManager() {
 
     }
@@ -75,12 +76,15 @@ public class PackageInfoManager {
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public void loadData(final Context context, final LoadStateCallback loadStateCallback) {
+        //防止重复加载
+        if (userAppInfos.size() > 0) {
+            return;
+        }
         @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask<Object, Integer, List<AppInfo>>() {
             private int mAppCount = 0;
 
             @Override
             protected List<AppInfo> doInBackground(Object... params) {
-                LogUtil.d("loadData1");
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -107,7 +111,6 @@ public class PackageInfoManager {
 
 
                 List<AppInfo> appinfos = new ArrayList<AppInfo>();
-                LogUtil.d("loadData2");
                 for (PackageInfo packInfo : packInfos) {
                     publishProgress(++mAppCount, packInfos.size());
                     final AppInfo appInfo = new AppInfo();
@@ -171,7 +174,6 @@ public class PackageInfoManager {
                     appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
                     appinfos.add(appInfo);
                 }
-                LogUtil.d("loadData3");
                 return appinfos;
             }
 

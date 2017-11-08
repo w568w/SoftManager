@@ -1,7 +1,6 @@
 package cn.ifreedomer.com.softmanager.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -33,7 +32,6 @@ public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
 
     @Override
     public void convert(ViewHolder holder, final AutoStartInfo autoStartInfo, final int position) {
-        Log.e("position", position + "");
         holder.setText(R.id.tv_appname, autoStartInfo.getLabel());
         holder.setImageDrawable(R.id.iv_icon, autoStartInfo.getIcon());
         final Switch switchWidget = holder.getView(R.id.swith_auto);
@@ -61,7 +59,6 @@ public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
         } else {
             switchWidget.setChecked(false);
         }
-        Log.e(autoStartInfo.getLabel(), autoStartInfo.isEnable() + "");
 
     }
 
