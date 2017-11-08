@@ -122,6 +122,7 @@ public class OpsxManager {
                         }
                     }
                 }
+                mContext.getSystemService(Context.APP_OPS_SERVICE);
             } else {
                 throw new Exception(opsForPackage.getException());
             }

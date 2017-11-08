@@ -103,6 +103,8 @@ public class PackageInfoManager {
 
                 //加载权限
                 PermissionManager.getInstance().loadPermissionConfig();
+                PermissionManager.getInstance().loadAllPermission();
+
 
                 List<AppInfo> appinfos = new ArrayList<AppInfo>();
                 LogUtil.d("loadData2");
@@ -166,7 +168,6 @@ public class PackageInfoManager {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    PermissionManager.getInstance().loadAllPermission();
                     appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
                     appinfos.add(appInfo);
                 }

@@ -97,6 +97,13 @@
             title="访问日历"/>
 
         <permission
+            name="android.permission.WRITE_CALENDAR"
+            des="修改日历"
+            icon="perm_group_calendar.xml"
+            title="修改日历"/>
+
+
+        <permission
             name="android.permission.GET_ACCOUNTS"
             des="获取手机的账户列表"
             icon="perm_group_other.xml"
@@ -122,13 +129,13 @@
 
         <permission
             name="android.permission.WRITE_EXTERNAL_STORAGE"
-            des="读写手机存储"
+            des="修改/删除SD卡的文件或文件夹"
             icon="perm_group_storage.xml"
-            title="读写手机存储"/>
+            title="写手机存储"/>
 
         <permission
             name="android.permission.READ_EXTERNAL_STORAGE"
-            des="读手机存储"
+            des="读取手机存储内容"
             icon="perm_group_storage.xml"
             title="读手机存储"/>
 
@@ -137,6 +144,13 @@
 
 
     <permission_group name="设置相关">
+
+        <permission
+            name="android.permission.VIBRATE"
+            des="允许使用震动传感器"
+            icon="perm_group_settings.xml"
+            title="震动"/>
+
         <permission
             name="android.permission.WRITE_SETTINGS"
             des="修改系统设置"
@@ -175,6 +189,7 @@
             des="显示悬浮窗"
             icon="perm_group_other.xml"
             title="显示悬浮窗"/>
+
 
     </permission_group>
 </grouplist>

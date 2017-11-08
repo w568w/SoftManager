@@ -40,7 +40,7 @@ import cn.ifreedomer.com.softmanager.util.XmlUtil;
 
 public class PermissionManager {
     private static final String TAG = PermissionManager.class.getSimpleName();
-    private static final int GRAINTED = 1;
+    private static final int GRAINTED = 0;
     private Context mContext;
     private boolean mIsRequestedRoot;
     private boolean mHasRootPermission = false;
@@ -199,7 +199,9 @@ public class PermissionManager {
                         LogUtil.e(TAG, "package name=" + pkgOps.getPackageName() + "  op=" + ops.get(i).getOp() + " is not support");
                         continue;
                     }
-                    appPermissionlist.add(getPermissionByOp(ops.get(i).getOp()));
+                    PermissionDetail permissionDetail = getPermissionByOp(ops.get(i).getOp());
+                    permissionDetail.setGranted(ops.get(i).getMode() == GRAINTED);
+                    appPermissionlist.add(permissionDetail);
                 }
                 mAllAppPermissionMap.put(pkgOps.getPackageName(), appPermissionlist);
             }
@@ -217,7 +219,7 @@ public class PermissionManager {
     public PermissionDetail getPermissionByOp(int op) {
         String permissionName = (String) ReflectUtils.getArrayFieldValue(AppOpsManager.class, "sOpPerms", op);
 //        LogUtil.e(TAG, "getPermissionByOp mPermissionDetailMap=" + mPermissionDetailMap + "  permissionName=" + permissionName);
-        if (!TextUtils.isEmpty(permissionName)&&mPermissionDetailMap.containsKey(permissionName)) {
+        if (!TextUtils.isEmpty(permissionName) && mPermissionDetailMap.containsKey(permissionName)) {
             return PermissionManager.getInstance().getPermissionDetailMap().get(permissionName);
         }
         return null;
