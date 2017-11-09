@@ -1,5 +1,6 @@
 package cn.ifreedomer.com.softmanager.util;
 
+import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.ifreedomer.com.softmanager.bean.EmptyFolder;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
 
@@ -18,6 +20,8 @@ import cn.ifreedomer.com.softmanager.service.FileScanService;
  */
 
 public class FileUtil {
+    public static final String SD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static final String THUMBNAIL_PATH = SD_PATH + "/DCIM/.thumbnails/";
     public static final String TAG = FileUtil.class.getSimpleName();
     public static final float MB = 1000 * 1000.0f;
 //
@@ -163,6 +167,63 @@ public class FileUtil {
         return fileInfoList;
     }
 
-    ;
+
+    /**
+     * 获取空文件夹的集合
+     *
+     * @return
+     */
+    public static EmptyFolder getEmptyFile() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            EmptyFolder emptyFolder = new EmptyFolder();
+            long size = 0;
+            ArrayList<String> arrayList = new ArrayList<String>();
+            File[] files = new File(SD_PATH).listFiles();
+            if (files != null && files.length > 0) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        if (file.getName().equals(".android_secure")) {
+                            continue;
+                        }
+                        boolean isEmpty = isEmpty(file);
+                        if (isEmpty) {
+                            arrayList.add(file.getAbsolutePath());
+                            size += file.length();
+                        }
+                    }
+                }
+            }
+            emptyFolder.setPathList(arrayList);
+            emptyFolder.setTotalSize(size);
+            return emptyFolder;
+        }
+        return null;
+    }
+
+
+
+    /**
+     * 判断一个文件夹是不是空文件夹
+     *
+     * @param folder
+     * @return
+     */
+    public static boolean isEmpty(File folder) {
+        File[] files = folder.listFiles();
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    boolean isEmpty = isEmpty(file);
+                    if (!isEmpty) {
+                        return false;
+                    }
+                } else if (file.isFile()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 }

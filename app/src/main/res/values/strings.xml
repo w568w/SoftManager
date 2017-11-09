@@ -69,7 +69,7 @@
     <string name="for_given">还你一个清爽的手机</string>
     <string name="clean_garbage">清理垃圾</string>
     <string name="see_detail">查看详情</string>
-    <string name="qq_clean">QQ专清</string>
+    <string name="apk_clean">Apk清理</string>
     <string name="big_file">大文件清理</string>
     <string name="deep_clean">深度清理</string>
     <string name="garbage_clean">垃圾清理</string>
@@ -128,4 +128,6 @@
 
     <string name="log_empty">No logs</string>
     <string name="media_about">多媒体相关</string>
+    <string name="empty_file">空文件夹清理</string>
+    <string name="not_use_empty">无用的空文件夹</string>
 </resources>

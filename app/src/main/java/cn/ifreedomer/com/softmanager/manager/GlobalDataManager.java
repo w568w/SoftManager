@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager;
+package cn.ifreedomer.com.softmanager.manager;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;

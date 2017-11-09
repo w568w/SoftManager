@@ -11,12 +11,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.GlobalDataManager;
-import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
-import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
-import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.bean.clean.AppCacheInfo;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
@@ -60,6 +57,17 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         return mGarbageInfoGroupList.get(groupPosition).get(childPosition);
+    }
+
+
+    @Override
+    public int getChildType(int groupPosition, int childPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public int getChildTypeCount() {
+        return mTitles.length;
     }
 
     @Override
@@ -109,24 +117,51 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final GarbageInfo garbageInfo = mGarbageInfoGroupList.get(groupPosition).get(childPosition);
-        View childView = View.inflate(mContext, R.layout.item_qq_child, null);
-        TextView nameTv = (TextView) childView.findViewById(R.id.tv_name);
-        nameTv.setText(garbageInfo.getName());
-        TextView sizeTv = (TextView) childView.findViewById(R.id.tv_size);
-        String sizeStr = DataTypeUtil.getTwoFloat(garbageInfo.getSize() / FileUtil.MB) + " MB";
-        sizeTv.setText(sizeStr);
-        ImageView fileIv = (ImageView) childView.findViewById(R.id.iv_icon);
-        fileIv.setImageDrawable(garbageInfo.getDrawable());
+        View childView = null;
+        switch (groupPosition) {
+            case GarbageInfo.TYPE_APP_CACHE:
+                childView = View.inflate(mContext, R.layout.item_appcache_child, null);
+                TextView nameTv = (TextView) childView.findViewById(R.id.tv_name);
+                TextView sizeTv = (TextView) childView.findViewById(R.id.tv_size);
+                ImageView iconIv = (ImageView) childView.findViewById(R.id.iv_icon);
+                AppCacheInfo data = (AppCacheInfo) garbageInfo.getData();
+                nameTv.setText(data.getName());
+                sizeTv.setText(data.getSize() + " kB");
+                iconIv.setImageDrawable(data.getDrawable());
 
-        final CheckBox cb = (CheckBox) childView.findViewById(R.id.cb);
-        cb.setChecked(garbageInfo.isChecked());
-        cb.setOnClickListener(v -> {
-            garbageInfo.setChecked(!garbageInfo.isChecked());
-            notifyDataSetChanged();
-        });
+                break;
+            case GarbageInfo.TYPE_AD_GARBAGE:
+                childView = View.inflate(mContext, R.layout.item_appcache_child, null);
 
+                break;
+            case GarbageInfo.TYPE_SYSTEM_GARBAGE:
+                childView = View.inflate(mContext, R.layout.item_appcache_child, null);
 
+                break;
+            case GarbageInfo.TYPE_EMPTY_FILE:
+                childView = View.inflate(mContext, R.layout.item_appcache_child, null);
+
+                break;
+        }
         return childView;
+
+//        TextView nameTv = (TextView) childView.findViewById(R.id.tv_name);
+//        nameTv.setText(garbageInfo.getName());
+//        TextView sizeTv = (TextView) childView.findViewById(R.id.tv_size);
+//        String sizeStr = DataTypeUtil.getTwoFloat(garbageInfo.getSize() / FileUtil.MB) + " MB";
+//        sizeTv.setText(sizeStr);
+//        ImageView fileIv = (ImageView) childView.findViewById(R.id.iv_icon);
+//        fileIv.setImageDrawable(garbageInfo.getDrawable());
+//
+//        final CheckBox cb = (CheckBox) childView.findViewById(R.id.cb);
+//        cb.setChecked(garbageInfo.isChecked());
+//        cb.setOnClickListener(v -> {
+//            garbageInfo.setChecked(!garbageInfo.isChecked());
+//            notifyDataSetChanged();
+//        });
+//
+//
+//        return childView;
 
     }
 
@@ -137,27 +172,27 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     public void removeCheckedItems() {
         LogUtil.e(TAG, "removeCheckedItems");
-        List<String> packageNameList = new ArrayList<>();
-        for (List<GarbageInfo> garbageInfoList : mGarbageInfoGroupList) {
-            for (int i = garbageInfoList.size() - 1; i >= 0; i--) {
-                boolean checked = garbageInfoList.get(i).isChecked();
-                final GarbageInfo garbageInfo = garbageInfoList.get(i);
-                if (garbageInfo.getType() == GarbageInfo.TYPE_APP_CACHE) {
-                    packageNameList.add(garbageInfo.getPackageName());
-                }
-                if (checked) {
-                    garbageInfoList.remove(i);
-                }
-            }
-        }
-        notifyDataSetChanged();
-        GlobalDataManager.getInstance().getThreadPool().execute(() ->
-        {
-            for (int i = 0; i < packageNameList.size(); i++) {
-                PackageInfoManager.getInstance().clearCache(packageNameList.get(i));
-
-            }
-        });
+//        List<String> packageNameList = new ArrayList<>();
+//        for (List<GarbageInfo<AppCacheInfo>> garbageInfoList : mGarbageInfoGroupList) {
+//            for (int i = garbageInfoList.size() - 1; i >= 0; i--) {
+//                boolean checked = garbageInfoList.get(i).isChecked();
+//                final GarbageInfo garbageInfo = garbageInfoList.get(i);
+//                if (garbageInfo.getType() == GarbageInfo.TYPE_APP_CACHE) {
+//                    packageNameList.add(garbageInfo.getPackageName());
+//                }
+//                if (checked) {
+//                    garbageInfoList.remove(i);
+//                }
+//            }
+//        }
+//        notifyDataSetChanged();
+//        GlobalDataManager.getInstance().getThreadPool().execute(() ->
+//        {
+//            for (int i = 0; i < packageNameList.size(); i++) {
+//                PackageInfoManager.getInstance().clearCache(packageNameList.get(i));
+//
+//            }
+//        });
 
     }
 

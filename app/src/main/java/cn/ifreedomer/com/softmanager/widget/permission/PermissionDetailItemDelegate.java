@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.zhy.adapter.recyclerview.base.ItemViewDelegate;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
-import cn.ifreedomer.com.softmanager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.bean.PermissionWrap;

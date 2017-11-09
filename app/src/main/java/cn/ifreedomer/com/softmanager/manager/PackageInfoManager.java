@@ -1,4 +1,4 @@
-package cn.ifreedomer.com.softmanager;
+package cn.ifreedomer.com.softmanager.manager;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.manager.PermissionManager;
+import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;

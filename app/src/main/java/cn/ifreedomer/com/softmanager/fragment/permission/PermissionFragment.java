@@ -17,7 +17,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.ifreedomer.com.softmanager.PackageInfoManager;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.PermissionSetActivity;
 import cn.ifreedomer.com.softmanager.adapter.PermissionAdater;

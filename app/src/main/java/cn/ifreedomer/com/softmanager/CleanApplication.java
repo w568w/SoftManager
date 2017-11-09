@@ -3,6 +3,7 @@ package cn.ifreedomer.com.softmanager;
 import android.app.Application;
 import android.util.Log;
 
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 
 /**

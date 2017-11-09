@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
@@ -97,7 +97,7 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final FileInfo fileInfo = mFileInfoGroupList.get(groupPosition).get(childPosition);
-        View childView = View.inflate(mContext, R.layout.item_qq_child, null);
+        View childView = View.inflate(mContext, R.layout.item_appcache_child, null);
         TextView nameTv = (TextView) childView.findViewById(R.id.tv_name);
         nameTv.setText(fileInfo.getName());
         TextView sizeTv = (TextView) childView.findViewById(R.id.tv_size);

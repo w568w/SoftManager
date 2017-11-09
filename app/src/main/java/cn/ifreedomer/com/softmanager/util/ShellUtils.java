@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.GlobalDataManager;
-
 /**
  * ShellUtils
  * <ul>

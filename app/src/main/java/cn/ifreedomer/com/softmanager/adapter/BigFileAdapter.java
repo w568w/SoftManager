@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.util.LogUtil;

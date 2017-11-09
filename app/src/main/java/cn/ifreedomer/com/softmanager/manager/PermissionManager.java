@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.ifreedomer.com.softmanager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.bean.PermissionGroup;

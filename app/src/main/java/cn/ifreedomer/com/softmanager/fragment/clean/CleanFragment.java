@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.clean.BigFileCleanActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.DeepCleanActivity;
@@ -66,7 +65,7 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
     private void setData() {
         garbageCardView.setData(new CleanCardInfo(getString(R.string.garbage_clean), R.mipmap.clean));
         deepCardView.setData(new CleanCardInfo(getString(R.string.deep_clean), R.mipmap.deep_clean));
-        qqCardView.setData(new CleanCardInfo(getString(R.string.qq_clean), R.mipmap.qq));
+        qqCardView.setData(new CleanCardInfo(getString(R.string.apk_clean), R.mipmap.apk_file));
         bigFileCardView.setData(new CleanCardInfo(getString(R.string.big_file), R.mipmap.file));
 
 

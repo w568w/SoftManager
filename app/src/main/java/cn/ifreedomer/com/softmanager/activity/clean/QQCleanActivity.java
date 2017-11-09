@@ -90,7 +90,7 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
                 QQCleanActivity.this.finish();
             }
         });
-        getSupportActionBar().setTitle(getString(R.string.qq_clean));
+        getSupportActionBar().setTitle(getString(R.string.apk_clean));
     }
 
     private AsyncTask<String, Integer, List<FileInfo>> asyncTask = new AsyncTask<String, Integer, List<FileInfo>>() {

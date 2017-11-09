@@ -15,12 +15,16 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.ifreedomer.com.softmanager.GlobalDataManager;
-import cn.ifreedomer.com.softmanager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.adapter.GarbageCleanAdapter;
+import cn.ifreedomer.com.softmanager.bean.EmptyFolder;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
+import cn.ifreedomer.com.softmanager.bean.clean.AppCacheInfo;
+import cn.ifreedomer.com.softmanager.bean.clean.EmptyFolderInfo;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
 import cn.ifreedomer.com.softmanager.widget.GarbageHeadView;
@@ -44,10 +48,8 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_UPDATE_TOTAL_SIZE:
-                    GarbageInfo garbageInfo = (GarbageInfo) msg.obj;
-                    mTotalSize = mTotalSize + garbageInfo.getSize();
+                    mTotalSize = mTotalSize + (Float) msg.obj;
                     mGarbageHeadView.setScanTotal(mTotalSize);
-                    mGarbageHeadView.setScanningText(garbageInfo.getPath());
                     LogUtil.e(TAG, "mTotalSize:" + mTotalSize + "");
                     break;
                 case MSG_APP_SCAN_FINISH:
@@ -82,7 +84,7 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private void initExpandbleListView() {
-        mTitles = new String[]{getString(R.string.app_cache), getString(R.string.ad_garbage)};
+        mTitles = new String[]{getString(R.string.app_cache), getString(R.string.empty_file), getString(R.string.ad_garbage)};
         mGarbageCleanAdapter = new GarbageCleanAdapter(this, mTitles, mGarbageInfoGroupList);
         mGarbageHeadView = new GarbageHeadView(this);
         mExpandListview.addHeaderView(mGarbageHeadView);
@@ -106,10 +108,16 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
         getUselessApkSize();
         getSystemGabargeSize();
         getADGarbageSize();
-        getUselessFileSize();
+        getEmptyFileSize();
     }
 
-    private float getUselessFileSize() {
+    private float getEmptyFileSize() {
+        Runnable runnable = () -> {
+            EmptyFolder emptyFile = FileUtil.getEmptyFile();
+            List<GarbageInfo> emptyList = new ArrayList<>();
+            GarbageInfo<EmptyFolderInfo> emptyGarbageInfo = EmptyFolderInfo.create(emptyFile.getTotalSize(), emptyFile.getPathList().size(), getString(R.string.not_use_empty));
+            emptyList.add(emptyGarbageInfo);
+        };
         return 0;
     }
 
@@ -146,28 +154,28 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
             List<AppInfo> totalApps = new ArrayList<>();
             List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
             totalApps.addAll(userApps);
-            List<GarbageInfo> mGarbageInfoList = new ArrayList<>();
+            List<GarbageInfo> appCahceList = new ArrayList<>();
             for (int i = 0; i < totalApps.size(); i++) {
                 AppInfo appInfo = totalApps.get(i);
                 float cacheSize = appInfo.getCacheSize();
                 if (cacheSize > 0) {
-                    GarbageInfo garbageInfo = new GarbageInfo(appInfo.getAppName(), appInfo.getCodePath(), appInfo.getCacheSize(), appInfo.getAppIcon());
-                    mGarbageInfoList.add(garbageInfo);
-                    garbageInfo.setPackageName(appInfo.getPackname());
-                    sendGarbageMsg(garbageInfo);
+                    AppCacheInfo appCacheInfo = new AppCacheInfo(appInfo.getAppName(), appInfo.getCodePath(), appInfo.getCacheSize(), appInfo.getAppIcon(), appInfo.getPackname());
+                    GarbageInfo<AppCacheInfo> garbageInfo = AppCacheInfo.create(appCacheInfo);
+                    GarbageActivity.this.sendGarbageMsg(garbageInfo);
+                    appCahceList.add(garbageInfo);
                 }
 
             }
-            mGarbageInfoGroupList.add(mGarbageInfoList);
+            mGarbageInfoGroupList.add(appCahceList);
             handler.sendEmptyMessage(MSG_APP_SCAN_FINISH);
         };
         GlobalDataManager.getInstance().getThreadPool().execute(runnable);
     }
 
 
-    public void sendGarbageMsg(GarbageInfo garbageInfo) {
+    public void sendGarbageMsg(GarbageInfo<AppCacheInfo> garbageInfo) {
         Message message = new Message();
-        message.obj = garbageInfo;
+        message.obj = garbageInfo.getData().getSize();
         message.what = MSG_UPDATE_TOTAL_SIZE;
         handler.sendMessage(message);
     }
@@ -182,12 +190,12 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
 
     public void refreshTotalCache() {
         mTotalSize = 0;
-        for (int i = 0; i < mGarbageInfoGroupList.size(); i++) {
-            List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(i);
-            for (int j = 0; j < garbageInfos.size(); j++) {
-                mTotalSize = mTotalSize + garbageInfos.get(j).getSize();
-            }
-        }
+//        for (int i = 0; i < mGarbageInfoGroupList.size(); i++) {
+//            List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(i);
+//            for (int j = 0; j < garbageInfos.size(); j++) {
+//                mTotalSize = mTotalSize + garbageInfos.get(j).getSize();
+//            }
+//        }
         mGarbageHeadView.setScanTotal(mTotalSize);
     }
 
