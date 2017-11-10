@@ -18,7 +18,7 @@ import java.security.SecureRandom;
  * Created by zl on 2016/11/13.
  */
 
-class AssetsUtils {
+public class AssetsUtils {
     private static final String TAG = AssetsUtils.class.getSimpleName();
     private static final char[] DIGITS_LOWER =
             {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};

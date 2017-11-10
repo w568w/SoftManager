@@ -24,6 +24,7 @@ import cn.ifreedomer.com.softmanager.bean.clean.EmptyFolderInfo;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
@@ -32,7 +33,7 @@ import cn.ifreedomer.com.softmanager.widget.GarbageHeadView;
 public class GarbageActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = GarbageActivity.class.getSimpleName();
     private static final int MSG_UPDATE_TOTAL_SIZE = 1;
-    private static final int MSG_APP_SCAN_FINISH = 2;
+    private static final int MSG_UPDATE_UI = 2;
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -52,7 +53,7 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
                     mGarbageHeadView.setScanTotal(mTotalSize);
                     LogUtil.e(TAG, "mTotalSize:" + mTotalSize + "");
                     break;
-                case MSG_APP_SCAN_FINISH:
+                case MSG_UPDATE_UI:
                     mGarbageCleanAdapter.notifyDataSetChanged();
                     for (int i = 0; i < mGarbageInfoGroupList.size(); i++) {
                         mExpandListview.expandGroup(i);
@@ -74,8 +75,18 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
         ButterKnife.inject(this);
         initTitleBar();
         initExpandbleListView();
-        scanGarbage();
         initListener();
+
+
+        //copy db file
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            DBUtil.copyDB(GarbageActivity.this);
+            scanGarbage();
+            getADGarbageSize();
+            //init ui
+        });
+
+
     }
 
     private void initListener() {
@@ -89,12 +100,9 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
         mGarbageHeadView = new GarbageHeadView(this);
         mExpandListview.addHeaderView(mGarbageHeadView);
         mExpandListview.setAdapter(mGarbageCleanAdapter);
-        mExpandListview.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Log.e(TAG, "onGroupClick: " + "group position=" + groupPosition);
-                return false;
-            }
+        mExpandListview.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+            Log.e(TAG, "onGroupClick: " + "group position=" + groupPosition);
+            return false;
         });
 
 
@@ -105,23 +113,28 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
 
         getTotalAppCacheSize();
         getUninstallCacheSize();
-        getUselessApkSize();
         getSystemGabargeSize();
         getADGarbageSize();
         getEmptyFileSize();
     }
 
-    private float getEmptyFileSize() {
+
+    private void getEmptyFileSize() {
         Runnable runnable = () -> {
             EmptyFolder emptyFile = FileUtil.getEmptyFile();
             List<GarbageInfo> emptyList = new ArrayList<>();
             GarbageInfo<EmptyFolderInfo> emptyGarbageInfo = EmptyFolderInfo.create(emptyFile.getTotalSize(), emptyFile.getPathList().size(), getString(R.string.not_use_empty));
             emptyList.add(emptyGarbageInfo);
+            mGarbageInfoGroupList.add(emptyList);
+            sendGarbageMsg(emptyGarbageInfo.getData().getEmptySize());
+            handler.sendEmptyMessage(MSG_UPDATE_UI);
         };
-        return 0;
+        GlobalDataManager.getInstance().getThreadPool().execute(runnable);
     }
 
     private float getADGarbageSize() {
+
+
         return 0;
     }
 
@@ -150,32 +163,29 @@ public class GarbageActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void getTotalAppCacheSize() {
-        Runnable runnable = () -> {
-            List<AppInfo> totalApps = new ArrayList<>();
-            List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
-            totalApps.addAll(userApps);
-            List<GarbageInfo> appCahceList = new ArrayList<>();
-            for (int i = 0; i < totalApps.size(); i++) {
-                AppInfo appInfo = totalApps.get(i);
-                float cacheSize = appInfo.getCacheSize();
-                if (cacheSize > 0) {
-                    AppCacheInfo appCacheInfo = new AppCacheInfo(appInfo.getAppName(), appInfo.getCodePath(), appInfo.getCacheSize(), appInfo.getAppIcon(), appInfo.getPackname());
-                    GarbageInfo<AppCacheInfo> garbageInfo = AppCacheInfo.create(appCacheInfo);
-                    GarbageActivity.this.sendGarbageMsg(garbageInfo);
-                    appCahceList.add(garbageInfo);
-                }
-
+        List<AppInfo> totalApps = new ArrayList<>();
+        List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
+        totalApps.addAll(userApps);
+        List<GarbageInfo> appCahceList = new ArrayList<>();
+        for (int i = 0; i < totalApps.size(); i++) {
+            AppInfo appInfo = totalApps.get(i);
+            float cacheSize = appInfo.getCacheSize();
+            if (cacheSize > 0) {
+                AppCacheInfo appCacheInfo = new AppCacheInfo(appInfo.getAppName(), appInfo.getCodePath(), appInfo.getCacheSize(), appInfo.getAppIcon(), appInfo.getPackname());
+                GarbageInfo<AppCacheInfo> garbageInfo = AppCacheInfo.create(appCacheInfo);
+                GarbageActivity.this.sendGarbageMsg(garbageInfo.getData().getSize());
+                appCahceList.add(garbageInfo);
             }
-            mGarbageInfoGroupList.add(appCahceList);
-            handler.sendEmptyMessage(MSG_APP_SCAN_FINISH);
-        };
-        GlobalDataManager.getInstance().getThreadPool().execute(runnable);
+
+        }
+        mGarbageInfoGroupList.add(appCahceList);
+        handler.sendEmptyMessage(MSG_UPDATE_UI);
     }
 
 
-    public void sendGarbageMsg(GarbageInfo<AppCacheInfo> garbageInfo) {
+    public void sendGarbageMsg(float size) {
         Message message = new Message();
-        message.obj = garbageInfo.getData().getSize();
+        message.obj = size;
         message.what = MSG_UPDATE_TOTAL_SIZE;
         handler.sendMessage(message);
     }

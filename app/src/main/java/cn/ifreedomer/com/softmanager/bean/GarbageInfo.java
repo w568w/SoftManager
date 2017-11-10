@@ -8,9 +8,9 @@ package cn.ifreedomer.com.softmanager.bean;
 
 public class GarbageInfo<T> {
     public static final int TYPE_APP_CACHE = 0;
-    public static final int TYPE_SYSTEM_GARBAGE = 1;
+    public static final int TYPE_SYSTEM_GARBAGE = 3;
     public static final int TYPE_AD_GARBAGE = 2;
-    public static final int TYPE_EMPTY_FILE = 3;
+    public static final int TYPE_EMPTY_FILE = 1;
 
     private boolean isChecked;
     private int type;

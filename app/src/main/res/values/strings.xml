@@ -128,6 +128,7 @@
 
     <string name="log_empty">No logs</string>
     <string name="media_about">多媒体相关</string>
-    <string name="empty_file">空文件夹清理</string>
+    <string name="empty_file">空文件夹</string>
     <string name="not_use_empty">无用的空文件夹</string>
+    <string name="useless_empty_folder">无用的空文件夹</string>
 </resources>

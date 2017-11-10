@@ -14,6 +14,7 @@ import java.util.List;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
 import cn.ifreedomer.com.softmanager.bean.clean.AppCacheInfo;
+import cn.ifreedomer.com.softmanager.bean.clean.EmptyFolderInfo;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
@@ -128,7 +129,6 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 nameTv.setText(data.getName());
                 sizeTv.setText(data.getSize() + " kB");
                 iconIv.setImageDrawable(data.getDrawable());
-
                 break;
             case GarbageInfo.TYPE_AD_GARBAGE:
                 childView = View.inflate(mContext, R.layout.item_appcache_child, null);
@@ -139,7 +139,10 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
                 break;
             case GarbageInfo.TYPE_EMPTY_FILE:
-                childView = View.inflate(mContext, R.layout.item_appcache_child, null);
+                childView = View.inflate(mContext, R.layout.item_empty_folder, null);
+                TextView countTv = (TextView) childView.findViewById(R.id.tv_count);
+                EmptyFolderInfo emptyFolderInfo = (EmptyFolderInfo) garbageInfo.getData();
+                countTv.setText(emptyFolderInfo.getEmptyCount() + "");
 
                 break;
         }
