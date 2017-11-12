@@ -14,4 +14,15 @@ public class DataTypeUtil {
         int roundingMode = 4;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等
         return b.setScale(2, roundingMode).floatValue();
     }
+
+    public static String getTextBySize(float size) {
+        if (size < FileUtil.KB) {
+            return DataTypeUtil.getTwoFloat(size) + " B";
+        } else if (size > FileUtil.KB && size < FileUtil.MB) {
+            return DataTypeUtil.getTwoFloat(size / FileUtil.KB) + " KB";
+        } else if (size > FileUtil.MB) {
+            return DataTypeUtil.getTwoFloat(size / FileUtil.MB) + " MB";
+        }
+        return "";
+    }
 }

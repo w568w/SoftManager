@@ -115,5 +115,20 @@ public class AppInfo {
         this.userApp = userApp;
     }
 
-
+    @Override
+    public String toString() {
+        return "AppInfo{" +
+                "appIcon=" + appIcon +
+                ", appName='" + appName + '\'' +
+                ", packname='" + packname + '\'' +
+                ", version='" + version + '\'' +
+                ", pkgSize=" + pkgSize +
+                ", uid=" + uid +
+                ", codePath='" + codePath + '\'' +
+                ", cacheSize=" + cacheSize +
+                ", permissionDetailList=" + permissionDetailList +
+                ", inRom=" + inRom +
+                ", userApp=" + userApp +
+                '}';
+    }
 }

@@ -30,7 +30,8 @@ public class AssetsUtils {
             Log.e(TAG, fileName);
             AssetFileDescriptor openFd = context.getAssets().openFd(fileName);
 
-            if (force) {
+            if (force && destFile.exists()) {
+
                 destFile.delete();
             } else {
                 if (destFile.exists()) {

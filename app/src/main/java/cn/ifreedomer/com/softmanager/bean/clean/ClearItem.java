@@ -93,4 +93,19 @@ public class ClearItem {
 		this.fileSize = fileSize;
 	}
 
+    @Override
+    public String toString() {
+        return "ClearItem{" +
+                "packageName='" + packageName + '\'' +
+                ", isChecked=" + isChecked +
+                ", filePath='" + filePath + '\'' +
+                ", fileSize=" + fileSize +
+                ", includeEBook=" + includeEBook +
+                ", includeAudio=" + includeAudio +
+                ", includeApk=" + includeApk +
+                ", name='" + name + '\'' +
+                ", md5Path='" + md5Path + '\'' +
+                ", md5PackageName='" + md5PackageName + '\'' +
+                '}';
+    }
 }

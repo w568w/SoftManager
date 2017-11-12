@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center_vertical"
-            android:text="50.13MB"
+            android:text="0 MB"
             android:textColor="@color/whiteColor"
             android:textSize="@dimen/sp50"/>
 
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:text="正在扫描:mnt/sdcard/mobileqq"
+            android:text="@string/dont_need_clean"
             android:textColor="@color/whiteColor"
             android:textSize="@dimen/sp15"/>
     </RelativeLayout>

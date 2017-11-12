@@ -131,4 +131,14 @@
     <string name="empty_file">空文件夹</string>
     <string name="not_use_empty">无用的空文件夹</string>
     <string name="useless_empty_folder">无用的空文件夹</string>
+    <string name="cn">cn</string>
+    <string name="zh">zh</string>
+    <string name="cache_garbage">缓存垃圾</string>
+    <string name="empty_file_count">数量:</string>
+    <string name="use_less_folder">无用的空文件夹</string>
+    <string name="cleaning_app_cache">正在清理app缓存...</string>
+    <string name="cleanning_ad_garbage">正在清除广告垃圾</string>
+    <string name="cleanning_empty_folder">正在清除空文件夹</string>
+    <string name="clean_finished">垃圾清理完毕</string>
+    <string name="dont_need_clean">你的手机没有垃圾.不需要清理哦</string>
 </resources>

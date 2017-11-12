@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/dp80"
                 android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp100"
+        android:layout_height="@dimen/dp80"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dp30"
         android:paddingRight="@dimen/dp30">
@@ -18,13 +18,40 @@
             android:layout_centerVertical="true"
             android:src="@mipmap/empty_folder"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp20"
+            android:layout_marginRight="@dimen/dp10"
             android:layout_toRightOf="@id/iv_icon"
-            android:text="@string/useless_empty_folder"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/useless_empty_folder"/>
+
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:text="14"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp40"
+            />
 
 
         <CheckBox
@@ -35,13 +62,7 @@
             android:layout_centerVertical="true"
             />
 
-        <TextView
-            android:id="@+id/tv_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dp10"
-            android:layout_toLeftOf="@+id/cb"
-            android:text="14"/>
     </RelativeLayout>
+
+
 </RelativeLayout>

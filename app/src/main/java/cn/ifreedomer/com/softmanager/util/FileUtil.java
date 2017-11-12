@@ -24,6 +24,8 @@ public class FileUtil {
     public static final String THUMBNAIL_PATH = SD_PATH + "/DCIM/.thumbnails/";
     public static final String TAG = FileUtil.class.getSimpleName();
     public static final float MB = 1000 * 1000.0f;
+    public static final float B = 1.0f;
+    public static final float KB = 1000.0f;
 //
 //    public static List<FileInfo> getBigFiles() {
 //        String sdCard = Environment.getExternalStorageDirectory().toString();
@@ -201,7 +203,6 @@ public class FileUtil {
     }
 
 
-
     /**
      * 判断一个文件夹是不是空文件夹
      *
@@ -223,6 +224,108 @@ public class FileUtil {
             }
         }
         return true;
+    }
+
+
+    /**
+     * 删除单个文件
+     *
+     * @param sPath 被删除文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public boolean deleteFile(String sPath) {
+        boolean flag = false;
+        File file = new File(sPath);
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists()) {
+            file.delete();
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    /**
+     * 根据目录删除所有的文件
+     *
+     * @param filePath
+     */
+    public static void deleteFileByPath(String filePath) {
+        File rootfile = new File(filePath);
+        if (rootfile != null && rootfile.exists()) {
+            if (rootfile.isDirectory()) {
+                File[] files = rootfile.listFiles();
+                if (files != null) {
+                    for (File childFile : files) {
+                        deleteFileByPath(childFile.getAbsolutePath());
+                    }
+                }
+                Log.e(TAG, "delete folder = " + filePath);
+                rootfile.delete();
+
+            } else if (rootfile.isFile()) {
+                Log.e(TAG, "delete file = " + filePath);
+
+                rootfile.delete();
+            }
+        }
+    }
+
+
+    /**
+     * 删除空目录
+     *
+     * @param dir 将要删除的目录路径
+     */
+    private static void doDeleteEmptyDir(String dir) {
+        boolean success = (new File(dir)).delete();
+        if (success) {
+            System.out.println("Successfully deleted empty directory: " + dir);
+        } else {
+            System.out.println("Failed to delete empty directory: " + dir);
+        }
+    }
+
+    /**
+     * 递归删除目录下的所有文件及子目录下所有文件
+     *
+     * @param dir 将要删除的文件目录
+     * @return boolean Returns "true" if all deletions were successful.
+     * If a deletion fails, the method stops attempting to
+     * delete and returns "false".
+     */
+    public static boolean deleteDir(File dir) {
+        LogUtil.e(TAG, "deleteDir  1");
+
+        if (!dir.exists()) {
+            LogUtil.e(TAG, "dir is not exist,del failed");
+            return false;
+        }
+        if (dir.isDirectory()) {
+            LogUtil.e(TAG, "deleteDir  2");
+
+            String[] children = dir.list();
+            LogUtil.e(TAG, "deleteDir  3");
+
+            //递归删除目录中的子目录下
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            LogUtil.e(TAG, "deleteDir  4");
+
+        }
+        LogUtil.e(TAG, "deleteDir  5");
+
+        // 目录此时为空，可以删除
+        return dir.delete();
+    }
+
+
+    public static ShellUtils.CommandResult deleteFolderByRoot(String path) {
+        return ShellUtils.execCommand("rm -r " + path, true);
     }
 
 

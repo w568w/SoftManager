@@ -11,6 +11,7 @@ import java.util.List;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.listener.OnUnInstallListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 
 /**
  * @author:eavawu
@@ -23,7 +24,6 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
     public AppAdapter(Context context, int layoutId, List<AppInfo> datas) {
         super(context, layoutId, datas);
     }
-
 
 
     public OnUnInstallListener getUnInstallListener() {
@@ -43,7 +43,7 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
     protected void convert(ViewHolder holder, final AppInfo appInfo, int position) {
         holder.setText(R.id.tv_appname, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
-        holder.setText(R.id.tv_appcache, appInfo.getPkgSize() + "M");
+        holder.setText(R.id.tv_appcache, DataTypeUtil.getTextBySize(appInfo.getPkgSize()));
         holder.setOnClickListener(R.id.iv_uninstall, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -38,7 +38,12 @@ public class GarbageHeadView extends RelativeLayout {
     }
 
     public void setScanTotal(float scanTotal) {
-
-        mTvScanTotal.setText(DataTypeUtil.getTwoFloat(scanTotal / FileUtil.MB) + " MB");
+        if (scanTotal < FileUtil.KB) {
+            mTvScanTotal.setText(DataTypeUtil.getTwoFloat(scanTotal / FileUtil.B) + " B");
+        } else if (scanTotal > FileUtil.KB && scanTotal < FileUtil.MB) {
+            mTvScanTotal.setText(DataTypeUtil.getTwoFloat(scanTotal / FileUtil.KB) + " KB");
+        } else if (scanTotal > FileUtil.MB) {
+            mTvScanTotal.setText(DataTypeUtil.getTwoFloat(scanTotal / FileUtil.MB) + " MB");
+        }
     }
 }

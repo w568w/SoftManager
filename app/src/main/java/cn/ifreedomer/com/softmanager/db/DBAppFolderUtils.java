@@ -8,16 +8,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import cn.com.opda.android.clearmaster.model.ClearItem;
-import cn.com.opda.android.clearmaster.utils.BaseJsonUtil;
-import cn.com.opda.android.clearmaster.utils.DesUtils;
+import cn.ifreedomer.com.softmanager.bean.clean.ClearItem;
+import cn.ifreedomer.com.softmanager.util.DesUtils;
 
-public class DBAppFolderUtils extends BaseJsonUtil {
+
+public class DBAppFolderUtils  {
 	private static final String TAG = "db";
 
-	public DBAppFolderUtils(Context context) {
-		super(context);
-	}
 
 	/**
 	 * @param info
@@ -56,7 +53,7 @@ public class DBAppFolderUtils extends BaseJsonUtil {
 	}
 
 	/**
-	 * @param info
+	 * @param infos
 	 * @param context
 	 *            把信息保存到数据库
 	 */
@@ -214,7 +211,7 @@ public class DBAppFolderUtils extends BaseJsonUtil {
 	}
 
 	/**
-	 * @param info
+	 * @param infos
 	 * @param context
 	 *            把信息保存到数据库
 	 */

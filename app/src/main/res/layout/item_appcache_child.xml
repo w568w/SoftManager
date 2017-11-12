@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp100"
+                android:layout_height="@dimen/dp80"
                 android:orientation="horizontal">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp100"
+        android:layout_height="@dimen/dp80"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dp30"
         android:paddingRight="@dimen/dp30">
@@ -34,11 +34,20 @@
                 android:text="hello.mp3"/>
 
             <TextView
-                android:id="@+id/tv_size"
+                android:id="@+id/tv_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="hello.mp3"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp40"
+            />
 
         <CheckBox
             android:id="@+id/cb"

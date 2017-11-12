@@ -26,7 +26,6 @@ import java.util.List;
 import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
-import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
@@ -161,8 +160,8 @@ public class PackageInfoManager {
                                     @Override
                                     public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
                                         synchronized (appInfo) {
-                                            appInfo.setPkgSize(DataTypeUtil.getTwoFloat((pStats.cacheSize + pStats.codeSize + pStats.dataSize) / FileUtil.MB));
-                                            appInfo.setCacheSize(DataTypeUtil.getTwoFloat(pStats.cacheSize / FileUtil.MB));
+                                            appInfo.setPkgSize(DataTypeUtil.getTwoFloat((pStats.cacheSize + pStats.codeSize + pStats.dataSize)));
+                                            appInfo.setCacheSize(DataTypeUtil.getTwoFloat(pStats.cacheSize));
 
                                         }
                                     }

@@ -60,7 +60,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions
-                .request(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE)
+                .request(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE,Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
                     if (granted) {
                         initApp(savedInstanceState);
