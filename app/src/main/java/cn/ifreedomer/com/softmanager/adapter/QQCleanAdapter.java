@@ -153,8 +153,11 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
 
         if ("image/jpeg".equals(fileInfo.getType())) {
             try {
-                fileInfo.setPhoto(BitmapFactory.decodeStream(new FileInputStream(fileInfo.getPath())));
-                fileIv.setImageBitmap(BitmapFactory.decodeStream(new FileInputStream(fileInfo.getPath())));
+                if (fileInfo.getPhoto() == null) {
+                    fileInfo.setPhoto(BitmapFactory.decodeStream(new FileInputStream(fileInfo.getPath())));
+                }
+                fileIv.setImageBitmap(fileInfo.getPhoto());
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

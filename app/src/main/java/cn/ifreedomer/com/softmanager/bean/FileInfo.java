@@ -84,4 +84,8 @@ public class FileInfo {
     public void setPhoto(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
+
+    public Bitmap getPhoto() {
+        return bitmap;
+    }
 }
