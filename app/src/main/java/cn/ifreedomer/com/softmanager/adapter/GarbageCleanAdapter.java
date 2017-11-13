@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
@@ -39,17 +37,14 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     private List<GarbageGroupTitle> mTitleList;
     private List<List<GarbageInfo>> mGarbageInfoGroupList;
     private Context mContext;
-    private List<Boolean> checkState = new ArrayList<>();
     private Handler mHandler = null;
 
     public GarbageCleanAdapter(Context context, List<GarbageGroupTitle> titleList, List<List<GarbageInfo>> garbageInfoGroupList) {
-        Log.e(TAG, "titleList size = " + titleList);
+//        Log.e(TAG, "titleList size = " + titleList);
         this.mTitleList = titleList;
         this.mGarbageInfoGroupList = garbageInfoGroupList;
         this.mContext = context;
-        for (int i = 0; i < mTitleList.size(); i++) {
-            checkState.add(false);
-        }
+
 
     }
 
@@ -60,12 +55,13 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
+        LogUtil.e(TAG, "mTitleList size = " + mTitleList.size() + "   mGarbageInfoGroupList size = " + mGarbageInfoGroupList.size() + "   groupPosition = " + groupPosition);
         return mGarbageInfoGroupList.get(groupPosition).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return mGarbageInfoGroupList.get(groupPosition);
+        return mTitleList.get(groupPosition);
     }
 
     @Override
@@ -81,7 +77,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildTypeCount() {
-        return mTitleList.size();
+        return mGarbageInfoGroupList.size();
     }
 
     @Override
@@ -101,25 +97,14 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        LogUtil.e(TAG, "mTitleList =" + mTitleList.toString());
+//        LogUtil.e(TAG, "mTitleList =" + mTitleList.toString());
         View groupView = View.inflate(mContext, R.layout.item_garbage_group, null);
         ImageView iconIv = (ImageView) groupView.findViewById(R.id.iv_icon);
         TextView titleTv = (TextView) groupView.findViewById(R.id.tv_title);
         GarbageGroupTitle garbageGroupInfo = mTitleList.get(groupPosition);
         titleTv.setText(garbageGroupInfo.getTitle());
 
-        final CheckBox cb = (CheckBox) groupView.findViewById(R.id.cb);
-        cb.setChecked(garbageGroupInfo.isChecked());
-        cb.setOnClickListener(v -> {
-            garbageGroupInfo.setChecked(!garbageGroupInfo.isChecked());
-            List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
-            for (int i = 0; i < garbageInfos.size(); i++) {
-                garbageInfos.get(i).setChecked(cb.isChecked());
-            }
-            notifyDataSetChanged();
-        });
-
-
+        selectChildren(groupPosition, groupView, garbageGroupInfo);
         if (isExpanded) {
             iconIv.setBackgroundResource(R.mipmap.bottom_arrow);
         } else {
@@ -130,9 +115,22 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
         return groupView;
     }
 
+    private void selectChildren(int groupPosition, View groupView, GarbageGroupTitle garbageGroupInfo) {
+        final CheckBox cb = (CheckBox) groupView.findViewById(R.id.cb);
+        cb.setChecked(garbageGroupInfo.isChecked());
+        cb.setOnClickListener(v -> {
+            garbageGroupInfo.setChecked(!garbageGroupInfo.isChecked());
+            List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
+            for (int i = 0; i < garbageInfos.size(); i++) {
+                garbageInfos.get(i).setChecked(cb.isChecked());
+            }
+            notifyDataSetChanged();
+        });
+    }
+
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        LogUtil.e(TAG, "group size = " + mTitleList.size() + "  group_pos=" + groupPosition);
+//        LogUtil.e(TAG, "group size = " + mTitleList.size() + "  group_pos=" + groupPosition);
         final GarbageInfo garbageInfo = mGarbageInfoGroupList.get(groupPosition).get(childPosition);
         View childView = null;
         CheckBox cb = null;
@@ -186,15 +184,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 iconIv.setImageResource(R.mipmap.empty_folder);
                 break;
         }
-        if (cb != null) {
-            cb.setOnClickListener(v -> {
-                garbageInfo.setChecked(!garbageInfo.isChecked());
-                if (!garbageInfo.isChecked()) {
-                    mTitleList.get(groupPosition).setChecked(false);
-                }
-                notifyDataSetChanged();
-            });
-        }
+        unSelectGroup(groupPosition, garbageInfo, cb);
 
 
         return childView;
@@ -216,6 +206,18 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     }
 
+    private void unSelectGroup(int groupPosition, GarbageInfo garbageInfo, CheckBox cb) {
+        if (cb != null) {
+            cb.setOnClickListener(v -> {
+                garbageInfo.setChecked(!garbageInfo.isChecked());
+                if (!garbageInfo.isChecked()) {
+                    mTitleList.get(groupPosition).setChecked(false);
+                }
+                notifyDataSetChanged();
+            });
+        }
+    }
+
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
@@ -235,8 +237,8 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 sendProcessTip(mContext.getString(R.string.cleanning_empty_folder));
                 deleteEmptyFolder(i);
             }
-            sendProcessTip(mContext.getString(R.string.clean_finished));
         }
+        sendProcessTip(mContext.getString(R.string.clean_finished));
     }
 
     private void sendProcessTip(String tip) {
@@ -248,15 +250,22 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     private void deleteEmptyFolder(int pos) {
         LogUtil.e(TAG, "deleteEmptyFolder = " + pos);
+        if (mGarbageInfoGroupList.get(pos).size() <= 0) {
+            LogUtil.e(TAG, "deleteEmptyFolder end ");
 
+            return;
+        }
         GarbageInfo garbageInfo = mGarbageInfoGroupList.get(pos).get(0);
 
         EmptyFolder emptyFolder = (EmptyFolder) garbageInfo.getData();
         for (int i = 0; i < emptyFolder.getPathList().size(); i++) {
             if (garbageInfo.isChecked()) {
+                LogUtil.e(TAG, "emptyFolder pathlist = ");
                 LogUtil.e(TAG, "delete empty folder " + emptyFolder.getPathList().get(i) + "  state =" + FileUtil.deleteDir(new File(emptyFolder.getPathList().get(i))));
             }
         }
+        LogUtil.e(TAG, "deleteEmptyFolder end ");
+
     }
 
     private void deleteAdGarbage(int pos) {
@@ -273,6 +282,8 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 LogUtil.e(TAG, "delete ad path " + file.getPath() + "  state =" + FileUtil.deleteDir(file));
             }
         }
+        LogUtil.e(TAG, "deleteAdGarbage = end");
+
     }
 
     private void deleteAppCache(int pos) {
@@ -286,6 +297,8 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 appInfo.setCacheSize(0);
             }
         }
+        LogUtil.e(TAG, "deleteAppCache = end");
+
     }
 
 

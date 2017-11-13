@@ -1,5 +1,7 @@
 package cn.ifreedomer.com.softmanager.bean;
 
+import android.graphics.Bitmap;
+
 import java.io.File;
 
 import cn.ifreedomer.com.softmanager.util.FileUtil;
@@ -17,6 +19,7 @@ public class FileInfo {
     private String type;
     private float size;
     private boolean isChecked;
+    private Bitmap bitmap;
 
     public boolean isChecked() {
         return isChecked;
@@ -76,5 +79,9 @@ public class FileInfo {
 
     public float getSize() {
         return size;
+    }
+
+    public void setPhoto(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

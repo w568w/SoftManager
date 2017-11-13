@@ -141,4 +141,9 @@
     <string name="cleanning_empty_folder">正在清除空文件夹</string>
     <string name="clean_finished">垃圾清理完毕</string>
     <string name="dont_need_clean">你的手机没有垃圾.不需要清理哦</string>
+    <string name="qq_clean">qq专清</string>
+    <string name="clean_finish">清理完毕</string>
+    <string name="user_head">用戶頭像</string>
+    <string name="thumbnails">缩略图片</string>
+    <string name="chat_title">聊天图片</string>
 </resources>

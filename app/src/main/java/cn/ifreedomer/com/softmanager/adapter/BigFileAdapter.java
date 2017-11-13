@@ -34,6 +34,9 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
         mimeTypeMap.put("application/vnd.android.package-archive", R.mipmap.apk_file);
         mimeTypeMap.put("audio/mpeg", R.mipmap.music_file);
         mimeTypeMap.put("video/mp4", R.mipmap.video_file);
+        mimeTypeMap.put("application/zip", R.mipmap.zip);
+        mimeTypeMap.put("application/rar", R.mipmap.zip);
+
     }
 
     @Override
@@ -43,7 +46,7 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
         LogUtil.e(TAG, fileInfo.toString());
         int icon = R.mipmap.unknow_file;
         if (!TextUtils.isEmpty(fileInfo.getType())) {
-            icon = mimeTypeMap.get(fileInfo.getType()) == null ? 0 : mimeTypeMap.get(fileInfo.getType());
+            icon = mimeTypeMap.get(fileInfo.getType()) == null ? R.mipmap.unknow_file : mimeTypeMap.get(fileInfo.getType());
         }
         holder.setImageResource(R.id.iv_icon, icon);
 

@@ -65,7 +65,7 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
     private void setData() {
         garbageCardView.setData(new CleanCardInfo(getString(R.string.garbage_clean), R.mipmap.clean));
         deepCardView.setData(new CleanCardInfo(getString(R.string.deep_clean), R.mipmap.deep_clean));
-        qqCardView.setData(new CleanCardInfo(getString(R.string.apk_clean), R.mipmap.apk_file));
+        qqCardView.setData(new CleanCardInfo(getString(R.string.qq_clean), R.mipmap.qq));
         bigFileCardView.setData(new CleanCardInfo(getString(R.string.big_file), R.mipmap.file));
 
 
@@ -103,6 +103,8 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btn_clean:
+                intent = new Intent(getActivity(), GarbageActivity.class);
+                startActivity(intent);
 //                PackageInfoManager.getInstance().clearCache();
                 break;
             default:

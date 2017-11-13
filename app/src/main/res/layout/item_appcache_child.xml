@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp20"
+            android:layout_toLeftOf="@+id/tv_size"
             android:layout_toRightOf="@id/iv_icon"
             android:orientation="vertical">
 
@@ -30,7 +31,7 @@
                 android:id="@+id/tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dp30"
+                android:layout_marginRight="@dimen/dp15"
                 android:text="hello.mp3"/>
 
             <TextView

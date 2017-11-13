@@ -136,6 +136,7 @@ public class FileUtil {
         }
     }
 
+
     public static String getMimeType(String url) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(url);
@@ -144,6 +145,7 @@ public class FileUtil {
         }
         return type;
     }
+
 
 
     public static List<FileInfo> getFolderFiles(String folderPath, List<FileInfo> fileInfoList) {
@@ -295,32 +297,8 @@ public class FileUtil {
      * delete and returns "false".
      */
     public static boolean deleteDir(File dir) {
-        LogUtil.e(TAG, "deleteDir  1");
+        return ShellUtils.execCommand("rm -r " + dir.getPath(), false).result == 0;
 
-        if (!dir.exists()) {
-            LogUtil.e(TAG, "dir is not exist,del failed");
-            return false;
-        }
-        if (dir.isDirectory()) {
-            LogUtil.e(TAG, "deleteDir  2");
-
-            String[] children = dir.list();
-            LogUtil.e(TAG, "deleteDir  3");
-
-            //递归删除目录中的子目录下
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-            LogUtil.e(TAG, "deleteDir  4");
-
-        }
-        LogUtil.e(TAG, "deleteDir  5");
-
-        // 目录此时为空，可以删除
-        return dir.delete();
     }
 
 
