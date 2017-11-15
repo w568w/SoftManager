@@ -146,4 +146,5 @@
     <string name="user_head">用戶頭像</string>
     <string name="thumbnails">缩略图片</string>
     <string name="chat_title">聊天图片</string>
+    <string name="alipay">支付宝充值</string>
 </resources>
