@@ -55,7 +55,7 @@
             android:name=".activity.clean.QQCleanActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.clean.DeepCleanActivity"
+            android:name=".activity.clean.MemoryCleanActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.clean.GarbageActivity"

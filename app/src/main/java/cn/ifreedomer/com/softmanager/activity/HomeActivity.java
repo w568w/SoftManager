@@ -94,8 +94,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 add(R.id.frame_content, cleanFragment, HARDWARE_TAG).
                 add(R.id.frame_content, permissionFragment, PERMISSION_TAG).
                 add(R.id.frame_content, iceboxFragment).
-                show(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).
-                hide(cleanFragment).commit();
+                hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).
+                show(cleanFragment).commit();
 
     }
 
@@ -111,7 +111,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.whiteColor));
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.soft_manager));
+            getSupportActionBar().setTitle(getString(R.string.clean_garbage));
         }
     }
 
@@ -167,6 +167,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
+
         toggle.syncState();
 
 

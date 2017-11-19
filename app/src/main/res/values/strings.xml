@@ -71,7 +71,7 @@
     <string name="see_detail">查看详情</string>
     <string name="apk_clean">Apk清理</string>
     <string name="big_file">大文件清理</string>
-    <string name="deep_clean">深度清理</string>
+    <string name="memory_clean">手机加速</string>
     <string name="garbage_clean">垃圾清理</string>
     <string name="big_file_clean">大文件清理</string>
     <string name="scanning">正在扫描</string>

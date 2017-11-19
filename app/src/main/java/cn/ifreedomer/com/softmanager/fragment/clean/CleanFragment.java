@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.clean.BigFileCleanActivity;
-import cn.ifreedomer.com.softmanager.activity.clean.DeepCleanActivity;
+import cn.ifreedomer.com.softmanager.activity.clean.MemoryCleanActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.GarbageActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.QQCleanActivity;
 import cn.ifreedomer.com.softmanager.bean.CleanCardInfo;
@@ -37,7 +37,7 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
     ItemCardView bigFileCardView;
     @InjectView(R.id.garbage_card)
     ItemCardView garbageCardView;
-    @InjectView(R.id.deep_card)
+    @InjectView(R.id.memory_clean)
     ItemCardView deepCardView;
     @InjectView(R.id.btn_clean)
     Button mBtnClean;
@@ -64,7 +64,7 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
 
     private void setData() {
         garbageCardView.setData(new CleanCardInfo(getString(R.string.garbage_clean), R.mipmap.clean));
-        deepCardView.setData(new CleanCardInfo(getString(R.string.deep_clean), R.mipmap.deep_clean));
+        deepCardView.setData(new CleanCardInfo(getString(R.string.memory_clean), R.mipmap.speed));
         qqCardView.setData(new CleanCardInfo(getString(R.string.qq_clean), R.mipmap.qq));
         bigFileCardView.setData(new CleanCardInfo(getString(R.string.big_file), R.mipmap.file));
 
@@ -86,8 +86,8 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(getActivity(), BigFileCleanActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.deep_card:
-                intent = new Intent(getActivity(), DeepCleanActivity.class);
+            case R.id.memory_clean:
+                intent = new Intent(getActivity(), MemoryCleanActivity.class);
                 startActivity(intent);
                 break;
             case R.id.garbage_card:

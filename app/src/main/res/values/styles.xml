@@ -6,15 +6,18 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:windowBackground">@color/whiteColor</item>
     </style>
 
 
-     <style name="ToolbarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ToolbarStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
+
     <style name="Theme.ToolBar.ZhiHu" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
@@ -79,14 +82,19 @@
         <item name="android:textColor">@color/blackHintColor</item>
     </style>
 
-    <!--android:layout_height="@dimen/dp200"-->
-    <!--android:background="@color/colorPrimary"-->
-    <!--android:paddingLeft="@dimen/dp30"-->
 
-    <!--android:paddingRight="@dimen/dp30"-->
-    <!--android:text="right"-->
-    <!--android:textColor="#C1C1C1"-->
-    <!--android:textSize="@dimen/sp10"-->
-    <dimen name="sp13">13sp</dimen>
-    <dimen name="sp17">17sp</dimen>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
+
+
+    <style name="roundButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/button_shape</item>
+        <item name="android:textColor">@color/blackTextColor</item>
+    </style>
+
 </resources>
