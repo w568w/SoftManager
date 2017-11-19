@@ -135,6 +135,7 @@ public class PackageInfoManager {
                     } else {
                         appInfo.setUserApp(true);//用户应用
                     }
+
                     boolean flag = false;
                     if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                         flag = true;
@@ -150,6 +151,7 @@ public class PackageInfoManager {
                     appInfo.setAppName(appName);
                     String packname = packInfo.packageName;
                     appInfo.setPackname(packname);
+                    appInfo.setEnable(PackageInfoManager.getInstance().isAppEnable(packname));
                     String version = packInfo.versionName;
                     appInfo.setVersion(version);
                     try {
@@ -257,5 +259,11 @@ public class PackageInfoManager {
             return 1;
         }
         return packageInfo.versionCode;
+    }
+
+
+    public boolean isAppEnable(String pkgName) {
+        int applicationEnabledSetting = mContext.getPackageManager().getApplicationEnabledSetting(pkgName);
+        return applicationEnabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
     }
 }

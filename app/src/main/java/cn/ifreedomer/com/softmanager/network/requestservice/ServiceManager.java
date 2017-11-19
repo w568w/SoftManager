@@ -1,7 +1,10 @@
 package cn.ifreedomer.com.softmanager.network.requestservice;
 
+
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
+import cn.ifreedomer.com.softmanager.bean.RespResult;
+import cn.ifreedomer.com.softmanager.bean.json.PayInfo;
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -14,7 +17,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class ServiceManager {
-    private static final String BASE_URL = "http://192.168.0.107:8080/";
+    private static final String BASE_URL = "http://www.ifreedomer.com/";
     private static Retrofit sStringRetrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 支持RxJava
@@ -29,15 +32,16 @@ public class ServiceManager {
             .build();
 
 
-    public static Observable<String> getPayInfo(String imei) {
-        PayService payService = sStringRetrofit.create(PayService.class);
-        Observable<String> payInfoObservable = payService.getPayInfo(imei);
-        return payInfoObservable;
+    public static Observable<RespResult<PayInfo>> getPayInfo(String imei) {
+        PayService payService = retrofit.create(PayService.class);
+        return payService.getPayInfo(imei);
     }
 
     public static void main(String[] args) {
-        Observable<String> payInfo = getPayInfo("12345");
-        payInfo.subscribe(s -> System.out.println(s));
+//        Observable<RespResult<PayInfo>> payInfo = getPayInfo("12345678910");
+        RespResult<PayInfo> payInfoRespResult = new RespResult<>();
+//        System.out.println(payInfo.blockingFirst().toString());
+//        payInfo.subscribe(s -> System.out.println(s));
     }
 
 }

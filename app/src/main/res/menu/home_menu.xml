@@ -18,9 +18,13 @@
     <item
         android:id="@+id/broken_notify"
         android:icon="@mipmap/broken_notify"
-        android:title="@string/broken_notify"/>
+        android:title="@string/broken_notify"
+        android:visible="false"/>
 
-
+    <item
+        android:id="@+id/icebox"
+        android:icon="@mipmap/icebox"
+        android:title="@string/icebox"/>
     <item
         android:id="@+id/permission"
         android:icon="@mipmap/permission"

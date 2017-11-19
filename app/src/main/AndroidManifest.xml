@@ -30,7 +30,7 @@
             android:name=".activity.setting.FeedBackActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TestActivity"
+            android:name=".activity.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -76,10 +76,6 @@
         </activity>
 
 
-
-
-
-
         <!-- alipay sdk begin -->
 
         <activity
@@ -87,14 +83,14 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
         <activity
             android:name="com.alipay.sdk.app.H5AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
 
         <!-- alipay sdk end -->

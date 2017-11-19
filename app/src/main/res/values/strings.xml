@@ -147,4 +147,6 @@
     <string name="thumbnails">缩略图片</string>
     <string name="chat_title">聊天图片</string>
     <string name="alipay">支付宝充值</string>
+    <string name="icebox">应用冰箱</string>
+    <string name="freeze">已经冰冻</string>
 </resources>

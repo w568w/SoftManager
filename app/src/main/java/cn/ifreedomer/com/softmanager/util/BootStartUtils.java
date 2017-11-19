@@ -98,7 +98,7 @@ public class BootStartUtils {
             icon = resolveInfoList.get(0).loadIcon(pm);
             ComponentName mComponentName1 = new ComponentName(resolveInfoList.get(0).activityInfo.packageName, resolveInfoList.get(0).activityInfo.name);
 
-            if (pm.getComponentEnabledSetting(mComponentName1) == 2) {
+            if (pm.getComponentEnabledSetting(mComponentName1) == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
 
                 isenable = false;
             } else {
@@ -150,6 +150,9 @@ public class BootStartUtils {
             appList.add(mAutoStartInfo);
 
         }
+
+
+
 
 
 //        for (ResolveInfo resolveInfo : resolveInfoList) {

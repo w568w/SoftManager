@@ -16,6 +16,16 @@ public class AppInfo {
     private int uid;
     private String codePath;
     private float cacheSize;
+    private boolean isEnable = true;
+
+    public boolean isEnable() {
+        return isEnable;
+    }
+
+    public void setEnable(boolean enable) {
+        isEnable = enable;
+    }
+
     private List<PermissionDetail> permissionDetailList = new ArrayList<>();
 
     public List<PermissionDetail> getPermissionDetailList() {

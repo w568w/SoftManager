@@ -1,5 +1,7 @@
 package cn.ifreedomer.com.softmanager.network.requestservice;
 
+import cn.ifreedomer.com.softmanager.bean.RespResult;
+import cn.ifreedomer.com.softmanager.bean.json.PayInfo;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -11,6 +13,6 @@ import retrofit2.http.Query;
 
 public interface PayService {
     @GET("pay/getPayInfo")
-    io.reactivex.Observable<String> getPayInfo(@Query("imei") String imei);
+    io.reactivex.Observable<RespResult<PayInfo>> getPayInfo(@Query("imei") String imei);
 
 }

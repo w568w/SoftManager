@@ -29,7 +29,7 @@ import static cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment.TAG;
 public class RecycleFragment extends Fragment {
     @InjectView(R.id.rv)
     RecyclerView rv;
-    AppAdapter appAdapter;
+    public AppAdapter appAdapter;
     private List<AppInfo> appInfoList = new ArrayList<>();
 
     @Override
@@ -48,8 +48,8 @@ public class RecycleFragment extends Fragment {
 
     public void setData(List<AppInfo> appInfos) {
         appInfoList.clear();
-        appInfoList.addAll( appInfos);
-        Log.e(TAG, "setData: "+appInfoList.size() );
+        appInfoList.addAll(appInfos);
+        Log.e(TAG, "setData: " + appInfoList.size());
         if (rv == null || rv.getAdapter() == null) {
             return;
         }

@@ -24,6 +24,7 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
+import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
@@ -51,6 +52,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     public static final String HARDWARE_TAG = "hardware";
     public static final String CLEAN_TAG = "clean";
     private ImageView mSettingIv;
+    private Fragment iceboxFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions
-                .request(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
                     if (granted) {
                         initApp(savedInstanceState);
@@ -85,12 +87,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         hardwareFragment = new DeviceInfoFragment();
         cleanFragment = new CleanFragment();
         permissionFragment = new PermissionFragment();
+        iceboxFragment = new IceBoxFragment();
         getSupportFragmentManager().beginTransaction().
                 add(R.id.frame_content, softFragment, SOFT_TAG).
                 add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).
                 add(R.id.frame_content, cleanFragment, HARDWARE_TAG).
                 add(R.id.frame_content, permissionFragment, PERMISSION_TAG).
-                show(softFragment).hide(hardwareFragment).hide(permissionFragment).
+                add(R.id.frame_content, iceboxFragment).
+                show(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).
                 hide(cleanFragment).commit();
 
     }
@@ -127,6 +131,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             fragmentTransaction.hide(softFragment);
             fragmentTransaction.hide(cleanFragment);
             fragmentTransaction.hide(permissionFragment);
+            fragmentTransaction.hide(iceboxFragment);
             switch (menuItem.getItemId()) {
                 case R.id.soft:
                     fragmentTransaction.show(softFragment);
@@ -143,6 +148,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 case R.id.permission:
                     getSupportActionBar().setTitle(getString(R.string.permission_manager));
                     fragmentTransaction.show(permissionFragment);
+                    break;
+                case R.id.icebox:
+                    getSupportActionBar().setTitle(getString(R.string.icebox));
+                    fragmentTransaction.show(iceboxFragment);
                     break;
                 default:
                     break;

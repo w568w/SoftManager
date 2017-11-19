@@ -1,7 +1,6 @@
 package cn.ifreedomer.com.softmanager.adapter;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -11,8 +10,8 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.util.AutoStartInfo;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
@@ -36,23 +35,20 @@ public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
         holder.setImageDrawable(R.id.iv_icon, autoStartInfo.getIcon());
         final Switch switchWidget = holder.getView(R.id.swith_auto);
 
-        holder.setOnClickListener(R.id.swith_auto, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
-                    switchWidget.setChecked(!switchWidget.isChecked());
-                    Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (mDatas.get(position).isEnable()) {
-                    diasableApp(autoStartInfo);
-                } else {
-                    enableApp(autoStartInfo);
-                }
-                mDatas.get(position).setEnable(switchWidget.isChecked());
-
+        holder.setOnClickListener(R.id.swith_auto, v -> {
+            if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
+                switchWidget.setChecked(!switchWidget.isChecked());
+                Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            if (mDatas.get(position).isEnable()) {
+                diasableApp(autoStartInfo);
+            } else {
+                enableApp(autoStartInfo);
+            }
+            mDatas.get(position).setEnable(switchWidget.isChecked());
+
         });
         if (mDatas.get(position).isEnable()) {
             switchWidget.setChecked(true);
