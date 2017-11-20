@@ -14,6 +14,7 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.clean.ProcessItem;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
+import cn.ifreedomer.com.softmanager.util.ProcessManagerUtils;
 
 
 /**
@@ -24,17 +25,9 @@ import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 public class MemoryAdapter extends CommonAdapter<ProcessItem> {
     private static final String TAG = MemoryAdapter.class.getSimpleName();
-    private HashMap<String, Integer> mimeTypeMap = new HashMap<>();
 
     public MemoryAdapter(Context context, int layoutId, List<ProcessItem> datas) {
         super(context, layoutId, datas);
-        mimeTypeMap.put("application/octet-stream", R.mipmap.unknow_file);
-        mimeTypeMap.put("application/vnd.android.package-archive", R.mipmap.apk_file);
-        mimeTypeMap.put("audio/mpeg", R.mipmap.music_file);
-        mimeTypeMap.put("video/mp4", R.mipmap.video_file);
-        mimeTypeMap.put("application/zip", R.mipmap.zip);
-        mimeTypeMap.put("application/rar", R.mipmap.zip);
-
     }
 
     @Override
@@ -48,16 +41,19 @@ public class MemoryAdapter extends CommonAdapter<ProcessItem> {
 
         CheckBox checkBox = holder.getView(R.id.cb);
         checkBox.setChecked(processItem.isChecked());
-        checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processItem.setChecked(!processItem.isChecked());
-            }
-        });
+        checkBox.setOnClickListener(v -> processItem.setChecked(!processItem.isChecked()));
 
     }
 
     public void removeCheckedItems() {
+        for (int i = mDatas.size() - 1; i == 0; i++) {
+            ProcessItem processItem = mDatas.get(i);
+            if (processItem.isChecked()) {
+                ProcessManagerUtils.killProcess(mContext, processItem);
+            }
+            mDatas.remove(i);
+        }
+        notifyDataSetChanged();
 //        for (int i = mDatas.size() - 1; i >= 0; i--) {
 //            boolean checked = mDatas.get(i).isChecked();
 //            final FileInfo fileInfo = mDatas.get(i);
@@ -66,7 +62,7 @@ public class MemoryAdapter extends CommonAdapter<ProcessItem> {
 //                    @Override
 //                    public void run() {
 //                        File file = new File(fileInfo.getPath());
-//                        file.delete();
+// s                       file.delete();
 //                    }
 //                });
 //
