@@ -1,5 +1,6 @@
 package cn.ifreedomer.com.softmanager.activity.clean;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
@@ -17,13 +19,16 @@ import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.BaseActivity;
-import cn.ifreedomer.com.softmanager.adapter.BigFileAdapter;
-import cn.ifreedomer.com.softmanager.bean.FileInfo;
+import cn.ifreedomer.com.softmanager.adapter.MemoryAdapter;
+import cn.ifreedomer.com.softmanager.bean.clean.ProcessItem;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
+import cn.ifreedomer.com.softmanager.util.ProcessManagerUtils;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
 import cn.ifreedomer.com.softmanager.widget.ArcProgress;
 import cn.ifreedomer.com.softmanager.widget.BigFileHeadView;
@@ -38,9 +43,10 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
     @InjectView(R.id.btn_clean)
     Button mBtnClean;
     ArcProgress mArcProgress;
-    private List<FileInfo> mFileInfoList = new ArrayList<>();
+    private List<ProcessItem> mProcessList = new ArrayList<>();
     private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
-    private BigFileAdapter mBigFileAdapter;
+    private MemoryAdapter mMemoryAdapter;
+    private ConcurrentHashMap<String, ProcessItem> mRunedMap = new ConcurrentHashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +75,14 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
 
 
         mRv.setLayoutManager(new LinearLayoutManager(this));
-        mBigFileAdapter = new BigFileAdapter(this, R.layout.item_big_file, mFileInfoList);
+        mMemoryAdapter = new MemoryAdapter(this, R.layout.item_appcache_child, mProcessList);
 
         //add headview
         BigFileHeadView headerView = new BigFileHeadView(this);
         mArcProgress = (ArcProgress) headerView.findViewById(R.id.arc_progress);
-        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mBigFileAdapter);
+        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mMemoryAdapter);
         mHeaderAndFooterWrapper.addHeaderView(headerView);
         mRv.setAdapter(mHeaderAndFooterWrapper);
-
         mHeaderAndFooterWrapper.notifyDataSetChanged();
     }
 
@@ -94,9 +99,12 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-    private AsyncTask<String, Integer, List<FileInfo>> asyncTask = new AsyncTask<String, Integer, List<FileInfo>>() {
+    @SuppressLint("StaticFieldLeak")
+    private AsyncTask<String, Integer, List<ProcessItem>> asyncTask = new AsyncTask<String, Integer, List<ProcessItem>>() {
         @Override
-        protected List<FileInfo> doInBackground(String... params) {
+        protected List<ProcessItem> doInBackground(String... params) {
+            mRunedMap.clear();
+            mProcessList.clear();
             ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             PackageManager pm = getPackageManager();
             List<ApplicationInfo> installedAppList = pm.getInstalledApplications(0);
@@ -107,21 +115,73 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                 if (runningAppProcessInfo.pkgList == null || runningAppProcessInfo.pkgList.length <= 0) {
                     continue;
                 }
+                publishProgress(i * 100 / lists.size());
                 try {
                     PackageInfo packageInfo = pm.getPackageInfo(runningAppProcessInfo.pkgList[0], 0);
                     int flags = packageInfo.applicationInfo.flags;
-                    if ((flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                    if ((flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                         continue;
                     }
+                    if (mRunedMap.containsKey(packageInfo.packageName)) {
+                        ProcessItem processItem = mRunedMap.get(packageInfo.packageName);
+                        mRunedMap.get(packageInfo.packageName).setMemorySize(processItem.getMemorySize() + ProcessManagerUtils.getProcessMemUsage(am, runningAppProcessInfo.pid) * 1000);
+                        continue;
+                    }
+                    LogUtil.e(TAG, "package name=>" + packageInfo.packageName + "   pid=" + runningAppProcessInfo.pid);
+                    ProcessItem processItem = new ProcessItem();
+                    processItem.setPkgName(packageInfo.packageName);
+                    processItem.setMemorySize(ProcessManagerUtils.getProcessMemUsage(am, runningAppProcessInfo.pid) * 1000);
+                    processItem.setPid(runningAppProcessInfo.pid + "");
+                    processItem.setIcon(packageInfo.applicationInfo.loadIcon(pm));
+                    processItem.setDes(packageInfo.applicationInfo.loadDescription(pm));
+                    processItem.setLabel(packageInfo.applicationInfo.loadLabel(pm));
+                    mRunedMap.put(packageInfo.packageName, processItem);
+                    mProcessList.add(processItem);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
 
-//                pm.getPackageInfo(runningAppProcessInfo.)
-
             }
 
-            return null;
+            for (int i = 0; i < serviceList.size(); i++) {
+                ActivityManager.RunningServiceInfo runningServiceInfo = serviceList.get(i);
+                if (runningServiceInfo.service == null) {
+                    continue;
+                }
+
+                String packageName = runningServiceInfo.service.getPackageName();
+                if (TextUtils.isEmpty(packageName)) {
+                    continue;
+                }
+                PackageInfo packageInfo = null;
+                try {
+                    packageInfo = pm.getPackageInfo(packageName, 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if (packageInfo == null) {
+                    continue;
+                }
+                int flags = packageInfo.applicationInfo.flags;
+                if ((flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                    continue;
+                }
+
+                if (mRunedMap.containsKey(packageName)) {
+                    mRunedMap.get(packageName).setMemorySize(ProcessManagerUtils.getProcessMemUsage(am, runningServiceInfo.pid) * 1000);
+                    continue;
+                }
+                ProcessItem processItem = new ProcessItem();
+                processItem.setPkgName(packageName);
+                processItem.setMemorySize(ProcessManagerUtils.getProcessMemUsage(am, runningServiceInfo.pid) * 1000);
+                processItem.setLabel(packageInfo.applicationInfo.loadLabel(pm));
+                processItem.setIcon(packageInfo.applicationInfo.loadIcon(pm));
+                mProcessList.add(processItem);
+                mRunedMap.put(packageName, processItem);
+            }
+
+            publishProgress(100);
+            return mProcessList;
 
         }
 
@@ -135,10 +195,9 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
             }
         }
 
+
         @Override
-        protected void onPostExecute(List<FileInfo> fileInfos) {
-            mFileInfoList.clear();
-            mFileInfoList.addAll(fileInfos);
+        protected void onPostExecute(List<ProcessItem> processItemList) {
             mHeaderAndFooterWrapper.notifyDataSetChanged();
 
         }
@@ -148,7 +207,7 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_clean:
-                mBigFileAdapter.removeCheckedItems();
+                mMemoryAdapter.removeCheckedItems();
                 mHeaderAndFooterWrapper.notifyDataSetChanged();
                 break;
             default:
