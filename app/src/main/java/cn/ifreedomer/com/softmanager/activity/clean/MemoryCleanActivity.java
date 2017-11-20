@@ -110,12 +110,13 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
             List<ApplicationInfo> installedAppList = pm.getInstalledApplications(0);
             List<ActivityManager.RunningAppProcessInfo> lists = am.getRunningAppProcesses();
             List<ActivityManager.RunningServiceInfo> serviceList = am.getRunningServices(100);
+            int serviceSize = serviceList == null ? 0 : serviceList.size();
             for (int i = 0; i < lists.size(); i++) {
                 ActivityManager.RunningAppProcessInfo runningAppProcessInfo = lists.get(i);
                 if (runningAppProcessInfo.pkgList == null || runningAppProcessInfo.pkgList.length <= 0) {
                     continue;
                 }
-                publishProgress(i * 100 / lists.size());
+                publishProgress(i * 100 / (lists.size() + serviceSize));
                 try {
                     PackageInfo packageInfo = pm.getPackageInfo(runningAppProcessInfo.pkgList[0], 0);
                     int flags = packageInfo.applicationInfo.flags;
@@ -143,8 +144,9 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
 
             }
 
-            for (int i = 0; i < serviceList.size(); i++) {
+            for (int i = 0; i < serviceSize; i++) {
                 ActivityManager.RunningServiceInfo runningServiceInfo = serviceList.get(i);
+                publishProgress((lists.size() + i) * 100 / (lists.size() + serviceSize));
                 if (runningServiceInfo.service == null) {
                     continue;
                 }
