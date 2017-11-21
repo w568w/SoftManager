@@ -1,20 +1,21 @@
 package cn.ifreedomer.com.softmanager.adapter;
 
+import android.app.ActivityManager;
 import android.content.Context;
-import android.view.View;
+import android.util.Log;
 import android.widget.CheckBox;
 
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
-import java.util.HashMap;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.clean.ProcessItem;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
-import cn.ifreedomer.com.softmanager.util.ProcessManagerUtils;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 
 /**
@@ -46,32 +47,17 @@ public class MemoryAdapter extends CommonAdapter<ProcessItem> {
     }
 
     public void removeCheckedItems() {
-        for (int i = mDatas.size() - 1; i == 0; i++) {
+        LogUtil.e(TAG, "removeCheckedItems0");
+        ActivityManager activityManger = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
+        for (int i = mDatas.size() - 1; i >= 0; i--) {
             ProcessItem processItem = mDatas.get(i);
-            if (processItem.isChecked()) {
-                ProcessManagerUtils.killProcess(mContext, processItem);
-            }
-            mDatas.remove(i);
-        }
-        notifyDataSetChanged();
-//        for (int i = mDatas.size() - 1; i >= 0; i--) {
-//            boolean checked = mDatas.get(i).isChecked();
-//            final FileInfo fileInfo = mDatas.get(i);
-//            if (checked) {
-//                GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        File file = new File(fileInfo.getPath());
-// s                       file.delete();
-//                    }
-//                });
-//
-//                mDatas.remove(i);
-//            }
-//
-//
-//        }
+            Log.e(TAG, "removeCheckedItems: package name=" + processItem.getPkgName());
 
+            if (processItem.isChecked()) {
+                mDatas.remove(i);
+                activityManger.killBackgroundProcesses(processItem.getPkgName());
+            }
+        }
     }
 
 

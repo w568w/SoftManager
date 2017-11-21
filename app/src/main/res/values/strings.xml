@@ -164,4 +164,5 @@
     <string name="external_space_other_title">其他</string>
     <string name="external_space_aval_title">可用空间</string>
     <string name="need_root">查看权限需要root权限哦.</string>
+    <string name="clear_text">本次共清理:</string>
 </resources>

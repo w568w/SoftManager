@@ -1,9 +1,10 @@
 package cn.ifreedomer.com.softmanager.util;
 
+import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Size;
+
 import java.util.List;
-import android.hardware.Camera;  
-import android.hardware.Camera.CameraInfo;  
-import android.hardware.Camera.Size;  
   
 public class CameraUtils {  
       
@@ -40,8 +41,8 @@ public class CameraUtils {
       public static String getCameraPixels(int paramInt)  
       {  
         if (paramInt == 2)  
-          return "无";  
-        Camera localCamera = Camera.open(paramInt);  
+          return "无";
+        Camera localCamera = Camera.open(paramInt);
         Camera.Parameters localParameters = localCamera.getParameters();  
         localParameters.set("camera-id", 1);  
         List<Size> localList = localParameters.getSupportedPictureSizes();  

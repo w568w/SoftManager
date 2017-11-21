@@ -238,7 +238,7 @@ public class ProcessManagerUtils {
     @SuppressWarnings("deprecation")
     public static void killProcess(Context mContext, ProcessItem appItem) {
         if (Terminal.isRoot(mContext)) {
-			Terminal.RootCommand("kill " + appItem.getPid());
+            Terminal.RootCommand("kill " + appItem.getPids().get(0));
 //            AppManagerUtils.forceStopPackage(mContext, appItem.getPkgName());
         }
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);

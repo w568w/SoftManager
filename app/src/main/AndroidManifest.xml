@@ -2,10 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="cn.ifreedomer.com.softmanager">
 
-    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.GRANT_REVOKE_PERMISSIONS"/>
-    <uses-permission android:name="android.permission.GRANT_GRANT_PERMISSIONS"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>

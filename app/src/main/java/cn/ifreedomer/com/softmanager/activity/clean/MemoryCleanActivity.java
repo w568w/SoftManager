@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
@@ -123,10 +124,14 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                     if ((flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                         continue;
                     }
+                    if (packageInfo.packageName.equals(getPackageName())) {
+                        continue;
+                    }
                     if (mRunedMap.containsKey(packageInfo.packageName)) {
                         ProcessItem processItem = mRunedMap.get(packageInfo.packageName);
                         int appendPackMemory = ProcessManagerUtils.getProcessMemUsage(am, runningAppProcessInfo.pid) * 1000;
                         mTotalMemoryGarbage = appendPackMemory + mTotalMemoryGarbage;
+                        mRunedMap.get(packageInfo.packageName).getPids().add(runningAppProcessInfo.pid);
                         mRunedMap.get(packageInfo.packageName).setMemorySize(processItem.getMemorySize() + appendPackMemory);
                         continue;
                     }
@@ -134,7 +139,7 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                     ProcessItem processItem = new ProcessItem();
                     processItem.setPkgName(packageInfo.packageName);
                     processItem.setMemorySize(ProcessManagerUtils.getProcessMemUsage(am, runningAppProcessInfo.pid) * 1000);
-                    processItem.setPid(runningAppProcessInfo.pid + "");
+                    processItem.getPids().add(runningAppProcessInfo.pid);
                     processItem.setIcon(packageInfo.applicationInfo.loadIcon(pm));
                     processItem.setDes(packageInfo.applicationInfo.loadDescription(pm));
                     processItem.setLabel(packageInfo.applicationInfo.loadLabel(pm));
@@ -155,7 +160,11 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                     continue;
                 }
 
+
                 String packageName = runningServiceInfo.service.getPackageName();
+                if (packageName.equals(getPackageName())) {
+                    continue;
+                }
                 if (TextUtils.isEmpty(packageName)) {
                     continue;
                 }
@@ -175,8 +184,8 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
 
                 if (mRunedMap.containsKey(packageName)) {
                     int appendPackMemory = ProcessManagerUtils.getProcessMemUsage(am, runningServiceInfo.pid) * 1000;
-
                     mTotalMemoryGarbage = mTotalMemoryGarbage + appendPackMemory;
+                    mRunedMap.get(packageName).getPids().add(runningServiceInfo.pid);
                     mRunedMap.get(packageName).setMemorySize(appendPackMemory + mRunedMap.get(packageName).getMemorySize());
                     continue;
                 }
@@ -186,6 +195,7 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                 processItem.setLabel(packageInfo.applicationInfo.loadLabel(pm));
                 processItem.setIcon(packageInfo.applicationInfo.loadIcon(pm));
                 processItem.setChecked(true);
+                processItem.getPids().add(runningServiceInfo.pid);
                 mProcessList.add(processItem);
                 mRunedMap.put(packageName, processItem);
                 mTotalMemoryGarbage = mTotalMemoryGarbage + processItem.getMemorySize();
@@ -204,7 +214,6 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
             }
             mHeaderView.setScanningText("");
             mHeaderView.setScanTotal(DataTypeUtil.getTwoFloat(mTotalMemoryGarbage));
-
         }
 
 
@@ -215,12 +224,24 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
         }
     };
 
+    public void refreshHeadNum() {
+        int mCurrentMemoryGarbage = 0;
+        for (int i = 0; i < mProcessList.size(); i++) {
+            ProcessItem processItem = mProcessList.get(i);
+            mCurrentMemoryGarbage = mCurrentMemoryGarbage + processItem.getMemorySize();
+        }
+        mHeaderView.setScanTotal(mCurrentMemoryGarbage);
+        Toast.makeText(this, getString(R.string.clear_text) + DataTypeUtil.getTextBySize(mTotalMemoryGarbage - mCurrentMemoryGarbage), Toast.LENGTH_SHORT).show();
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_clean:
                 mMemoryAdapter.removeCheckedItems();
                 mHeaderAndFooterWrapper.notifyDataSetChanged();
+                refreshHeadNum();
                 break;
             default:
                 break;

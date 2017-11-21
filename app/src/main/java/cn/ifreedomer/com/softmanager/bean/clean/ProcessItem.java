@@ -2,6 +2,9 @@ package cn.ifreedomer.com.softmanager.bean.clean;
 
 import android.graphics.drawable.Drawable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author:eavawu
  * @since: 19/11/2017.
@@ -17,6 +20,7 @@ public class ProcessItem {
     private CharSequence label;
     private boolean checked;
     private CharSequence des;
+    private List<Integer> pids = new ArrayList<>();
 
     public void setPkgName(String pkgName) {
         this.pkgName = pkgName;
@@ -33,15 +37,6 @@ public class ProcessItem {
     public int getMemorySize() {
         return memorySize;
     }
-
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
-
 
 
     public void setLabel(CharSequence label) {
@@ -74,5 +69,13 @@ public class ProcessItem {
 
     public CharSequence getDes() {
         return des;
+    }
+
+    public List<Integer> getPids() {
+        return pids;
+    }
+
+    public void setPids(List<Integer> pids) {
+        this.pids = pids;
     }
 }
