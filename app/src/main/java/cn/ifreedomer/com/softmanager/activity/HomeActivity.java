@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -146,6 +147,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     fragmentTransaction.show(cleanFragment);
                     break;
                 case R.id.permission:
+                    Toast.makeText(HomeActivity.this, R.string.need_root, Toast.LENGTH_SHORT).show();
                     getSupportActionBar().setTitle(getString(R.string.permission_manager));
                     fragmentTransaction.show(permissionFragment);
                     break;

@@ -27,11 +27,11 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.BaseActivity;
 import cn.ifreedomer.com.softmanager.adapter.MemoryAdapter;
 import cn.ifreedomer.com.softmanager.bean.clean.ProcessItem;
+import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ProcessManagerUtils;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
-import cn.ifreedomer.com.softmanager.widget.ArcProgress;
-import cn.ifreedomer.com.softmanager.widget.BigFileHeadView;
+import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 
 public class MemoryCleanActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = BigFileCleanActivity.class.getSimpleName();
@@ -42,11 +42,12 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
     RecyclerView mRv;
     @InjectView(R.id.btn_clean)
     Button mBtnClean;
-    ArcProgress mArcProgress;
     private List<ProcessItem> mProcessList = new ArrayList<>();
     private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
     private MemoryAdapter mMemoryAdapter;
     private ConcurrentHashMap<String, ProcessItem> mRunedMap = new ConcurrentHashMap<>();
+    private float mTotalMemoryGarbage = 0;
+    private NumChangeHeadView mHeaderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +79,10 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
         mMemoryAdapter = new MemoryAdapter(this, R.layout.item_appcache_child, mProcessList);
 
         //add headview
-        BigFileHeadView headerView = new BigFileHeadView(this);
-        mArcProgress = (ArcProgress) headerView.findViewById(R.id.arc_progress);
+        mHeaderView = new NumChangeHeadView(this);
+
         mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mMemoryAdapter);
-        mHeaderAndFooterWrapper.addHeaderView(headerView);
+        mHeaderAndFooterWrapper.addHeaderView(mHeaderView);
         mRv.setAdapter(mHeaderAndFooterWrapper);
         mHeaderAndFooterWrapper.notifyDataSetChanged();
     }
@@ -93,8 +94,7 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void startScan() {
-        mArcProgress.setProgress(0);
-        mArcProgress.setProgress(1);
+
         asyncTask.execute();
     }
 
@@ -125,7 +125,9 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                     }
                     if (mRunedMap.containsKey(packageInfo.packageName)) {
                         ProcessItem processItem = mRunedMap.get(packageInfo.packageName);
-                        mRunedMap.get(packageInfo.packageName).setMemorySize(processItem.getMemorySize() + ProcessManagerUtils.getProcessMemUsage(am, runningAppProcessInfo.pid) * 1000);
+                        int appendPackMemory = ProcessManagerUtils.getProcessMemUsage(am, runningAppProcessInfo.pid) * 1000;
+                        mTotalMemoryGarbage = appendPackMemory + mTotalMemoryGarbage;
+                        mRunedMap.get(packageInfo.packageName).setMemorySize(processItem.getMemorySize() + appendPackMemory);
                         continue;
                     }
                     LogUtil.e(TAG, "package name=>" + packageInfo.packageName + "   pid=" + runningAppProcessInfo.pid);
@@ -136,7 +138,9 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                     processItem.setIcon(packageInfo.applicationInfo.loadIcon(pm));
                     processItem.setDes(packageInfo.applicationInfo.loadDescription(pm));
                     processItem.setLabel(packageInfo.applicationInfo.loadLabel(pm));
+                    processItem.setChecked(true);
                     mRunedMap.put(packageInfo.packageName, processItem);
+                    mTotalMemoryGarbage = mTotalMemoryGarbage + processItem.getMemorySize();
                     mProcessList.add(processItem);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
@@ -170,7 +174,10 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                 }
 
                 if (mRunedMap.containsKey(packageName)) {
-                    mRunedMap.get(packageName).setMemorySize(ProcessManagerUtils.getProcessMemUsage(am, runningServiceInfo.pid) * 1000);
+                    int appendPackMemory = ProcessManagerUtils.getProcessMemUsage(am, runningServiceInfo.pid) * 1000;
+
+                    mTotalMemoryGarbage = mTotalMemoryGarbage + appendPackMemory;
+                    mRunedMap.get(packageName).setMemorySize(appendPackMemory + mRunedMap.get(packageName).getMemorySize());
                     continue;
                 }
                 ProcessItem processItem = new ProcessItem();
@@ -178,8 +185,11 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                 processItem.setMemorySize(ProcessManagerUtils.getProcessMemUsage(am, runningServiceInfo.pid) * 1000);
                 processItem.setLabel(packageInfo.applicationInfo.loadLabel(pm));
                 processItem.setIcon(packageInfo.applicationInfo.loadIcon(pm));
+                processItem.setChecked(true);
                 mProcessList.add(processItem);
                 mRunedMap.put(packageName, processItem);
+                mTotalMemoryGarbage = mTotalMemoryGarbage + processItem.getMemorySize();
+
             }
 
             publishProgress(100);
@@ -189,12 +199,12 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            mArcProgress.setProgress(values[0]);
             if (values[0] == 100) {
-                mArcProgress.setBottomText(getString(R.string.scan_finish));
                 mBtnClean.setVisibility(View.VISIBLE);
-
             }
+            mHeaderView.setScanningText("");
+            mHeaderView.setScanTotal(DataTypeUtil.getTwoFloat(mTotalMemoryGarbage));
+
         }
 
 

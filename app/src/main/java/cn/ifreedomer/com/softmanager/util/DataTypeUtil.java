@@ -20,8 +20,10 @@ public class DataTypeUtil {
             return DataTypeUtil.getTwoFloat(size) + " B";
         } else if (size > FileUtil.KB && size < FileUtil.MB) {
             return DataTypeUtil.getTwoFloat(size / FileUtil.KB) + " KB";
-        } else if (size > FileUtil.MB) {
+        } else if (size > FileUtil.MB && size < FileUtil.MB * 1000) {
             return DataTypeUtil.getTwoFloat(size / FileUtil.MB) + " MB";
+        } else if (size > FileUtil.MB * 1000) {
+            return DataTypeUtil.getTwoFloat(size / (FileUtil.MB*1000)) + " GB";
         }
         return "";
     }

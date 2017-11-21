@@ -16,12 +16,12 @@ import cn.ifreedomer.com.softmanager.util.FileUtil;
  * TODO:
  */
 
-public class GarbageHeadView extends RelativeLayout {
+public class NumChangeHeadView extends RelativeLayout {
 
     private TextView mTvScanning;
     private TextView mTvScanTotal;
 
-    public GarbageHeadView(Context context) {
+    public NumChangeHeadView(Context context) {
         super(context);
         initView(context);
     }

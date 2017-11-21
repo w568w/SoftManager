@@ -1,25 +1,34 @@
 package cn.ifreedomer.com.softmanager.fragment.clean;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.clean.BigFileCleanActivity;
-import cn.ifreedomer.com.softmanager.activity.clean.MemoryCleanActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.GarbageActivity;
+import cn.ifreedomer.com.softmanager.activity.clean.MemoryCleanActivity;
 import cn.ifreedomer.com.softmanager.activity.clean.QQCleanActivity;
 import cn.ifreedomer.com.softmanager.bean.CleanCardInfo;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
+import cn.ifreedomer.com.softmanager.util.MemoryUtils;
 import cn.ifreedomer.com.softmanager.util.PackageUtil;
+import cn.ifreedomer.com.softmanager.widget.CustomProgressView;
 import cn.ifreedomer.com.softmanager.widget.ItemCardView;
 
 /**
@@ -29,8 +38,8 @@ import cn.ifreedomer.com.softmanager.widget.ItemCardView;
  */
 
 public class CleanFragment extends Fragment implements View.OnClickListener {
-    @InjectView(R.id.iv_clean)
-    ImageView ivClean;
+    //    @InjectView(R.id.iv_clean)
+//    ImageView ivClean;
     @InjectView(R.id.qq_card)
     ItemCardView qqCardView;
     @InjectView(R.id.big_file_card)
@@ -39,8 +48,41 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
     ItemCardView garbageCardView;
     @InjectView(R.id.memory_clean)
     ItemCardView deepCardView;
-    @InjectView(R.id.btn_clean)
-    Button mBtnClean;
+    @InjectView(R.id.big)
+    CustomProgressView big;
+    @InjectView(R.id.big_percent_textview)
+    TextView bigPercentTextview;
+    @InjectView(R.id.big_percent_layout)
+    LinearLayout bigPercentLayout;
+    @InjectView(R.id.big_available_memory_textview)
+    TextView bigAvailableMemoryTextview;
+    @InjectView(R.id.small)
+    CustomProgressView small;
+    @InjectView(R.id.small_percent_textview)
+    TextView smallPercentTextview;
+    @InjectView(R.id.small_percent_layout)
+    LinearLayout smallPercentLayout;
+    @InjectView(R.id.percent_view_layout)
+    RelativeLayout percentViewLayout;
+    private static final int MSG_UPDATE_PERCENT = 0;
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_UPDATE_PERCENT:
+                    small.setProgress((int) mRamAvPercent);
+                    big.setProgress((int) mSdAvPercent);
+                    bigAvailableMemoryTextview.setText("剩余" + DataTypeUtil.getTextBySize(mSdAvalible));
+                    break;
+
+            }
+        }
+    };
+    private long mRamAvPercent;
+    private long mSdAvPercent;
+    private long mSdAvalible;
 
 
     @Nullable
@@ -58,8 +100,13 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
         bigFileCardView.setOnClickListener(this);
         deepCardView.setOnClickListener(this);
         qqCardView.setOnClickListener(this);
-        mBtnClean.setOnClickListener(this);
+//        mBtnClean.setOnClickListener(this);
         garbageCardView.setOnClickListener(this);
+        big.setBig(true);
+        big.setPercentView(bigPercentTextview);
+        small.setPercentView(smallPercentTextview);
+        small.setBig(false);
+
     }
 
     private void setData() {
@@ -67,8 +114,19 @@ public class CleanFragment extends Fragment implements View.OnClickListener {
         deepCardView.setData(new CleanCardInfo(getString(R.string.memory_clean), R.mipmap.speed));
         qqCardView.setData(new CleanCardInfo(getString(R.string.qq_clean), R.mipmap.qq));
         bigFileCardView.setData(new CleanCardInfo(getString(R.string.big_file), R.mipmap.file));
+        updataPercentView();
+    }
 
-
+    private void updataPercentView() {
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            long sdMax = MemoryUtils.getTotalExternalMemorySize();
+            mSdAvalible = MemoryUtils.getAvailableExternalMemorySize();
+            long romMax = MemoryUtils.getTotalInternalMemorySize();
+            long romAva = MemoryUtils.getAvailableInternalMemorySize();
+            mRamAvPercent = romAva * 100 / romMax;
+            mSdAvPercent = (sdMax - mSdAvalible) * 100 / sdMax;
+            mHandler.sendEmptyMessage(MSG_UPDATE_PERCENT);
+        });
     }
 
 

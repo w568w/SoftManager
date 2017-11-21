@@ -52,6 +52,10 @@
     <dimen name="dp70">70dp</dimen>
     <dimen name="sp13">13sp</dimen>
     <dimen name="sp17">17sp</dimen>
+    <dimen name="dp228">228dp</dimen>
+    <dimen name="dp96">96dp</dimen>
+    <dimen name="sp22">22sp</dimen>
+    <dimen name="dp190">190dp</dimen>
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>

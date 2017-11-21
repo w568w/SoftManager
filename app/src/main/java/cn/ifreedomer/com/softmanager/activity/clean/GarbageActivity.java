@@ -34,7 +34,7 @@ import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
-import cn.ifreedomer.com.softmanager.widget.GarbageHeadView;
+import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 
 public class GarbageActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = GarbageActivity.class.getSimpleName();
@@ -90,7 +90,7 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
         }
     };
     private GarbageCleanAdapter mGarbageCleanAdapter;
-    private GarbageHeadView mGarbageHeadView;
+    private NumChangeHeadView mGarbageHeadView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +136,7 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
 
 //        mTitleList = new String[]{getString(R.string.app_cache), getString(R.string.empty_file), getString(R.string.ad_garbage)};
         mGarbageCleanAdapter = new GarbageCleanAdapter(this, mTitleList, mGarbageInfoGroupList);
-        mGarbageHeadView = new GarbageHeadView(this);
+        mGarbageHeadView = new NumChangeHeadView(this);
         mExpandListview.addHeaderView(mGarbageHeadView);
         mExpandListview.setAdapter(mGarbageCleanAdapter);
         mExpandListview.setOnGroupClickListener((parent, v, groupPosition, id) -> {

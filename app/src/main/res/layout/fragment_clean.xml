@@ -7,40 +7,125 @@
 
     <RelativeLayout
         style="@style/topBackgrounStyle"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/dp300"
         >
 
-        <LinearLayout
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/percent_view_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
 
-            <ImageView
-                android:id="@+id/iv_clean"
-                android:layout_width="@dimen/dp50"
-                android:layout_height="@dimen/dp50"
-                android:layout_gravity="center_horizontal"
-                android:src="@mipmap/clean_garbage_big"/>
+            <RelativeLayout
+                android:layout_width="@dimen/dp228"
+                android:layout_height="@dimen/dp228"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
 
-            <Button
+                <cn.ifreedomer.com.softmanager.widget.CustomProgressView
+                    android:id="@+id/big"
+                    android:layout_width="@dimen/dp200"
+                    android:layout_height="@dimen/dp200"
+                    android:layout_centerInParent="true"/>
 
-                android:id="@+id/btn_clean"
-                style="@style/roundButton"
-                android:layout_width="@dimen/dp120"
-                android:layout_height="@dimen/dp40"
-                android:layout_below="@id/iv_clean"
-                android:layout_marginTop="@dimen/dp40"
-                android:text="@string/clean_garbage"/>
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/big_percent_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="8dp">
 
+                    <TextView
+                        android:id="@+id/big_percent_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="80"
+                        android:textColor="@color/whiteColor"
+                        android:textSize="@dimen/sp45"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:text="%"
+                        android:textColor="@color/whiteColor"
+                        android:textSize="@dimen/sp20"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/big_available_memory_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/big_percent_layout"
+                    android:layout_centerHorizontal="true"
+                    android:text="剩余7.0GB"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/sp13"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/big_available_memory_textview"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/external_memory_title"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/sp16"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="@dimen/dp96"
+                android:layout_height="@dimen/dp96"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/dp40"
+                android:layout_marginRight="@dimen/sp45"
+                android:orientation="vertical">
+
+                <cn.ifreedomer.com.softmanager.widget.CustomProgressView
+                    android:id="@+id/small"
+                    android:layout_width="@dimen/dp96"
+                    android:layout_height="@dimen/dp96"
+                    android:layout_centerInParent="true"/>
+
+                <LinearLayout
+                    android:id="@+id/small_percent_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp">
+
+                    <TextView
+                        android:id="@+id/small_percent_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="63"
+                        android:textColor="@color/whiteColor"
+                        android:textSize="@dimen/sp22"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:text="%"
+                        android:textColor="@color/whiteColor"
+                        android:textSize="@dimen/sp13"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/small_percent_layout"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/internal_memory_title"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="@dimen/sp13"/>
+            </RelativeLayout>
+        </RelativeLayout>
     </RelativeLayout>
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/rv_clean"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"/>-->
 
 
     <LinearLayout

@@ -147,6 +147,21 @@
     <string name="thumbnails">缩略图片</string>
     <string name="chat_title">聊天图片</string>
     <string name="alipay">支付宝充值</string>
-    <string name="icebox">应用冰箱</string>
+    <string name="icebox">应用冰冻</string>
     <string name="freeze">已经冰冻</string>
+
+
+
+    <!-- 内存详细页面 -->
+    <string name="external_memory_title">存储信息</string>
+    <string name="internal_memory_title">内存</string>
+    <string name="external_space_title">存储空间</string>
+    <string name="external_space_detail_title">存储空间可分为: </string>
+    <string name="external_space_system">系统</string>
+    <string name="external_space_detail">空间详情</string>
+    <string name="external_space_app_title">应用数据</string>
+    <string name="external_space_media_title">图片、视频</string>
+    <string name="external_space_other_title">其他</string>
+    <string name="external_space_aval_title">可用空间</string>
+    <string name="need_root">查看权限需要root权限哦.</string>
 </resources>
