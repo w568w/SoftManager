@@ -242,23 +242,18 @@ public class PackageInfoManager {
         }
     }
 
-    public PackageInfo getPackageInfo() {
-        String packageName = mContext.getPackageName();
-        PackageInfo packageInfo = null;
+
+    public String getVersionCode(Context context) {
+        PackageManager manager = context.getPackageManager();
+        PackageInfo info = null;
         try {
-            packageInfo = mContext.getPackageManager().getPackageInfo(packageName, 0);
+            info = manager.getPackageInfo(
+                    context.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return packageInfo;
-    }
-
-    public int getVersionCode() {
-        PackageInfo packageInfo = getPackageInfo();
-        if (packageInfo == null) {
-            return 1;
-        }
-        return packageInfo.versionCode;
+        String version = info.versionName;
+        return version;
     }
 
 

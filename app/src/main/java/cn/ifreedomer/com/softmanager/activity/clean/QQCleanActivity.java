@@ -126,12 +126,6 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
 
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                QQCleanActivity.this.finish();
-            }
-        });
         getSupportActionBar().setTitle(getString(R.string.qq_clean));
     }
 

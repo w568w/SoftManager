@@ -102,12 +102,6 @@ public class PermissionSetActivity extends BaseActivity {
 
         rv.setAdapter(mMultiAdapter);
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PermissionSetActivity.this.finish();
-            }
-        });
         getSupportActionBar().setTitle(getString(R.string.permission_manager));
     }
 

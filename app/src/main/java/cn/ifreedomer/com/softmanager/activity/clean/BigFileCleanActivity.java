@@ -82,12 +82,7 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
 
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BigFileCleanActivity.this.finish();
-            }
-        });
+
         getSupportActionBar().setTitle(getString(R.string.big_file_clean));
     }
 

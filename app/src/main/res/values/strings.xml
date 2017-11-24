@@ -104,9 +104,9 @@
     <string name="visit">访问</string>
     <string name="version_title">版本号:</string>
     <string name="copyright">版权:</string>
-    <string name="email">wuyihua86@gmail.com</string>
+    <string name="email">developermail1@163.com</string>
     <string name="github_content">https://github.com/HumorSmith</string>
-    <string name="gmail_title">Gmail:</string>
+    <string name="gmail_title">Email:</string>
     <string name="github_title">Github:</string>
 
 
@@ -169,4 +169,10 @@
     <string name="try_end">试用结束</string>
     <string name="price">4.00</string>
     <string name="exit_str">再按一次退出app</string>
+    <string name="authority">作者:</string>
+    <string name="baihua">白桦</string>
+    <string name="qqgroup">qq群</string>
+    <string name="group_name">587521420</string>
+    <string name="thanks">鸣谢</string>
+    <string name="thanks_names">卡基猫.老曾.灰灰</string>
 </resources>

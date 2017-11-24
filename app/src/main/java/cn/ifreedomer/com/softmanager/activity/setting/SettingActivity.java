@@ -49,9 +49,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
         getSupportActionBar().setTitle(getString(R.string.setting));
-        mToolbar.setNavigationOnClickListener(v -> {
-            SettingActivity.this.finish();
-        });
     }
 
 

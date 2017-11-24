@@ -280,7 +280,6 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
         getSupportActionBar().setTitle(getString(R.string.garbage_clean));
-        mToolbar.setNavigationOnClickListener(v -> GarbageActivity.this.finish());
     }
 
 

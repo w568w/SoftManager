@@ -46,7 +46,8 @@ public class AboutItemView extends RelativeLayout {
     private void initView(Context context) {
         this.context = context;
         View inflate = LayoutInflater.from(context).inflate(R.layout.about_item, this);
-
+        titleTv = (TextView) findViewById(R.id.title_tv);
+        contentTv = (TextView) findViewById(R.id.content_tv);
     }
 
     public void setTitle(String title) {

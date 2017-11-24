@@ -90,7 +90,6 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
 
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
-        mToolbar.setNavigationOnClickListener(v -> MemoryCleanActivity.this.finish());
         getSupportActionBar().setTitle(getString(R.string.memory_clean));
     }
 
