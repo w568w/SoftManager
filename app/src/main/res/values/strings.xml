@@ -168,4 +168,5 @@
     <string name="use_alipay">使用支付宝</string>
     <string name="try_end">试用结束</string>
     <string name="price">4.00</string>
+    <string name="exit_str">再按一次退出app</string>
 </resources>

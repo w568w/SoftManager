@@ -3,6 +3,7 @@ package cn.ifreedomer.com.softmanager.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -227,5 +229,31 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
         }
+    }
+
+
+
+    boolean isExit = false;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.e(TAG + "======", "keyback====");
+            if (!isExit) {
+                isExit = true;
+                Toast.makeText(this, R.string.exit_str, Toast.LENGTH_SHORT)
+                        .show();
+                new Handler().postDelayed(() -> isExit = false, 2000);
+                return false;
+
+            } else {
+                Log.e(TAG + "======", "退出应用");
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
+                //
+            }
+        }
+
+        return false;
     }
 }
