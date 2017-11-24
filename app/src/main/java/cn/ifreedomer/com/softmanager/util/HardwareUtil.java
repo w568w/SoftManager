@@ -3,10 +3,13 @@ package cn.ifreedomer.com.softmanager.util;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.telephony.TelephonyManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+
+import cn.ifreedomer.com.softmanager.CleanApplication;
 
 /**
  * @author wuyihua
@@ -69,4 +72,16 @@ public class HardwareUtil {
         Sensor defaultSensor = mSensorManager.getDefaultSensor(type);
         return defaultSensor != null;
     }
+
+
+    public static String getImei() {
+
+        TelephonyManager telephonyManager = (TelephonyManager) CleanApplication.INSTANCE.getSystemService(Context.TELEPHONY_SERVICE);
+        if (telephonyManager != null) {
+            return telephonyManager.getDeviceId();
+        }
+        return "";
+    }
+
+
 }

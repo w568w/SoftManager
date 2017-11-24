@@ -1,7 +1,9 @@
 package cn.ifreedomer.com.softmanager.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -157,7 +159,20 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
                     fileInfo.setPhoto(BitmapFactory.decodeStream(new FileInputStream(fileInfo.getPath())));
                 }
                 fileIv.setImageBitmap(fileInfo.getPhoto());
-
+                childView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+//action还可以通过set方法进行设置
+                        intent.setAction(Intent.ACTION_VIEW);
+//既然是查看图片，就要指定打开哪张图片，通过setData，传入图片的uri
+                        intent.setData(Uri.parse(fileInfo.getPath()));
+//然后指定打开文件的类型，图片的话可用用image/*
+                        intent.setType("image/*");//这两句也可以用intent.setDataAndType();来一句话搞定
+//最后调用startActivity,系统就会根据条件找到具体能执行这个intent的activity
+                        mContext.startActivity(intent);
+                    }
+                });
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

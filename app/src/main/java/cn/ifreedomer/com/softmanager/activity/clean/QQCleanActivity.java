@@ -105,8 +105,6 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
         mTitleList.add(chatPhotoTitle);
 
 
-
-
 //        mTitles = new String[]{getString(R.string.recv_files), getString(R.string.shortvideo)};
     }
 
@@ -146,12 +144,13 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
             List<FileInfo> receiveFiles = new ArrayList<>();
             FileUtil.getFolderFiles(QQ_FILE_RECV, receiveFiles);
             fileInfoGroupList.add(receiveFiles);
-
+            publishProgress(20);
 
             List<FileInfo> shortVideoFiles = new ArrayList<>();
             FileUtil.getFolderFiles(QQ_SHORT_VIDEO, shortVideoFiles);
             fileInfoGroupList.add(shortVideoFiles);
 
+            publishProgress(30);
 
             List<FileInfo> userHeadFiles = new ArrayList<>();
             FileUtil.getFolderFiles(QQ_USER_HEAD, userHeadFiles);
@@ -161,6 +160,7 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
             }
             fileInfoGroupList.add(userHeadFiles);
 
+            publishProgress(40);
 
             List<FileInfo> thumbnails = new ArrayList<>();
             FileUtil.getFolderFiles(QQ_THUMBNAILS, thumbnails);
@@ -169,8 +169,7 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
                 fileInfo.setType("image/jpeg");
             }
             fileInfoGroupList.add(thumbnails);
-
-
+            publishProgress(90);
 
 
             List<FileInfo> chatPhotos = new ArrayList<>();
@@ -181,6 +180,7 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
             }
             fileInfoGroupList.add(chatPhotos);
 
+            publishProgress(100);
 
             return null;
         }
@@ -192,7 +192,10 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
                 float calculateTotalSize = calculateTotalSize();
                 mTvScanTotal.setText(DataTypeUtil.getTextBySize(calculateTotalSize));
                 qqCleanAdapter.notifyDataSetChanged();
-
+                qqCleanAdapter.notifyDataSetChanged();
+                for (int i = 0; i < fileInfoGroupList.size(); i++) {
+                    mExpandListview.expandGroup(i);
+                }
             });
 
         }
@@ -200,6 +203,9 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
+            float calculateTotalSize = calculateTotalSize();
+            mTvScanTotal.setText(DataTypeUtil.getTextBySize(calculateTotalSize));
+            qqCleanAdapter.notifyDataSetChanged();
         }
     };
 

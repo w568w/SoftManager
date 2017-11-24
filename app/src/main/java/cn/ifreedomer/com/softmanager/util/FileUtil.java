@@ -79,11 +79,13 @@ public class FileUtil {
                 } else {
                     System.out.println("文件:" + file2.getAbsolutePath());
                     fileNum++;
-                    processBigFile(file2, bigFileInfoList);
-
-
+                    FileInfo fileInfo =   processBigFile(file2, bigFileInfoList);
                     scanSize = scanSize + file2.length();
-                    scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize);
+                    if (fileInfo==null){
+                        continue;
+                    }
+
+                    scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize,fileInfo);
 
                 }
             }
@@ -105,12 +107,14 @@ public class FileUtil {
                         System.out.println("文件:" + file2.getAbsolutePath());
                         fileNum++;
 
-                        processBigFile(file2, bigFileInfoList);
-
-
+                        FileInfo fileInfo = processBigFile(file2, bigFileInfoList);
                         scanSize = scanSize + file2.length();
 
-                        scanListener.onScanProcess(scanSize / (MB) * 100 / totalSize);
+                        if (fileInfo==null){
+                            continue;
+                        }
+                        scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize,fileInfo);
+
 
                     }
                 }
@@ -128,12 +132,14 @@ public class FileUtil {
         return bigFileInfoList;
     }
 
-    public static void processBigFile(File curFile, List<FileInfo> fileInfoList) {
+    public static FileInfo processBigFile(File curFile, List<FileInfo> fileInfoList) {
         if (curFile.length() > FileInfo.BIG_FILE_SIZE) {
             FileInfo fileInfo = FileInfo.getFileInfo(curFile);
             fileInfo.setSize(DataTypeUtil.getTwoFloat(fileInfo.getSize() / (MB)));
             fileInfoList.add(fileInfo);
+            return fileInfo;
         }
+        return null;
     }
 
 

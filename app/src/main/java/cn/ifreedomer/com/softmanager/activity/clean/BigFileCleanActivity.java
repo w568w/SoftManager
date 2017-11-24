@@ -111,10 +111,13 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
                 }
 
                 @Override
-                public void onScanProcess(float process) {
-                    Log.e(TAG, "onScanProcess: " + process);
+                public void onScanProcess(float process, FileInfo fileInfo) {
                     publishProgress((int) process);
+                    mFileInfoList.add(fileInfo);
+
                 }
+
+
 
                 @Override
                 public void onScanFinish(float garbageSize, List<FileInfo> garbageList) {
@@ -127,19 +130,19 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected void onProgressUpdate(Integer... values) {
             mArcProgress.setProgress(values[0]);
+
             if (values[0] == 100) {
                 mArcProgress.setBottomText(getString(R.string.scan_finish));
                 mBtnClean.setVisibility(View.VISIBLE);
-
             }
+            mHeaderAndFooterWrapper.notifyDataSetChanged();
+
         }
 
         @Override
         protected void onPostExecute(List<FileInfo> fileInfos) {
-            mFileInfoList.clear();
-            mFileInfoList.addAll(fileInfos);
-            mHeaderAndFooterWrapper.notifyDataSetChanged();
-
+//            mFileInfoList.clear();
+//            mFileInfoList.addAll(fileInfos);
         }
     };
 

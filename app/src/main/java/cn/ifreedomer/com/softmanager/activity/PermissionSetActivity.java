@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
@@ -101,6 +102,12 @@ public class PermissionSetActivity extends BaseActivity {
 
         rv.setAdapter(mMultiAdapter);
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PermissionSetActivity.this.finish();
+            }
+        });
         getSupportActionBar().setTitle(getString(R.string.permission_manager));
     }
 

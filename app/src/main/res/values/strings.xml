@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">简.管理</string>
-
+    <string name="app_name">极速清理大师</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="system">系统</string>
@@ -151,7 +150,6 @@
     <string name="freeze">已经冰冻</string>
 
 
-
     <!-- 内存详细页面 -->
     <string name="external_memory_title">存储信息</string>
     <string name="internal_memory_title">内存</string>
@@ -165,4 +163,9 @@
     <string name="external_space_aval_title">可用空间</string>
     <string name="need_root">查看权限需要root权限哦.</string>
     <string name="clear_text">本次共清理:</string>
+    <string name="pay_des">试用结束.无广告,付费后支持作者开发更多功能，包括但不限于:  \n\t1.切断APP之间相互唤醒  \n\t2.免root实现权限管理.app冰冻 \n\t3.大文件扫描阈值设置 \n\t4.清理更顽固垃圾</string>
+    <string name="support">支持一波</string>
+    <string name="use_alipay">使用支付宝</string>
+    <string name="try_end">试用结束</string>
+    <string name="price">4.00</string>
 </resources>

@@ -23,12 +23,20 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
+import cn.ifreedomer.com.softmanager.bean.RespResult;
+import cn.ifreedomer.com.softmanager.bean.json.Authority;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
+import cn.ifreedomer.com.softmanager.manager.PermissionManager;
+import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
+import cn.ifreedomer.com.softmanager.util.HardwareUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
+import cn.ifreedomer.com.softmanager.widget.PayDialog;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author HomorSmith
@@ -81,6 +89,33 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         ButterKnife.inject(this);
         initFragments();
         initView();
+        checkAuthority();
+
+    }
+
+
+    public void checkAuthority() {
+
+//        if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
+//            PayDialog payDialog = new PayDialog(HomeActivity.this);
+//            payDialog.show();
+//        }
+
+
+        ServiceManager.getTime(HardwareUtil.getImei()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
+            if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
+                Authority data = authorityRespResult.getData();
+                long time = data.getExpirdTime() - System.currentTimeMillis();
+                LogUtil.e(TAG, "checkAuthority: time="+time );
+                if (0 < System.currentTimeMillis()) {
+                    PayDialog payDialog = new PayDialog(HomeActivity.this);
+                    payDialog.show();
+                }
+            }
+        }, throwable -> {
+            Log.e(TAG, "checkAuthority error: " + throwable);
+            throwable.printStackTrace();
+        });
     }
 
     private void initFragments() {
@@ -147,7 +182,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     fragmentTransaction.show(cleanFragment);
                     break;
                 case R.id.permission:
-                    Toast.makeText(HomeActivity.this, R.string.need_root, Toast.LENGTH_SHORT).show();
+                    if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
+                        Toast.makeText(HomeActivity.this, R.string.need_root, Toast.LENGTH_SHORT).show();
+                    }
                     getSupportActionBar().setTitle(getString(R.string.permission_manager));
                     fragmentTransaction.show(permissionFragment);
                     break;

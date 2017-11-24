@@ -23,7 +23,7 @@ public class FileScanService extends Service {
     public interface ScanListener {
         void onScanStart();
 
-        void onScanProcess(float process);
+        void onScanProcess(float process,FileInfo fileInfo);
 
         void onScanFinish(float garbageSize, List<FileInfo> garbageList);
     }

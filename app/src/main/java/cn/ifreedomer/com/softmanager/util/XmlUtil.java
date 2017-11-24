@@ -34,12 +34,12 @@ public class XmlUtil {
                         break;
                     case XmlPullParser.START_TAG:
                         //一般都是获取标签的属性值，所以在这里数据你需要的数据
-                        Log.d(TAG, "当前标签是：" + xmlParser.getName());
+//                        Log.d(TAG, "当前标签是：" + xmlParser.getName());
                         if (xmlParser.getName().equals("permission_group")) {
                             permissionGroup = new PermissionGroup();
 
                             String name = xmlParser.getAttributeValue(null, "name");
-                            LogUtil.e(TAG, "permission_group name = " + name);
+//                            LogUtil.e(TAG, "permission_group name = " + name);
                             permissionGroup.setName(name);
                         }
 
@@ -52,7 +52,7 @@ public class XmlUtil {
                             permissionDetail.setPermissionDes(xmlParser.getAttributeValue(null, "des"));
                             permissionDetail.setGroup(permissionGroup.getName());
                             permissionGroup.getPermissionDetailList().add(permissionDetail);
-                            LogUtil.e(TAG, permissionGroup.toString());
+//                            LogUtil.e(TAG, permissionGroup.toString());
 
 //                            Log.d(TAG, "permission name=" + xmlParser.getAttributeName(0)
 //                                    + ": " + xmlParser.getAttributeValue(0));

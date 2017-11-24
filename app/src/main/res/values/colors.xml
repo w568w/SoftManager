@@ -20,7 +20,7 @@
     <color name="card_normal">#19000000</color>
     <color name="tabLayout_bg">#07000000</color>
 
-
+    <color name="payBtnColor">#33000000</color>
 
 
     <color name="expandable_item_indicator_color">#42000000</color>
