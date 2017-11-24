@@ -38,10 +38,10 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="58b79c79c62dca7ce90017d2"/>
+            android:value="5a1764a8b27b0a0485000971"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="xiaomi"/>
+            android:value="UMENG_CHANNEL_VALUE"/>
 
         <!-- <activity android:name=".activity.TestActivity"></activity> -->
         <activity

@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -108,7 +109,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
                 Authority data = authorityRespResult.getData();
                 long time = data.getExpirdTime() - System.currentTimeMillis();
-                LogUtil.e(TAG, "checkAuthority: time="+time );
+                LogUtil.e(TAG, "checkAuthority: time=" + time);
                 if (0 < System.currentTimeMillis()) {
                     PayDialog payDialog = new PayDialog(HomeActivity.this);
                     payDialog.show();
@@ -173,17 +174,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
             switch (menuItem.getItemId()) {
                 case R.id.soft:
                     fragmentTransaction.show(softFragment);
+                    MobclickAgent.onEvent(HomeActivity.this, "soft");
                     getSupportActionBar().setTitle(getString(R.string.soft_manager));
                     break;
                 case R.id.hardware:
                     getSupportActionBar().setTitle(getString(R.string.hardware_info));
+                    MobclickAgent.onEvent(HomeActivity.this, "device");
                     fragmentTransaction.show(hardwareFragment);
                     break;
                 case R.id.clean:
+                    MobclickAgent.onEvent(HomeActivity.this, "clean");
+
                     getSupportActionBar().setTitle(getString(R.string.clean_garbage));
                     fragmentTransaction.show(cleanFragment);
                     break;
                 case R.id.permission:
+                    MobclickAgent.onEvent(HomeActivity.this, "permission");
                     if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                         Toast.makeText(HomeActivity.this, R.string.need_root, Toast.LENGTH_SHORT).show();
                     }
@@ -191,6 +197,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     fragmentTransaction.show(permissionFragment);
                     break;
                 case R.id.icebox:
+                    MobclickAgent.onEvent(HomeActivity.this, "freeze");
                     getSupportActionBar().setTitle(getString(R.string.icebox));
                     fragmentTransaction.show(iceboxFragment);
                     break;
@@ -232,7 +239,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     boolean isExit = false;
 
     @Override
@@ -255,5 +261,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         }
 
         return false;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

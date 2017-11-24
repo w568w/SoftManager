@@ -53,6 +53,47 @@ android {
         noCompress 'jar', 'sh', 'db'
     }
 
+
+
+    flavorDimensions "mode"
+
+    // 友盟多渠道打包
+    productFlavors {
+        wandoujia {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+            dimension "mode"
+        }
+        _360 {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "_360"]
+
+        }
+        baidu {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+
+        }
+        xiaomi {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+
+        }
+        tencent {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "tencent"]
+
+        }
+        taobao {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "taobao"]
+
+        }
+    }
+
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
 }
 
 dependencies {
