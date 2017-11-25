@@ -2,9 +2,11 @@ package cn.ifreedomer.com.softmanager.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -67,6 +69,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private Fragment iceboxFragment;
     private ImageView mBuyId;
     private Fragment lastShowFragment;
+    private RxPermissions mRxPermissions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +77,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_home);
 
 
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions
-                .request(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        mRxPermissions = new RxPermissions(this);
+        mRxPermissions
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
                 .subscribe(granted -> {
                     if (granted) {
                         initApp(savedInstanceState);
@@ -106,7 +109,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 //            payDialog.show();
 //        }
 
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            mRxPermissions
+                    .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
+                    .subscribe(granted -> {
+                        if (!granted) {
+                            Toast.makeText(HomeActivity.this, R.string.device_id_request, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            return;
+        }
         ServiceManager.getTime(HardwareUtil.getImei()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
             if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
                 Authority data = authorityRespResult.getData();
@@ -123,9 +135,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void showPayDialog() {
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                            if (!granted) {
+                                Toast.makeText(this, "充值需要以设备Id作为凭证.请授权避免充值无效哦", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            PayDialog payDialog = new PayDialog(HomeActivity.this);
+                            payDialog.showPay();
+                        }
+                );
 
-        PayDialog payDialog = new PayDialog(HomeActivity.this);
-        payDialog.showPay();
     }
 
     private void initFragments() {

@@ -175,4 +175,5 @@
     <string name="group_name">587521420</string>
     <string name="thanks">鸣谢</string>
     <string name="thanks_names">卡基猫.老曾.灰灰</string>
+    <string name="device_id_request">充值需要获取设备id做标记.请授权哦</string>
 </resources>
