@@ -12,7 +12,16 @@ public class Authority {
     private long activeTime;
     private long expirdTime;
     private String imei;
+    private String price;
 
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
     public long getActiveTime() {
         return activeTime;

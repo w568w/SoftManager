@@ -86,17 +86,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 //                itemView.setSubTitle(getString(R.string.send_introduce));
 //            }
 
-
+//
+//            if (i == 1) {
+//                itemView.setTitle(getString(R.string.help));
+//                itemView.setMarginTop(R.dimen.dp15);
+//            }
             if (i == 1) {
-                itemView.setTitle(getString(R.string.help));
-                itemView.setMarginTop(R.dimen.dp15);
-            }
-            if (i == 2) {
                 itemView.setTitle(getString(R.string.feedback));
                 itemView.setShowSub(true);
                 itemView.setSubTitle(getString(R.string.comment_introduce));
             }
-            if (i == 3) {
+            if (i == 2) {
                 itemView.setTitle(getString(R.string.about));
                 itemView.setShowSub(true);
                 itemView.setSubTitle(getString(R.string.app_introduce));
@@ -129,13 +129,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 //                LoadingDialog loadingDialog = (LoadingDialog) showLoadingDialog();
 //                loadingDialog.setOnLoadCancelLisener(this);
                 break;
+//            case 1:
+//                startActivity(new Intent(this, HelpActivity.class));
+//                break;
             case 1:
-                startActivity(new Intent(this, HelpActivity.class));
-                break;
-            case 2:
                 startActivity(new Intent(this, FeedBackActivity.class));
                 break;
-            case 3:
+            case 2:
                 startActivity(new Intent(this, AboutActivity.class));
 //                boolean isPush = !SaveUtil.get(SaveConstants.ISPUSH);
 //                SaveUtil.save(SaveConstants.ISPUSH, isPush);

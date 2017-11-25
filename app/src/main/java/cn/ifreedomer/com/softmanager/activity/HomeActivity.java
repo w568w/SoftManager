@@ -65,6 +65,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     public static final String CLEAN_TAG = "clean";
     private ImageView mSettingIv;
     private Fragment iceboxFragment;
+    private ImageView mBuyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,14 +112,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 long time = data.getExpirdTime() - System.currentTimeMillis();
                 LogUtil.e(TAG, "checkAuthority: time=" + time);
                 if (0 < System.currentTimeMillis()) {
-                    PayDialog payDialog = new PayDialog(HomeActivity.this);
-                    payDialog.show();
+                    showPayDialog();
                 }
             }
         }, throwable -> {
             Log.e(TAG, "checkAuthority error: " + throwable);
             throwable.printStackTrace();
         });
+    }
+
+    private void showPayDialog() {
+
+        PayDialog payDialog = new PayDialog(HomeActivity.this);
+        payDialog.showPay();
     }
 
     private void initFragments() {
@@ -157,7 +163,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private void initNavView() {
         navigationView.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
         mSettingIv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.setting_iv);
+        mBuyId = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.buy_iv);
         mSettingIv.setOnClickListener(this);
+        mBuyId.setOnClickListener(this);
+
     }
 
     private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -201,6 +210,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     getSupportActionBar().setTitle(getString(R.string.icebox));
                     fragmentTransaction.show(iceboxFragment);
                     break;
+
                 default:
                     break;
             }
@@ -234,6 +244,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.setting_iv:
                 startActivity(new Intent(this, SettingActivity.class));
+                break;
+            case R.id.buy_iv:
+                showPayDialog();
                 break;
         }
     }

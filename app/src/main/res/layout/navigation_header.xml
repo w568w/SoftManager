@@ -40,4 +40,15 @@
         android:src="@mipmap/setting"/>
 
 
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/buy_iv"
+        android:layout_width="@dimen/dp30"
+        android:layout_height="@dimen/dp30"
+        android:layout_marginBottom="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp60"
+        android:src="@mipmap/buy"/>
+
+
 </RelativeLayout>
