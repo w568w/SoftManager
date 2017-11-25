@@ -66,6 +66,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mSettingIv;
     private Fragment iceboxFragment;
     private ImageView mBuyId;
+    private Fragment lastShowFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +142,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 add(R.id.frame_content, iceboxFragment).
                 hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).
                 show(cleanFragment).commit();
+        lastShowFragment = cleanFragment;
 
     }
 
@@ -175,14 +177,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         public boolean onNavigationItemSelected(MenuItem menuItem) {
             Log.e(TAG, "onNavigationItemSelected: 0000");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.hide(hardwareFragment);
-            fragmentTransaction.hide(softFragment);
-            fragmentTransaction.hide(cleanFragment);
-            fragmentTransaction.hide(permissionFragment);
-            fragmentTransaction.hide(iceboxFragment);
+            fragmentTransaction.hide(lastShowFragment);
             switch (menuItem.getItemId()) {
                 case R.id.soft:
                     fragmentTransaction.show(softFragment);
+                    lastShowFragment = softFragment;
                     MobclickAgent.onEvent(HomeActivity.this, "soft");
                     getSupportActionBar().setTitle(getString(R.string.soft_manager));
                     break;
@@ -190,12 +189,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     getSupportActionBar().setTitle(getString(R.string.hardware_info));
                     MobclickAgent.onEvent(HomeActivity.this, "device");
                     fragmentTransaction.show(hardwareFragment);
+                    lastShowFragment = hardwareFragment;
                     break;
                 case R.id.clean:
                     MobclickAgent.onEvent(HomeActivity.this, "clean");
 
                     getSupportActionBar().setTitle(getString(R.string.clean_garbage));
                     fragmentTransaction.show(cleanFragment);
+                    lastShowFragment = cleanFragment;
                     break;
                 case R.id.permission:
                     MobclickAgent.onEvent(HomeActivity.this, "permission");
@@ -204,16 +205,19 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     }
                     getSupportActionBar().setTitle(getString(R.string.permission_manager));
                     fragmentTransaction.show(permissionFragment);
+                    lastShowFragment = permissionFragment;
+
                     break;
                 case R.id.icebox:
                     MobclickAgent.onEvent(HomeActivity.this, "freeze");
                     getSupportActionBar().setTitle(getString(R.string.icebox));
                     fragmentTransaction.show(iceboxFragment);
+                    lastShowFragment = iceboxFragment;
                     break;
-
                 default:
                     break;
             }
+
             fragmentTransaction.commit();
             drawerLayout.closeDrawers();
             return false;
