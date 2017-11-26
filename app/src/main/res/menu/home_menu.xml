@@ -20,6 +20,7 @@
         android:id="@+id/cut_wakeup"
         android:icon="@mipmap/broken_notify"
         android:title="@string/broken_notify"
+        android:visible="false"
         />
 
     <item

@@ -162,6 +162,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 long time = data.getExpirdTime() - System.currentTimeMillis();
                 LogUtil.e(TAG, "checkAuthority: time=" + time);
                 if (data.getExpirdTime() < System.currentTimeMillis()) {
+                    mBuyId.setVisibility(View.VISIBLE);
                     showPayDialog();
                 }
             }

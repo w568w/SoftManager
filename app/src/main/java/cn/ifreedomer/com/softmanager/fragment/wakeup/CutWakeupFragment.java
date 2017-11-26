@@ -45,17 +45,20 @@ public class CutWakeupFragment extends Fragment {
                 PackageInfo packageInfo = this.getActivity().getPackageManager().getPackageInfo(packname, 0);
                 ActivityInfo[] receivers = packageInfo.receivers;
                 ServiceInfo[] services = packageInfo.services;
-                for (int j = 0; j < receivers.length; j++) {
-                    String receiverName = receivers[i].getClass().getSimpleName();
-                    LogUtil.d(TAG, receiverName);
+                if (receivers != null) {
+                    for (int j = 0; j < receivers.length; j++) {
+                        String receiverName = receivers[i].getClass().getSimpleName();
+                        LogUtil.d(TAG, receiverName);
+                    }
                 }
+                if (services != null) {
 
-                for (int j = 0; j < services.length; j++) {
-                    String serviceName = services[i].getClass().getSimpleName();
-                    LogUtil.d(TAG, serviceName);
+
+                    for (int j = 0; j < services.length; j++) {
+                        String serviceName = services[i].getClass().getSimpleName();
+                        LogUtil.d(TAG, serviceName);
+                    }
                 }
-
-
 
 
             } catch (PackageManager.NameNotFoundException e) {
