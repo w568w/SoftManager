@@ -39,8 +39,8 @@ import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
-import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.fragment.wakeup.CutWakeupFragment;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
@@ -161,7 +161,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 Authority data = authorityRespResult.getData();
                 long time = data.getExpirdTime() - System.currentTimeMillis();
                 LogUtil.e(TAG, "checkAuthority: time=" + time);
-                if (data.getExpirdTime() < System.currentTimeMillis()) {
+                if (time < 0) {
                     mBuyId.setVisibility(View.VISIBLE);
                     showPayDialog();
                 }
@@ -173,18 +173,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void showPayDialog() {
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions
-                .request(Manifest.permission.READ_PHONE_STATE)
-                .subscribe(granted -> {
-                            if (!granted) {
-                                Toast.makeText(this, "充值需要以设备Id作为凭证.请授权避免充值无效哦", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            PayDialog payDialog = new PayDialog(HomeActivity.this);
-                            payDialog.showPay();
-                        }
-                );
+        PayDialog payDialog = new PayDialog(HomeActivity.this);
+        payDialog.showPay();
 
     }
 

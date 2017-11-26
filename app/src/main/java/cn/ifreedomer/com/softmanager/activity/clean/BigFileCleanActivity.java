@@ -22,10 +22,10 @@ import cn.ifreedomer.com.softmanager.activity.BaseActivity;
 import cn.ifreedomer.com.softmanager.adapter.BigFileAdapter;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
+import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
-import cn.ifreedomer.com.softmanager.widget.ArcProgress;
-import cn.ifreedomer.com.softmanager.widget.BigFileHeadView;
+import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 
 public class BigFileCleanActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = BigFileCleanActivity.class.getSimpleName();
@@ -36,10 +36,11 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
     RecyclerView mRv;
     @InjectView(R.id.btn_clean)
     Button mBtnClean;
-    ArcProgress mArcProgress;
+
     private List<FileInfo> mFileInfoList = new ArrayList<>();
     private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
     private BigFileAdapter mBigFileAdapter;
+    private NumChangeHeadView mHeaderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +72,9 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
         mBigFileAdapter = new BigFileAdapter(this, R.layout.item_big_file, mFileInfoList);
 
         //add headview
-        BigFileHeadView headerView = new BigFileHeadView(this);
-        mArcProgress = (ArcProgress) headerView.findViewById(R.id.arc_progress);
+        mHeaderView = new NumChangeHeadView(this);
         mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mBigFileAdapter);
-        mHeaderAndFooterWrapper.addHeaderView(headerView);
+        mHeaderAndFooterWrapper.addHeaderView(mHeaderView);
         mRv.setAdapter(mHeaderAndFooterWrapper);
 
         mHeaderAndFooterWrapper.notifyDataSetChanged();
@@ -87,8 +87,7 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void startScan() {
-        mArcProgress.setProgress(0);
-        mArcProgress.setProgress(1);
+
         asyncTask.execute();
     }
 
@@ -113,7 +112,6 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
                 }
 
 
-
                 @Override
                 public void onScanFinish(float garbageSize, List<FileInfo> garbageList) {
                     publishProgress(100);
@@ -124,13 +122,27 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            mArcProgress.setProgress(values[0]);
 
             if (values[0] == 100) {
-                mArcProgress.setBottomText(getString(R.string.scan_finish));
                 mBtnClean.setVisibility(View.VISIBLE);
+                mHeaderView.setScanningText("扫描进度:100%");
+                return;
             }
-            mHeaderAndFooterWrapper.notifyDataSetChanged();
+            float totalSize = 0;
+            for (int i = 0; i < mFileInfoList.size(); i++) {
+                totalSize = totalSize + mFileInfoList.get(i).getSize();
+            }
+            float finalTotalSize = totalSize;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mHeaderView.setScanTotal(DataTypeUtil.getTextBySize(finalTotalSize * FileUtil.MB));
+                    mHeaderView.setScanningText("扫描进度:" + values[0] + " % ");
+                    mHeaderAndFooterWrapper.notifyDataSetChanged();
+
+
+                }
+            });
 
         }
 

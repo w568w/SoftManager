@@ -94,7 +94,6 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void startScan() {
-
         asyncTask.execute();
     }
 
@@ -212,7 +211,7 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
                 mBtnClean.setVisibility(View.VISIBLE);
             }
             mHeaderView.setScanningText("");
-            mHeaderView.setScanTotal(DataTypeUtil.getTwoFloat(mTotalMemoryGarbage));
+            mHeaderView.setScanTotal(DataTypeUtil.getTextBySize(mTotalMemoryGarbage));
         }
 
 
@@ -229,7 +228,7 @@ public class MemoryCleanActivity extends BaseActivity implements View.OnClickLis
             ProcessItem processItem = mProcessList.get(i);
             mCurrentMemoryGarbage = mCurrentMemoryGarbage + processItem.getMemorySize();
         }
-        mHeaderView.setScanTotal(mCurrentMemoryGarbage);
+        mHeaderView.setScanTotal(DataTypeUtil.getTextBySize(mCurrentMemoryGarbage));
         Toast.makeText(this, getString(R.string.clear_text) + DataTypeUtil.getTextBySize(mTotalMemoryGarbage - mCurrentMemoryGarbage), Toast.LENGTH_SHORT).show();
 
     }
