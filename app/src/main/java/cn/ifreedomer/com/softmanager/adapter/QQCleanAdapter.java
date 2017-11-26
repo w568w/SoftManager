@@ -146,7 +146,7 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
         nameTv.setText(fileInfo.getName());
         TextView sizeTv = (TextView) childView.findViewById(R.id.tv_size);
         sizeTv.setText(DataTypeUtil.getTextBySize(fileInfo.getSize()));
-
+        childView.findViewById(R.id.tv_category).setVisibility(View.GONE);
         int iconRes = R.mipmap.unknow_file;
         if (!TextUtils.isEmpty(fileInfo.getType())) {
             iconRes = mimeTypeMap.get(fileInfo.getType()) == null ? R.mipmap.unknow_file : mimeTypeMap.get(fileInfo.getType());
