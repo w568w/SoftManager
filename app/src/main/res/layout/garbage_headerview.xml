@@ -5,6 +5,7 @@
               android:orientation="vertical">
 
     <RelativeLayout
+        android:padding="@dimen/dp10"
         android:id="@+id/rel_top"
         style="@style/topBackgrounStyle"
         android:layout_below="@id/toolbar">
