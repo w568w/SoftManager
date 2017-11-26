@@ -35,6 +35,7 @@ import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
+import cn.ifreedomer.com.softmanager.fragment.wakeup.CutWakeupFragment;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
@@ -70,6 +71,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mBuyId;
     private Fragment lastShowFragment;
     private RxPermissions mRxPermissions;
+    private Fragment cutWakeUpFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,13 +158,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         cleanFragment = new CleanFragment();
         permissionFragment = new PermissionFragment();
         iceboxFragment = new IceBoxFragment();
+        cutWakeUpFragment = new CutWakeupFragment();
         getSupportFragmentManager().beginTransaction().
                 add(R.id.frame_content, softFragment, SOFT_TAG).
                 add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).
                 add(R.id.frame_content, cleanFragment, HARDWARE_TAG).
                 add(R.id.frame_content, permissionFragment, PERMISSION_TAG).
                 add(R.id.frame_content, iceboxFragment).
-                hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).
+                add(R.id.frame_content, cutWakeUpFragment).
+                hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).
                 show(cleanFragment).commit();
         lastShowFragment = cleanFragment;
 
@@ -235,6 +239,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     getSupportActionBar().setTitle(getString(R.string.icebox));
                     fragmentTransaction.show(iceboxFragment);
                     lastShowFragment = iceboxFragment;
+                    break;
+
+                case R.id.cut_wakeup:
+                    MobclickAgent.onEvent(HomeActivity.this, "cut wakeup");
+                    getSupportActionBar().setTitle(getString(R.string.cut_wakeup));
+                    fragmentTransaction.show(cutWakeUpFragment);
+                    lastShowFragment = cutWakeUpFragment;
                     break;
                 default:
                     break;

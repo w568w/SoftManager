@@ -170,6 +170,9 @@ public class PackageInfoManager {
                                 }
                         });
                     } catch (Exception e) {
+
+
+
                         e.printStackTrace();
                     }
                     appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
@@ -260,5 +263,13 @@ public class PackageInfoManager {
     public boolean isAppEnable(String pkgName) {
         int applicationEnabledSetting = mContext.getPackageManager().getApplicationEnabledSetting(pkgName);
         return applicationEnabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+    }
+
+
+    public List<AppInfo> getAllApp() {
+        List<AppInfo> allApps = new ArrayList<>();
+        allApps.addAll(userAppInfos);
+        allApps.addAll(systemAppInfos);
+        return allApps;
     }
 }
