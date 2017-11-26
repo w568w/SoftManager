@@ -40,7 +40,8 @@ public class PackageInfoManager {
     private Context mContext;
     private Method mDeleteApplicationCacheFiles;
     private StatFs mStat;
-
+    private boolean isLoaded = false;
+    private boolean isLoadFinish = false;
 
     private PackageInfoManager() {
 
@@ -73,35 +74,39 @@ public class PackageInfoManager {
     }
 
 
+    private List<LoadStateCallback> loadStateCallbackList = new ArrayList<>();
+
+    public void addLoadStateCallback(LoadStateCallback loadStateCallback) {
+        if (loadStateCallback != null) {
+            loadStateCallbackList.add(loadStateCallback);
+        }
+    }
+
+
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
-    public void loadData(final Context context, final LoadStateCallback loadStateCallback) {
+    public void loadData(final LoadStateCallback loadStateCallback) {
         //防止重复加载
-        if (userAppInfos.size() > 0) {
+        if (isLoaded) {
             return;
         }
+        isLoaded = true;
         @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask<Object, Integer, List<AppInfo>>() {
             private int mAppCount = 0;
 
             @Override
             protected List<AppInfo> doInBackground(Object... params) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadStateCallback.loadBegin();
-                    }
-                });
 
                 Method mGetPackageSizeInfoMethod = null;
 
                 try {
-                    mGetPackageSizeInfoMethod = context.getPackageManager().getClass().getMethod(
+                    mGetPackageSizeInfoMethod = mContext.getPackageManager().getClass().getMethod(
                             "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
 
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }
-                PackageManager pm = context.getPackageManager();
+                PackageManager pm = mContext.getPackageManager();
                 List<PackageInfo> packInfos = pm.getInstalledPackages(0);
 
                 //加载权限
@@ -120,7 +125,7 @@ public class PackageInfoManager {
                         continue;
                     }
                     appInfo.setCodePath(info.sourceDir);
-                    if (info.packageName.equals(context.getPackageName())) {
+                    if (info.packageName.equals(mContext.getPackageName())) {
                         continue;
                     }
                     int flags = packInfo.applicationInfo.flags;
@@ -156,7 +161,7 @@ public class PackageInfoManager {
                     appInfo.setVersion(version);
                     try {
 
-                        mGetPackageSizeInfoMethod.invoke(context.getPackageManager(), new Object[]{
+                        mGetPackageSizeInfoMethod.invoke(mContext.getPackageManager(), new Object[]{
                                 packname,
                                 new IPackageStatsObserver.Stub() {
                                     @Override
@@ -175,17 +180,17 @@ public class PackageInfoManager {
                     appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
                     appinfos.add(appInfo);
                 }
+
+
+
+
+
                 return appinfos;
             }
 
             @Override
             protected void onProgressUpdate(final Integer... values) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadStateCallback.loadProgress(values[0], values[1]);
-                    }
-                });
+                new Handler(Looper.getMainLooper()).post(() -> loadStateCallback.loadProgress(values[0], values[1]));
 
             }
 
@@ -197,12 +202,12 @@ public class PackageInfoManager {
 
             @Override
             protected void onPostExecute(List<AppInfo> result) {
-
+                LogUtil.e(TAG, "onPostExecute");
+                isLoadFinish = true;
                 super.onPostExecute(result);
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadStateCallback.loadFinish();
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    for (int i = 0; i < loadStateCallbackList.size(); i++) {
+                        loadStateCallbackList.get(i).loadFinish();
                     }
                 });
 
@@ -212,8 +217,8 @@ public class PackageInfoManager {
         };
         task.execute();
 
-
     }
+
 
     public void clearCache(String packageName) {
         try {
@@ -260,5 +265,9 @@ public class PackageInfoManager {
     public boolean isAppEnable(String pkgName) {
         int applicationEnabledSetting = mContext.getPackageManager().getApplicationEnabledSetting(pkgName);
         return applicationEnabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+    }
+
+    public boolean isLoadFinish() {
+        return isLoadFinish;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Process;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -26,6 +29,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
@@ -35,6 +39,7 @@ import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
@@ -58,6 +63,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     NavigationView navigationView;
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @InjectView(R.id.pb)
+    ProgressBar pb;
+    @InjectView(R.id.lin_loading)
+    LinearLayout linLoading;
     private Fragment softFragment;
     private Fragment hardwareFragment;
     private Fragment cleanFragment;
@@ -75,16 +84,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        ButterKnife.inject(this);
+        initView();
 
         mRxPermissions = new RxPermissions(this);
         mRxPermissions
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
                 .subscribe(granted -> {
                     if (granted) {
-                        initApp(savedInstanceState);
+                        loadData();
                     } else {
-                        initApp(savedInstanceState);
+                        loadData();
                         LogUtil.e(TAG, "没有获取权限");
                     }
                 });
@@ -92,13 +102,38 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    private void initApp(Bundle savedInstanceState) {
-
-        ButterKnife.inject(this);
+    private void refreView() {
         initFragments();
-        initView();
         checkAuthority();
 
+    }
+
+
+    private void loadData() {
+
+        if (PackageInfoManager.getInstance().isLoadFinish()) {
+            refreView();
+            return;
+        }
+        linLoading.setVisibility(View.VISIBLE);
+        LogUtil.e(TAG, "loadFinish before");
+
+        PackageInfoManager.getInstance().addLoadStateCallback(new LoadStateCallback() {
+            @Override
+            public void loadBegin() {
+            }
+
+            @Override
+            public void loadProgress(int current, int max) {
+            }
+
+            @Override
+            public void loadFinish() {
+                LogUtil.e(TAG, "loadFinish");
+                linLoading.setVisibility(View.GONE);
+                refreView();
+            }
+        });
     }
 
 
@@ -293,7 +328,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
             } else {
                 Log.e(TAG + "======", "退出应用");
-                android.os.Process.killProcess(android.os.Process.myPid());
+                Process.killProcess(Process.myPid());
                 System.exit(0);
                 //
             }

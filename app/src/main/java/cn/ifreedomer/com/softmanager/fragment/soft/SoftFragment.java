@@ -17,10 +17,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.ifreedomer.com.softmanager.LoadStateCallback;
-import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 
 public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
     private static final int MINE_INDEX = 0;
@@ -41,7 +40,7 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_soft, container, false);
-        ButterKnife.inject(this,view);
+        ButterKnife.inject(this, view);
         initAllFragment();
         initView();
         initData();
@@ -64,26 +63,15 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
     }
 
     private void initData() {
-        PackageInfoManager.getInstance().loadData(getActivity(), new LoadStateCallback() {
-            @Override
-            public void loadBegin() {
-                pb.setVisibility(View.VISIBLE);
-            }
+        refreshData();
+    }
 
-            @Override
-            public void loadProgress(int current, int max) {
-            }
+    private void refreshData() {
+        RecycleFragment mineFragment = (RecycleFragment) fragmentList.get(MINE_INDEX);
+        RecycleFragment systemFragment = (RecycleFragment) fragmentList.get(SYSTEM_INDEX);
 
-            @Override
-            public void loadFinish() {
-                pb.setVisibility(View.GONE);
-                RecycleFragment mineFragment = (RecycleFragment) fragmentList.get(MINE_INDEX);
-                RecycleFragment systemFragment = (RecycleFragment) fragmentList.get(SYSTEM_INDEX);
-
-                mineFragment.setData(PackageInfoManager.getInstance().getUserApps());
-                systemFragment.setData(PackageInfoManager.getInstance().getSystemApps());
-            }
-        });
+        mineFragment.setData(PackageInfoManager.getInstance().getUserApps());
+        systemFragment.setData(PackageInfoManager.getInstance().getSystemApps());
     }
 
     private void initAllFragment() {

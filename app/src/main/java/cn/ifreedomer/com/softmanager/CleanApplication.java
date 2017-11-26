@@ -25,6 +25,22 @@ public class CleanApplication extends Application {
         INSTANCE = this;
         PermissionManager.getInstance().init(this);
         PackageInfoManager.getInstance().init(this);
+        PackageInfoManager.getInstance().loadData(new LoadStateCallback() {
+            @Override
+            public void loadBegin() {
+
+            }
+
+            @Override
+            public void loadProgress(int current, int max) {
+
+            }
+
+            @Override
+            public void loadFinish() {
+
+            }
+        });
 
     }
 }
