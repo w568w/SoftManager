@@ -111,7 +111,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             mRxPermissions
-                    .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
+                    .request(Manifest.permission.READ_PHONE_STATE)
                     .subscribe(granted -> {
                         if (!granted) {
                             Toast.makeText(HomeActivity.this, R.string.device_id_request, Toast.LENGTH_SHORT).show();
@@ -124,7 +124,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 Authority data = authorityRespResult.getData();
                 long time = data.getExpirdTime() - System.currentTimeMillis();
                 LogUtil.e(TAG, "checkAuthority: time=" + time);
-                if (0 < System.currentTimeMillis()) {
+                if (data.getExpirdTime() < System.currentTimeMillis()) {
                     showPayDialog();
                 }
             }
@@ -137,7 +137,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private void showPayDialog() {
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(Manifest.permission.READ_PHONE_STATE)
                 .subscribe(granted -> {
                             if (!granted) {
                                 Toast.makeText(this, "充值需要以设备Id作为凭证.请授权避免充值无效哦", Toast.LENGTH_SHORT).show();

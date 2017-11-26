@@ -28,6 +28,7 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.PayResult;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.bean.json.PayInfo;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
@@ -85,8 +86,12 @@ public class PayDialog extends Dialog implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_pay:
                 dismiss();
-
-                pay(mPayInfo.getPayInfo());
+                GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        pay(mPayInfo.getPayInfo());
+                    }
+                });
 
 
                 break;
