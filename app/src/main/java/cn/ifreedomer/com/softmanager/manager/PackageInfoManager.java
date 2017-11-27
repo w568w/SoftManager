@@ -175,14 +175,13 @@ public class PackageInfoManager {
                                 }
                         });
                     } catch (Exception e) {
+
+
                         e.printStackTrace();
                     }
                     appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
                     appinfos.add(appInfo);
                 }
-
-
-
 
 
                 return appinfos;
@@ -269,5 +268,12 @@ public class PackageInfoManager {
 
     public boolean isLoadFinish() {
         return isLoadFinish;
+    }
+
+    public List<AppInfo> getAllApp() {
+        List<AppInfo> allApps = new ArrayList<>();
+        allApps.addAll(userAppInfos);
+        allApps.addAll(systemAppInfos);
+        return allApps;
     }
 }
