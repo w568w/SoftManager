@@ -13,46 +13,6 @@
         layout="@layout/toolbar"
         />
 
-    <RelativeLayout
-        android:id="@+id/rel_top"
-        style="@style/topBackgrounStyle"
-        android:layout_below="@id/toolbar">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/dp60"
-                android:layout_height="@dimen/dp60"
-                android:src="@mipmap/qq_stoke"/>
-
-            <TextView
-                android:id="@+id/tv_scan_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/whiteColor"
-                android:textSize="@dimen/sp50"/>
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="MB"-->
-                <!--android:textColor="@color/whiteColor"/>-->
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/dp5"
-            android:textColor="@color/whiteColor"/>
-    </RelativeLayout>
-
     <ExpandableListView
         android:id="@+id/expand_listview"
         android:layout_width="match_parent"

@@ -13,8 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,17 +28,14 @@ import cn.ifreedomer.com.softmanager.bean.clean.QQGroupTitle;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
+import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 
 public class QQCleanActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = QQCleanActivity.class.getSimpleName();
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
-    @InjectView(R.id.rel_top)
-    RelativeLayout mRelTop;
     @InjectView(R.id.expand_listview)
     ExpandableListView mExpandListview;
-    @InjectView(R.id.tv_scan_total)
-    TextView mTvScanTotal;
     @InjectView(R.id.btn_clean)
     Button mBtnClean;
     @InjectView(R.id.pb)
@@ -64,12 +59,13 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
                     pb.setVisibility(View.GONE);
                     qqCleanAdapter.notifyDataSetChanged();
                     float calculateTotalSize = calculateTotalSize();
-                    mTvScanTotal.setText(DataTypeUtil.getTextBySize(calculateTotalSize));
+                    mNumChangeHeadView.setScanTotal(DataTypeUtil.getTextBySize(calculateTotalSize));
                     break;
 
             }
         }
     };
+    private NumChangeHeadView mNumChangeHeadView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +105,9 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initExpandbleListView() {
+        mNumChangeHeadView = new NumChangeHeadView(this);
         qqCleanAdapter = new QQCleanAdapter(this, mTitleList, fileInfoGroupList);
+        mExpandListview.addHeaderView(mNumChangeHeadView);
         mExpandListview.setAdapter(qqCleanAdapter);
         mExpandListview.setOnGroupClickListener((parent, v, groupPosition, id) -> {
             Log.e(TAG, "onGroupClick: " + "group position=" + groupPosition);
@@ -184,7 +182,7 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
             runOnUiThread(() -> {
                 pb.setVisibility(View.GONE);
                 float calculateTotalSize = calculateTotalSize();
-                mTvScanTotal.setText(DataTypeUtil.getTextBySize(calculateTotalSize));
+                mNumChangeHeadView.setScanTotal(DataTypeUtil.getTextBySize(calculateTotalSize));
                 qqCleanAdapter.notifyDataSetChanged();
                 qqCleanAdapter.notifyDataSetChanged();
                 for (int i = 0; i < fileInfoGroupList.size(); i++) {
@@ -198,7 +196,8 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             float calculateTotalSize = calculateTotalSize();
-            mTvScanTotal.setText(DataTypeUtil.getTextBySize(calculateTotalSize));
+            mNumChangeHeadView.setScanTotal(DataTypeUtil.getTextBySize(calculateTotalSize));
+            mNumChangeHeadView.setScanningText("已经扫描:" + values[0] + "%");
             qqCleanAdapter.notifyDataSetChanged();
         }
     };
