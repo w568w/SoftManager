@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:text="@string/dont_need_clean"
             android:textColor="@color/whiteColor"
             android:textSize="@dimen/sp15"/>
     </RelativeLayout>
