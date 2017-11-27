@@ -164,4 +164,13 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (asyncTask != null && (asyncTask.getStatus() == AsyncTask.Status.RUNNING)) {
+            asyncTask.cancel(true);
+        }
+    }
 }
