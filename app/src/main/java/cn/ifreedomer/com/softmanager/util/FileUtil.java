@@ -68,10 +68,16 @@ public class FileUtil {
         if (file.exists()) {
             LinkedList<File> list = new LinkedList<File>();
             File[] files = file.listFiles();
+            if (files == null) {
+                return null;
+            }
             for (File file2 : files) {
                 if (file2.isDirectory()) {
                     System.out.println("文件夹:" + file2.getAbsolutePath());
                     list.add(file2);
+                    if (file2.listFiles() == null) {
+                        continue;
+                    }
                     if (file2.listFiles().length == 0) {
                         scanSize = scanSize + file2.length();
                     }
@@ -79,13 +85,13 @@ public class FileUtil {
                 } else {
                     System.out.println("文件:" + file2.getAbsolutePath());
                     fileNum++;
-                    FileInfo fileInfo =   processBigFile(file2, bigFileInfoList);
+                    FileInfo fileInfo = processBigFile(file2, bigFileInfoList);
                     scanSize = scanSize + file2.length();
-                    if (fileInfo==null){
+                    if (fileInfo == null) {
                         continue;
                     }
 
-                    scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize,fileInfo);
+                    scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize, fileInfo);
 
                 }
             }
@@ -93,6 +99,9 @@ public class FileUtil {
             while (!list.isEmpty()) {
                 temp_file = list.removeFirst();
                 files = temp_file.listFiles();
+                if (files == null || files.length == 0) {
+                    continue;
+                }
                 for (File file2 : files) {
                     if (file2.isDirectory()) {
                         System.out.println("文件夹:" + file2.getAbsolutePath());
@@ -110,10 +119,10 @@ public class FileUtil {
                         FileInfo fileInfo = processBigFile(file2, bigFileInfoList);
                         scanSize = scanSize + file2.length();
 
-                        if (fileInfo==null){
+                        if (fileInfo == null) {
                             continue;
                         }
-                        scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize,fileInfo);
+                        scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize, fileInfo);
 
 
                     }
@@ -151,7 +160,6 @@ public class FileUtil {
         }
         return type;
     }
-
 
 
     public static List<FileInfo> getFolderFiles(String folderPath, List<FileInfo> fileInfoList) {
