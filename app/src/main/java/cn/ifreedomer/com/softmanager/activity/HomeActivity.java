@@ -229,10 +229,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         public boolean onNavigationItemSelected(MenuItem menuItem) {
             Log.e(TAG, "onNavigationItemSelected: 0000");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.hide(lastShowFragment);
+            if (lastShowFragment!=null){
+                fragmentTransaction.hide(lastShowFragment);
+            }
             switch (menuItem.getItemId()) {
                 case R.id.soft:
-                    fragmentTransaction.show(softFragment);
                     lastShowFragment = softFragment;
                     MobclickAgent.onEvent(HomeActivity.this, "soft");
                     getSupportActionBar().setTitle(getString(R.string.soft_manager));
@@ -240,14 +241,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 case R.id.hardware:
                     getSupportActionBar().setTitle(getString(R.string.hardware_info));
                     MobclickAgent.onEvent(HomeActivity.this, "device");
-                    fragmentTransaction.show(hardwareFragment);
                     lastShowFragment = hardwareFragment;
                     break;
                 case R.id.clean:
                     MobclickAgent.onEvent(HomeActivity.this, "clean");
 
                     getSupportActionBar().setTitle(getString(R.string.clean_garbage));
-                    fragmentTransaction.show(cleanFragment);
                     lastShowFragment = cleanFragment;
                     break;
                 case R.id.permission:
@@ -256,28 +255,27 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                         Toast.makeText(HomeActivity.this, R.string.need_root, Toast.LENGTH_SHORT).show();
                     }
                     getSupportActionBar().setTitle(getString(R.string.permission_manager));
-                    fragmentTransaction.show(permissionFragment);
                     lastShowFragment = permissionFragment;
 
                     break;
                 case R.id.icebox:
                     MobclickAgent.onEvent(HomeActivity.this, "freeze");
                     getSupportActionBar().setTitle(getString(R.string.icebox));
-                    fragmentTransaction.show(iceboxFragment);
                     lastShowFragment = iceboxFragment;
                     break;
 
                 case R.id.cut_wakeup:
                     MobclickAgent.onEvent(HomeActivity.this, "cut wakeup");
                     getSupportActionBar().setTitle(getString(R.string.cut_wakeup));
-                    fragmentTransaction.show(cutWakeUpFragment);
                     lastShowFragment = cutWakeUpFragment;
                     break;
                 default:
                     break;
             }
-
-            fragmentTransaction.commit();
+            if (lastShowFragment != null) {
+                fragmentTransaction.show(lastShowFragment);
+                fragmentTransaction.commit();
+            }
             drawerLayout.closeDrawers();
             return false;
         }
