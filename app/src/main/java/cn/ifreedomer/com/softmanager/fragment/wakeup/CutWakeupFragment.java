@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.model.WakeupPathInfo;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
@@ -30,13 +30,14 @@ import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 public class CutWakeupFragment extends Fragment {
     private static final String TAG = CutWakeupFragment.class.getSimpleName();
-    private ConcurrentHashMap<String, List<AppInfo>> wakupPathMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, WakeupPathInfo> wakupPathMap = new ConcurrentHashMap<>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wakeup, container, false);
         //scan wake up path
+
         return view;
     }
 
@@ -49,24 +50,35 @@ public class CutWakeupFragment extends Fragment {
         }
     }
 
+
     private void scanWakeupPath() {
+        PackageManager packageManager = this.getActivity().getPackageManager();
+
         List<AppInfo> allApp = PackageInfoManager.getInstance().getUserApps();
         for (int i = 0; i < allApp.size(); i++) {
             AppInfo appInfo = allApp.get(i);
             String packname = appInfo.getPackname();
             try {
-                PackageInfo packageInfo = this.getActivity().getPackageManager().getPackageInfo(packname, 0);
+                PackageInfo packageInfo = this.getActivity().getPackageManager().getPackageInfo(packname, PackageManager.GET_RECEIVERS | PackageManager.GET_SERVICES);
                 ActivityInfo[] receivers = packageInfo.receivers;
                 ServiceInfo[] services = packageInfo.services;
                 if (receivers != null) {
                     for (int j = 0; j < receivers.length; j++) {
-                        String receiverName = receivers[i].getClass().getSimpleName();
+                        ActivityInfo receiver = receivers[j];
+
+                        if (receiver == null) {
+                            continue;
+                        }
+                        String receiverName = receiver.name;
                         LogUtil.d(TAG, receiverName);
+
                         if (wakupPathMap.containsKey(receiverName)) {
-                            wakupPathMap.get(receiverName).add(appInfo);
+                            wakupPathMap.get(receiverName).getWakeupPath().add(appInfo);
                         } else {
-                            List<AppInfo> appInfoList = new ArrayList<>(5);
-                            wakupPathMap.put(receiverName, appInfoList);
+                            WakeupPathInfo wakeupPathInfo = new WakeupPathInfo();
+                            wakeupPathInfo.setWakeUpName(receiver.processName);
+                            wakeupPathInfo.getWakeupPath().add(appInfo);
+                            wakupPathMap.put(receiverName, wakeupPathInfo);
                         }
                     }
                 }
@@ -74,13 +86,22 @@ public class CutWakeupFragment extends Fragment {
 
 
                     for (int j = 0; j < services.length; j++) {
-                        String serviceName = services[i].getClass().getSimpleName();
+                        ServiceInfo service = services[j];
+                        if (service == null) {
+                            continue;
+                        }
+                        if (!service.exported) {
+                            continue;
+                        }
+                        String serviceName = services[j].name;
                         LogUtil.d(TAG, serviceName);
                         if (wakupPathMap.containsKey(serviceName)) {
-                            wakupPathMap.get(serviceName).add(appInfo);
+                            wakupPathMap.get(serviceName).getWakeupPath().add(appInfo);
                         } else {
-                            List<AppInfo> appInfoList = new ArrayList<>(5);
-                            wakupPathMap.put(serviceName, appInfoList);
+                            WakeupPathInfo wakeupPathInfo = new WakeupPathInfo();
+                            wakeupPathInfo.setWakeUpName(service.processName);
+                            wakeupPathInfo.getWakeupPath().add(appInfo);
+                            wakupPathMap.put(serviceName, wakeupPathInfo);
                         }
                     }
                 }
@@ -92,14 +113,14 @@ public class CutWakeupFragment extends Fragment {
         }
 
 
-        Set<Map.Entry<String, List<AppInfo>>> entries = wakupPathMap.entrySet();
-        for (Map.Entry<String, List<AppInfo>> wakeupEntry : entries) {
-            if (wakeupEntry.getValue().size() < 2) {
+        Set<Map.Entry<String, WakeupPathInfo>> entries = wakupPathMap.entrySet();
+        for (Map.Entry<String, WakeupPathInfo> wakeupEntry : entries) {
+            if (wakeupEntry.getValue().getWakeupPath().size() < 2) {
                 wakupPathMap.remove(wakeupEntry.getKey());
             }
         }
 
-        for (Map.Entry<String, List<AppInfo>> wakeupEntry : entries) {
+        for (Map.Entry<String, WakeupPathInfo> wakeupEntry : entries) {
             LogUtil.d(TAG, "key=" + wakeupEntry.getKey() + "   value=" + wakeupEntry.getValue());
         }
 

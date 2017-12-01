@@ -27,6 +27,7 @@ import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
+import cn.ifreedomer.com.softmanager.util.XmlUtil;
 
 /**
  * @author:eavawu
@@ -276,4 +277,16 @@ public class PackageInfoManager {
         allApps.addAll(systemAppInfos);
         return allApps;
     }
+
+
+    //加载所有组件
+    public void loadAllComponent() {
+        List<AppInfo> allApp = getAllApp();
+        for (int i = 0; i < allApp.size(); i++) {
+            AppInfo appInfo = allApp.get(i);
+            XmlUtil.parseAppInfo(mContext, appInfo.getPackname(), appInfo);
+        }
+    }
+
+
 }
