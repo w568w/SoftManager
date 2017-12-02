@@ -41,6 +41,7 @@ public class ReceiverListActivity extends BaseActivity {
 
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, toolbar);
+        getSupportActionBar().setTitle(R.string.receiver);
     }
 
     private void initData() {
