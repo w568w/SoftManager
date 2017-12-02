@@ -66,6 +66,11 @@
             android:name=".activity.PermissionSetActivity"
             android:screenOrientation="portrait"/>
 
+
+        <activity
+            android:name=".activity.component.ReceiverListActivity"
+            android:screenOrientation="portrait"/>
+
         <service
             android:name=".service.FileScanService"
             android:exported="false"/>

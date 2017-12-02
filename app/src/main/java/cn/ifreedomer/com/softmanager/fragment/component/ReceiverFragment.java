@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.component.ComponentListActivity;
+import cn.ifreedomer.com.softmanager.activity.component.ReceiverListActivity;
 import cn.ifreedomer.com.softmanager.adapter.ReceiverAdapter;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
@@ -81,8 +82,7 @@ public class ReceiverFragment extends Fragment implements TabLayout.OnTabSelecte
                     return;
                 }
                 GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, PackageInfoManager.getInstance().getUserApps().get(position));
-                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.SHOW_TYPE, ComponentListActivity.RECEIVER);
-                startActivity(new Intent(getActivity(), ComponentListActivity.class));
+                startActivity(new Intent(getActivity(), ReceiverListActivity.class));
             }
 
             @Override
@@ -106,8 +106,7 @@ public class ReceiverFragment extends Fragment implements TabLayout.OnTabSelecte
                     return;
                 }
                 GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, systemApps.get(position));
-                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.SHOW_TYPE, ComponentListActivity.RECEIVER);
-                startActivity(new Intent(getActivity(), ComponentListActivity.class));
+                startActivity(new Intent(getActivity(), ReceiverListActivity.class));
             }
 
             @Override
