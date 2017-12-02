@@ -35,6 +35,7 @@ import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.bean.json.Authority;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
+import cn.ifreedomer.com.softmanager.fragment.component.ComponentFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
@@ -81,6 +82,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private Fragment lastShowFragment;
     private RxPermissions mRxPermissions;
     private Fragment cutWakeUpFragment;
+    private ComponentFragment componentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +187,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         permissionFragment = new PermissionFragment();
         iceboxFragment = new IceBoxFragment();
         cutWakeUpFragment = new CutWakeupFragment();
+        componentFragment = new ComponentFragment();
         getSupportFragmentManager().beginTransaction().
                 add(R.id.frame_content, softFragment, SOFT_TAG).
                 add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).
@@ -192,8 +195,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 add(R.id.frame_content, permissionFragment, PERMISSION_TAG).
                 add(R.id.frame_content, iceboxFragment).
                 add(R.id.frame_content, cutWakeUpFragment).
-                hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).
-                show(cleanFragment).commit();
+                add(R.id.frame_content, componentFragment).
+                hide(componentFragment).hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).
+                show(cleanFragment).commitAllowingStateLoss();
         lastShowFragment = cleanFragment;
 
     }
@@ -272,6 +276,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     getSupportActionBar().setTitle(getString(R.string.cut_wakeup));
                     fragmentTransaction.show(cutWakeUpFragment);
                     lastShowFragment = cutWakeUpFragment;
+                    break;
+                case R.id.component_manager:
+                    MobclickAgent.onEvent(HomeActivity.this, "component manager");
+                    getSupportActionBar().setTitle(getString(R.string.component_manager));
+                    fragmentTransaction.show(componentFragment);
+                    lastShowFragment = componentFragment;
                     break;
                 default:
                     break;

@@ -49,8 +49,6 @@ android {
         noCompress 'jar', 'sh', 'db'
     }
 
-
-
 //    flavorDimensions "mode"
 //
 //    // 友盟多渠道打包

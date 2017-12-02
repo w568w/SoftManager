@@ -1,35 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/clean"
-        android:icon="@mipmap/clean"
-        android:title="@string/clean_garbage"/>
+        android:id="@+id/menu_search_option"
+        android:title="@string/base_function"
+        app:showAsAction="ifRoom|withText">
+
+        <menu>
+            <item
+                android:id="@+id/clean"
+                android:icon="@mipmap/clean"
+                android:title="@string/clean_garbage"/>
+
+            <item
+                android:id="@+id/soft"
+                android:icon="@mipmap/soft"
+                android:title="@string/soft_manager"/>
+            <item
+                android:id="@+id/hardware"
+                android:icon="@mipmap/device"
+                android:title="@string/hardware_info"/>
+
+            <item
+                android:id="@+id/permission"
+                android:icon="@mipmap/permission"
+                android:title="@string/permission_manager"/>
+
+
+        </menu>
+    </item>
+
 
     <item
-        android:id="@+id/soft"
-        android:icon="@mipmap/soft"
-        android:title="@string/soft_manager"/>
-    <item
-        android:id="@+id/hardware"
-        android:icon="@mipmap/device"
-        android:title="@string/hardware_info"/>
+        android:title="@string/high_function"
+        app:showAsAction="ifRoom|withText">
+        <menu>
+
+            <item
+                android:id="@+id/cut_wakeup"
+                android:icon="@mipmap/broken_notify"
+                android:title="@string/broken_notify"
+                />
+
+            <item
+                android:id="@+id/icebox"
+                android:icon="@mipmap/icebox"
+                android:title="@string/icebox"/>
 
 
-    <item
-        android:id="@+id/cut_wakeup"
-        android:icon="@mipmap/broken_notify"
-        android:title="@string/broken_notify"
-        />
+            <item
+                android:id="@+id/component_manager"
+                android:icon="@mipmap/component_manager"
+                android:title="@string/component_manager"/>
 
-    <item
-        android:id="@+id/icebox"
-        android:icon="@mipmap/icebox"
-        android:title="@string/icebox"/>
-    <item
-        android:id="@+id/permission"
-        android:icon="@mipmap/permission"
-        android:title="@string/permission_manager"/>
+
+
+        </menu>
+    </item>
     <!--<item-->
     <!--android:id="@+id/photo"-->
     <!--android:drawable="@mipmap/ic_launcher"-->

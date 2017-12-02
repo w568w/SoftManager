@@ -26,7 +26,7 @@
         <TextView
             android:textColor="@color/primary_text"
             android:textSize="18sp"
-            android:id="@+id/tv_appname"
+            android:id="@+id/tv_name"
             android:text="这是app名称"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

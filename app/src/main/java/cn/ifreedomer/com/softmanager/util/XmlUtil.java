@@ -17,6 +17,7 @@ import java.util.List;
 import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
 import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.bean.PermissionGroup;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 
 /**
@@ -87,12 +88,15 @@ public class XmlUtil {
 
 
     public static void parseAppInfo(Context context, String pkgName, AppInfo appInfo) {
+        LogUtil.d(TAG, "parseAppInfo PkgName=" + pkgName);
         Context createPackageContext = null;
         try {
             createPackageContext = context.createPackageContext(pkgName, 0);
             AssetManager assets = createPackageContext.getAssets();
             XmlResourceParser xmlParser = assets.openXmlResourceParser(((Integer) AssetManager.class.getMethod("addAssetPath", new Class[]{String.class}).invoke(assets, new Object[]{context.getPackageManager().getApplicationInfo(pkgName, 0).sourceDir})).intValue(), "AndroidManifest.xml");
             int event = xmlParser.getEventType();   //先获取当前解析器光标在哪
+//            LogUtil.d(TAG, "parseAppInfo PkgName111=" + pkgName);
+
             ComponentEntity componentEntity = null;
             while (event != XmlPullParser.END_DOCUMENT) {
                 switch (event) {
@@ -100,12 +104,42 @@ public class XmlUtil {
                         Log.i(TAG, "xml解析开始");
                         break;
                     case XmlPullParser.START_TAG:
-                        LogUtil.i(TAG, xmlParser.getName());
-                        if ("activity".equals(xmlParser.getName())) {
+                        //   LogUtil.d(TAG, "parseAppInfo PkgName=222");
+
+                        if ("activity".equals(xmlParser.getName()) || "provider".equals(xmlParser.getName()) || "receiver".equals(xmlParser.getName()) || "service".equals(xmlParser.getName())) {
                             componentEntity = new ComponentEntity();
                             componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
                             componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
+                            componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(componentEntity.getName()));
+                            LogUtil.d(TAG, "parseAppInfo tagName=>" + xmlParser.getName());
+
                         }
+
+                        if ("action".equals(xmlParser.getName())) {
+                            if (componentEntity != null && componentEntity.getActionList() != null) {
+                                componentEntity.getActionList().add(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+                            }
+                        }
+
+//                        if ("provider".equals(xmlParser.getName())) {
+//                            componentEntity = new ComponentEntity();
+//                            componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+//                            componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
+//                        }
+//
+//
+//                        if ("service".equals(xmlParser.getName())) {
+//                            componentEntity = new ComponentEntity();
+//                            componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+//                            componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
+//                        }
+//
+//                        if ("receiver".equals(xmlParser.getName())) {
+//                            componentEntity = new ComponentEntity();
+//                            componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+//                            componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
+//                        }
+
 
                         break;
                     case XmlPullParser.TEXT:
@@ -113,6 +147,8 @@ public class XmlUtil {
 //                        Log.d(TAG, "Text:" + xmlParser.getText());
                         break;
                     case XmlPullParser.END_TAG:
+//                        LogUtil.d(TAG, "parseAppInfo PkgName444=");
+
                         if ("activity".equals(xmlParser.getName())) {
                             if (appInfo.getActivityList() == null) {
                                 appInfo.setActivityList(new ArrayList<>(5));
@@ -120,10 +156,48 @@ public class XmlUtil {
                             appInfo.getActivityList().add(componentEntity);
                             LogUtil.d(TAG, "activity=" + componentEntity.toString());
                         }
+
+//                        LogUtil.d(TAG, "parseAppInfo PkgName444-1");
+
+
+                        if ("provider".equals(xmlParser.getName())) {
+                            if (appInfo.getContentProviderList() == null) {
+                                appInfo.setContentProviderList(new ArrayList<>(5));
+                            }
+                            appInfo.getContentProviderList().add(componentEntity);
+                            LogUtil.d(TAG, "provider=" + componentEntity.toString());
+
+                        }
+//                        LogUtil.d(TAG, "parseAppInfo PkgName444-2");
+
+
+                        if ("service".equals(xmlParser.getName())) {
+                            if (appInfo.getServiceList() == null) {
+                                appInfo.setServiceList(new ArrayList<>(5));
+                            }
+                            appInfo.getServiceList().add(componentEntity);
+                            LogUtil.d(TAG, "service=" + componentEntity.toString());
+
+                        }
+
+
+//                        LogUtil.d(TAG, "parseAppInfo PkgName444-3");
+
+                        if ("receiver".equals(xmlParser.getName())) {
+                            if (appInfo.getReceiverList() == null) {
+                                appInfo.setReceiverList(new ArrayList<>(5));
+                            }
+                            appInfo.getReceiverList().add(componentEntity);
+                            LogUtil.d(TAG, "receiver=" + componentEntity.toString());
+
+                        }
+//                        LogUtil.d(TAG, "parseAppInfo PkgName444-");
                         break;
                 }
                 event = xmlParser.next();   //将当前解析器光标往下一步移
             }
+            LogUtil.d(TAG, "parseAppInfo PkgName5555=");
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

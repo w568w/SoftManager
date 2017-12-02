@@ -31,7 +31,7 @@ public class AutoStartAdapter extends CommonAdapter<AutoStartInfo> {
 
     @Override
     public void convert(ViewHolder holder, final AutoStartInfo autoStartInfo, final int position) {
-        holder.setText(R.id.tv_appname, autoStartInfo.getLabel());
+        holder.setText(R.id.tv_name, autoStartInfo.getLabel());
         holder.setImageDrawable(R.id.iv_icon, autoStartInfo.getIcon());
         final Switch switchWidget = holder.getView(R.id.swith_auto);
 

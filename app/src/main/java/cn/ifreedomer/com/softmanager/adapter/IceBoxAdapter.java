@@ -30,7 +30,7 @@ public class IceBoxAdapter extends CommonAdapter<AppInfo> {
 
     @Override
     protected void convert(ViewHolder holder, AppInfo appInfo, int position) {
-        holder.setText(R.id.tv_appname, appInfo.getAppName());
+        holder.setText(R.id.tv_name, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         Switch switchView = holder.getView(R.id.switch_enable);
         switchView.setChecked(appInfo.isEnable());

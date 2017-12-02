@@ -41,7 +41,7 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
 
     @Override
     protected void convert(ViewHolder holder, final AppInfo appInfo, int position) {
-        holder.setText(R.id.tv_appname, appInfo.getAppName());
+        holder.setText(R.id.tv_name, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         holder.setText(R.id.tv_appcache, DataTypeUtil.getTextBySize(appInfo.getPkgSize()));
         holder.setOnClickListener(R.id.iv_uninstall, new View.OnClickListener() {

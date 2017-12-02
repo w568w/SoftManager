@@ -30,6 +30,7 @@ import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 import io.reactivex.schedulers.Schedulers;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
@@ -141,11 +142,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_load_component:
-                GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        PackageInfoManager.getInstance().loadAllComponent();
-                    }
+                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+                    PackageInfoManager.getInstance().loadAllComponent();
+                    LogUtil.d(TAG,"loadAllComponent");
                 });
                 break;
             default:

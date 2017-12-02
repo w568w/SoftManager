@@ -1,5 +1,8 @@
 package cn.ifreedomer.com.softmanager.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author:eavawu
  * @since: 01/12/2017.
@@ -9,6 +12,24 @@ package cn.ifreedomer.com.softmanager.bean;
 public class ComponentEntity {
     private String name;
     private String exported;
+    private List<String> actionList = new ArrayList<>();
+    private boolean isChecked = false;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    public List<String> getActionList() {
+        return actionList;
+    }
+
+    public void setActionList(List<String> actionList) {
+        this.actionList = actionList;
+    }
 
     public String getName() {
         return name;

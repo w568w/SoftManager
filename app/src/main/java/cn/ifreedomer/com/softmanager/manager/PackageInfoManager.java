@@ -2,6 +2,7 @@ package cn.ifreedomer.com.softmanager.manager;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
@@ -27,6 +28,7 @@ import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
+import cn.ifreedomer.com.softmanager.util.ShellUtils;
 import cn.ifreedomer.com.softmanager.util.XmlUtil;
 
 /**
@@ -43,6 +45,7 @@ public class PackageInfoManager {
     private StatFs mStat;
     private boolean isLoaded = false;
     private boolean isLoadFinish = false;
+    private boolean isComponentLoaded = false;
 
     private PackageInfoManager() {
 
@@ -267,6 +270,13 @@ public class PackageInfoManager {
         return applicationEnabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
     }
 
+
+    public boolean isComponentEnable(String component) {
+        ComponentName componentName = new ComponentName(mContext, component);
+        return mContext.getPackageManager().getComponentEnabledSetting(componentName) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+
+    }
+
     public boolean isLoadFinish() {
         return isLoadFinish;
     }
@@ -282,11 +292,35 @@ public class PackageInfoManager {
     //加载所有组件
     public void loadAllComponent() {
         List<AppInfo> allApp = getAllApp();
+        LogUtil.d(TAG, "loadAllComponent size=>" + allApp.size());
+
         for (int i = 0; i < allApp.size(); i++) {
             AppInfo appInfo = allApp.get(i);
+            LogUtil.d(TAG, "loadAllComponent=>" + appInfo.getPackname());
             XmlUtil.parseAppInfo(mContext, appInfo.getPackname(), appInfo);
         }
+        isComponentLoaded = true;
     }
 
+
+    public void disableComponent(String component) {
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                ShellUtils.execCommand("pm disable " + component, true);
+            }
+        });
+    }
+
+    public void enableComponent(String component) {
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            ShellUtils.execCommand("pm disable " + component, true);
+        });
+    }
+
+
+    public boolean isComponentLoaded() {
+        return isComponentLoaded;
+    }
 
 }
