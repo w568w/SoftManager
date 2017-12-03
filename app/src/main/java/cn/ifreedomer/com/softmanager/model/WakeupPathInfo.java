@@ -3,6 +3,8 @@ package cn.ifreedomer.com.softmanager.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
+
 /**
  * @author:eavawu
  * @since: 30/11/2017.
@@ -11,6 +13,7 @@ import java.util.List;
 
 public class WakeupPathInfo {
     private List<AppInfo> wakeupPath = new ArrayList<>(5);
+    private List<ComponentEntity> componentEntityList = new ArrayList<>(5);
     private String wakeUpName = "";
 
     public List<AppInfo> getWakeupPath() {
@@ -40,6 +43,15 @@ public class WakeupPathInfo {
     }
 
     public WakeupPathInfo() {
+    }
+
+
+    public List<ComponentEntity> getComponentEntityList() {
+        return componentEntityList;
+    }
+
+    public void setComponentEntityList(List<ComponentEntity> componentEntityList) {
+        this.componentEntityList = componentEntityList;
     }
 
     @Override

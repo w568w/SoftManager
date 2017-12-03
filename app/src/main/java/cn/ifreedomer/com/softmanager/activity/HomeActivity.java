@@ -34,6 +34,7 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.bean.json.Authority;
+import cn.ifreedomer.com.softmanager.db.DBActionUtils;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
 import cn.ifreedomer.com.softmanager.fragment.component.ComponentFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
@@ -41,9 +42,11 @@ import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
 import cn.ifreedomer.com.softmanager.fragment.wakeup.CutWakeupFragment;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
+import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.widget.PayDialog;
@@ -114,6 +117,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
 
     private void loadData() {
+
+        //拷贝数据库
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            DBUtil.copyDB(HomeActivity.this);
+            GlobalDataManager.getInstance().setActionMap(DBActionUtils.loadActionMap(HomeActivity.this));
+        });
 
         if (PackageInfoManager.getInstance().isLoadFinish()) {
             refreView();

@@ -1,5 +1,6 @@
 package cn.ifreedomer.com.softmanager.manager;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -31,6 +32,16 @@ public class GlobalDataManager {
         return executorService;
     }
 
+
+    private Map<String, String> actionMap = null;
+
+    public Map<String, String> getActionMap() {
+        return actionMap;
+    }
+
+    public void setActionMap(Map<String, String> actionMap) {
+        this.actionMap = actionMap;
+    }
 
     private ConcurrentHashMap<String, Object> tempMap = new ConcurrentHashMap<>();
 

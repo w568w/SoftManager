@@ -99,7 +99,6 @@ public class PackageInfoManager {
 
             @Override
             protected List<AppInfo> doInBackground(Object... params) {
-
                 Method mGetPackageSizeInfoMethod = null;
 
                 try {

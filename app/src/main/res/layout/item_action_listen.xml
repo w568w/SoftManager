@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/itemroot"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:orientation="horizontal">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_icon_left"
+       >
+
+        <ImageView
+            android:id="@+id/iv_go"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/icon_marginright"
+            android:alpha="0.5"
+            android:padding="5dp"
+            android:src="@mipmap/right_arrow"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/devider_height"
+            android:layout_alignParentBottom="true"
+            android:background="#eaeaea"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp15"
+            android:layout_toLeftOf="@id/iv_go"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="这是app名称"
+                android:textColor="@color/primary_text"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_name"
+                android:layout_centerVertical="true"
+                android:text="6个权限"
+                android:textColor="@color/secondary_text"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</RelativeLayout>
