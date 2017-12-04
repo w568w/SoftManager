@@ -195,7 +195,7 @@ public class PermissionManager {
                 List<PermissionDetail> appPermissionlist = new ArrayList<>();
                 for (int i = 0; i < ops.size(); i++) {
                     if (getPermissionByOp(ops.get(i).getOp()) == null) {
-//                        LogUtil.e(TAG, "package name=" + pkgOps.getPackageName() + "  op=" + ops.get(i).getOp() + " is not support");
+                        LogUtil.e(TAG, "package name=" + pkgOps.getPackageName() + "  op=" + ops.get(i).getOp() + " is not support");
                         continue;
                     }
                     PermissionDetail permissionDetail = getPermissionByOp(ops.get(i).getOp());

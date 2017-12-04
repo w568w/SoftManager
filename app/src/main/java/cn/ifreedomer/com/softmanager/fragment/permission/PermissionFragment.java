@@ -77,12 +77,14 @@ public class PermissionFragment extends Fragment {
     private void loadDataAsync() {
         //加载权限
         linLoading.setVisibility(View.VISIBLE);
-        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                PermissionManager.getInstance().loadPermissionConfig();
-                PermissionManager.getInstance().loadAllPermission();
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            PermissionManager.getInstance().loadPermissionConfig();
+            PermissionManager.getInstance().loadAllPermission();
+            for (int i = 0; i < PackageInfoManager.getInstance().getAllApp().size(); i++) {
+                AppInfo appInfo = PackageInfoManager.getInstance().getAllApp().get(i);
+                appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
             }
+            mHandler.sendEmptyMessage(LOAD_SUCCESS);
         });
 
     }

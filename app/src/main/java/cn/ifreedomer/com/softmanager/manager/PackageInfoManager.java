@@ -176,11 +176,8 @@ public class PackageInfoManager {
                                 }
                         });
                     } catch (Exception e) {
-
-
                         e.printStackTrace();
                     }
-                    appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
                     appinfos.add(appInfo);
                 }
 
