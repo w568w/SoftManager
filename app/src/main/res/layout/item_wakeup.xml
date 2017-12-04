@@ -43,16 +43,16 @@
                 android:textColor="@color/secondary_text"/>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_go"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+        <Switch
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/icon_marginright"
             android:alpha="0.5"
-            android:padding="5dp"
-            android:src="@mipmap/right_arrow"/>
+
+            />
 
         <View
             android:layout_width="match_parent"

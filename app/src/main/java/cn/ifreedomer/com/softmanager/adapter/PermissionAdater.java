@@ -28,10 +28,10 @@ public class PermissionAdater extends CommonAdapter<AppInfo> {
         holder.setText(R.id.tv_name, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         if (appInfo.getPermissionDetailList() != null) {
-            holder.setText(R.id.tv_count, appInfo.getPermissionDetailList().size() + mContext.getString(R.string.permission_count));
+            holder.setText(R.id.tv_category, appInfo.getPermissionDetailList().size() + mContext.getString(R.string.permission_count));
             LogUtil.e(TAG,"appName="+appInfo.getAppName()+"  permission="+appInfo.getPermissionDetailList());
         } else {
-            holder.setText(R.id.tv_count, 0 + mContext.getString(R.string.permission_count));
+            holder.setText(R.id.tv_category, 0 + mContext.getString(R.string.permission_count));
         }
     }
 }

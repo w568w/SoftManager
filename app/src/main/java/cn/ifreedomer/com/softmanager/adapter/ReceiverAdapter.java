@@ -29,9 +29,9 @@ public class ReceiverAdapter extends CommonAdapter<AppInfo> {
         holder.setText(R.id.tv_name, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         if (appInfo.getReceiverList() != null) {
-            holder.setText(R.id.tv_count, appInfo.getReceiverList().size() + mSuffix);
+            holder.setText(R.id.tv_category, appInfo.getReceiverList().size() + mSuffix);
         } else {
-            holder.setText(R.id.tv_count, 0 + mSuffix);
+            holder.setText(R.id.tv_category, 0 + mSuffix);
         }
     }
 }

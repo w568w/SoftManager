@@ -12,6 +12,16 @@ import java.util.List;
 public class ComponentEntity {
     private String name;
     private String exported;
+    private String belongPkg;
+
+    public String getBelongPkg() {
+        return belongPkg;
+    }
+
+    public void setBelongPkg(String belongPkg) {
+        this.belongPkg = belongPkg;
+    }
+
     private List<String> actionList = new ArrayList<>();
     private boolean isChecked = false;
 

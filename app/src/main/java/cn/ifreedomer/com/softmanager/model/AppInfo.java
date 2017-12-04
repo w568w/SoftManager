@@ -22,7 +22,15 @@ public class AppInfo {
     private List<ComponentEntity> receiverList = null;
     private List<ComponentEntity> serviceList = null;
     private List<ComponentEntity> contentProviderList = null;
+    private List<ComponentEntity> wakeupList = new ArrayList<>();
 
+    public List<ComponentEntity> getWakeupList() {
+        return wakeupList;
+    }
+
+    public void setWakeupList(List<ComponentEntity> wakeupList) {
+        this.wakeupList = wakeupList;
+    }
 
     public List<ComponentEntity> getActivityList() {
         return activityList;

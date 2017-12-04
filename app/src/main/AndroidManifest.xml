@@ -66,6 +66,10 @@
             android:name=".activity.PermissionSetActivity"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".activity.component.WakeupListActivity"
+            android:screenOrientation="portrait"/>
+
 
         <activity
             android:name=".activity.component.ReceiverListActivity"

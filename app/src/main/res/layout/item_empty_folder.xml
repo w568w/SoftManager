@@ -35,7 +35,7 @@
 
 
             <TextView
-                android:id="@+id/tv_count"
+                android:id="@+id/tv_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp10"

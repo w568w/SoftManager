@@ -29,9 +29,9 @@ public class ServiceAdapter extends CommonAdapter<AppInfo> {
         holder.setText(R.id.tv_name, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         if (appInfo.getServiceList() != null) {
-            holder.setText(R.id.tv_count, appInfo.getServiceList().size() + mSuffix);
+            holder.setText(R.id.tv_category, appInfo.getServiceList().size() + mSuffix);
         } else {
-            holder.setText(R.id.tv_count, 0 + mSuffix);
+            holder.setText(R.id.tv_category, 0 + mSuffix);
         }
     }
 }

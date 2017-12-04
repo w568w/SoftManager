@@ -1,6 +1,7 @@
 package cn.ifreedomer.com.softmanager.fragment.wakeup;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.activity.component.WakeupListActivity;
 import cn.ifreedomer.com.softmanager.adapter.ActionAdapter;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
 import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
@@ -34,7 +40,6 @@ import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.model.WakeupPathInfo;
-import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author:eavawu
@@ -61,6 +66,8 @@ public class CutWakeupFragment extends Fragment {
     private List<WakeupPathInfo> wakeupPathInfoList = new ArrayList<>();
     private static final int LOAD_SUCCESS = 1;
     private static final int SCAN_SUCCESS = 2;
+    public static final String WAKEUP_PATH = "wakeup_path";
+    public static final String WAKEUP_ACTION = "wakeup_action";
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -95,18 +102,41 @@ public class CutWakeupFragment extends Fragment {
             wakeupPathInfoList.add(entry.getValue());
         }
 
+
+        WakeupPathInfo[] wakeupPathInfos = new WakeupPathInfo[wakeupPathInfoList.size()];
+        Arrays.sort(wakeupPathInfoList.toArray(wakeupPathInfos), (lhs, rhs) -> {
+            return rhs.getWakeupPath().size() - lhs.getWakeupPath().size();
+        });
+
+        wakeupPathInfoList.clear();
+
+        wakeupPathInfoList = Arrays.asList(wakeupPathInfos);
+
         CommonRecycleFragment actionFragment = new CommonRecycleFragment();
         ActionAdapter mineAdapter = new ActionAdapter(getActivity(), R.layout.item_action_listen, wakeupPathInfoList);
         actionFragment.setAdapter(mineAdapter);
         actionFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mineAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                GlobalDataManager.getInstance().getTempMap().put(WAKEUP_ACTION, wakeupPathInfoList.get(position).getWakeUpName());
+                GlobalDataManager.getInstance().getTempMap().put(WAKEUP_PATH, wakeupPathInfoList.get(position));
+                startActivity(new Intent(getActivity(), WakeupListActivity.class));
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
         fragmentList.add(actionFragment);
 
-
-        CommonRecycleFragment interFragment = new CommonRecycleFragment();
-        mineAdapter = new ActionAdapter(getActivity(), R.layout.item_action_listen, wakeupPathInfoList);
-        actionFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        actionFragment.setAdapter(mineAdapter);
+//
+//        CommonRecycleFragment interFragment = new CommonRecycleFragment();
+//        mineAdapter = new ActionAdapter(getActivity(), R.layout.item_action_listen, wakeupPathInfoList);
+//        actionFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//        actionFragment.setAdapter(mineAdapter);
 //        fragmentList.add(interFragment);
 
 
@@ -140,12 +170,12 @@ public class CutWakeupFragment extends Fragment {
 
 
     private void scanWakeupPath() {
-        LogUtil.d(TAG, "scanWakeupPath");
+//        LogUtil.d(TAG, "scanWakeupPath");
         List<AppInfo> allApp = PackageInfoManager.getInstance().getAllApp();
         for (int i = 0; i < allApp.size(); i++) {
 
             AppInfo appInfo = allApp.get(i);
-            LogUtil.d(TAG, "scanWakeupPath pkgName = " + appInfo.getPackname());
+//            LogUtil.d(TAG, "scanWakeupPath pkgName = " + appInfo.getPackname());
 
             List<ComponentEntity> receiverList = appInfo.getReceiverList();
             if (receiverList == null || receiverList.size() == 0) {
@@ -154,8 +184,8 @@ public class CutWakeupFragment extends Fragment {
             for (int j = 0; j < receiverList.size(); j++) {
 
                 ComponentEntity componentEntity = receiverList.get(j);
-                LogUtil.d(TAG, "scanWakeupPath pkgName  receiver= " + componentEntity.getName());
-
+//                LogUtil.d(TAG, "scanWakeupPath pkgName  receiver= " + componentEntity.getName());
+                componentEntity.setBelongPkg(appInfo.getPackname());
                 List<String> actionList = componentEntity.getActionList();
                 if (actionList == null || actionList.size() == 0) {
                     continue;
@@ -163,7 +193,7 @@ public class CutWakeupFragment extends Fragment {
                 for (int k = 0; k < actionList.size(); k++) {
 
                     String action = actionList.get(k);
-                    LogUtil.d(TAG, "scanWakeupPath pkgName  receiver action= " + action);
+//                    LogUtil.d(TAG, "scanWakeupPath pkgName  receiver action= " + action);
 
                     if (TextUtils.isEmpty(action)) {
                         continue;
@@ -172,15 +202,17 @@ public class CutWakeupFragment extends Fragment {
 
                     if (wakupPathMap.containsKey(action)) {
                         if (wakupPathMap.get(action).getWakeupPath().contains(appInfo)) {
-                            wakupPathMap.get(action).getComponentEntityList().add(componentEntity);
                             continue;
                         }
+                        wakupPathMap.get(action).getComponentEntityList().add(componentEntity);
                         wakupPathMap.get(action).getWakeupPath().add(appInfo);
                     } else {
                         WakeupPathInfo wakeupPathInfo = new WakeupPathInfo();
                         //存组件
                         wakeupPathInfo.getComponentEntityList().add(componentEntity);
-                        wakeupPathInfo.setWakeUpName(action);
+                        String actionDesc = GlobalDataManager.getInstance().getActionMap().get(action);
+                        actionDesc = TextUtils.isEmpty(actionDesc) ? action : actionDesc;
+                        wakeupPathInfo.setWakeUpName(actionDesc);
                         //存储被启动的app
                         wakeupPathInfo.getWakeupPath().add(appInfo);
 
@@ -198,10 +230,10 @@ public class CutWakeupFragment extends Fragment {
             }
         }
 
-        LogUtil.d(TAG, "wakepath size = " + entries.size());
-        for (Map.Entry<String, WakeupPathInfo> wakeupEntry : entries) {
-            LogUtil.d(TAG, "key=" + wakeupEntry.getKey() + "   value size=" + wakeupEntry.getValue().getWakeupPath().size());
-        }
+//        LogUtil.d(TAG, "wakepath size = " + entries.size());
+//        for (Map.Entry<String, WakeupPathInfo> wakeupEntry : entries) {
+//            LogUtil.d(TAG, "key=" + wakeupEntry.getKey() + "   value size=" + wakeupEntry.getValue().getWakeupPath().size());
+//        }
 
     }
 
