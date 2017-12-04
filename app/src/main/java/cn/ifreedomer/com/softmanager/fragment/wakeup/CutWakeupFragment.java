@@ -68,6 +68,7 @@ public class CutWakeupFragment extends Fragment {
     private static final int SCAN_SUCCESS = 2;
     public static final String WAKEUP_PATH = "wakeup_path";
     public static final String WAKEUP_ACTION = "wakeup_action";
+    private boolean isLoaded = false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -78,6 +79,7 @@ public class CutWakeupFragment extends Fragment {
                     tvProgress.setText(R.string.scan_wakeup_path);
                     break;
                 case SCAN_SUCCESS:
+                    isLoaded = true;
                     tvProgress.setText(R.string.scan_finish);
                     linLoading.setVisibility(View.GONE);
                     initFragments();
@@ -160,12 +162,21 @@ public class CutWakeupFragment extends Fragment {
                 linLoading.setVisibility(View.VISIBLE);
                 GlobalDataManager.getInstance().getThreadPool().execute(() -> {
                     PackageInfoManager.getInstance().loadAllComponent();
-                    mHandler.sendEmptyMessage(LOAD_SUCCESS);
-                    scanWakeupPath();
-                    mHandler.sendEmptyMessage(SCAN_SUCCESS);
+                    loadData();
                 });
             }
+            if (PackageInfoManager.getInstance().isComponentLoaded()) {
+                if (!isLoaded) {
+                    loadData();
+                }
+            }
         }
+    }
+
+    private void loadData() {
+        mHandler.sendEmptyMessage(LOAD_SUCCESS);
+        scanWakeupPath();
+        mHandler.sendEmptyMessage(SCAN_SUCCESS);
     }
 
 
