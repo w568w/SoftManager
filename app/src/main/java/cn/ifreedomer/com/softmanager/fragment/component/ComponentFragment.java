@@ -44,18 +44,20 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
     private Toolbar mToolBar;
     private List<Fragment> fragmentList = new ArrayList<>();
     private Fragment mLastFragment = null;
-    private boolean isLoad = false;
-    private static final int LOAD_SUCCESS = 1;
+    private boolean isLoaded = false;
+    private static final int LOAD_UI = 1;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case LOAD_SUCCESS:
+                case LOAD_UI:
                     initFragments();
                     linLoading.setVisibility(View.GONE);
-
+                    isLoaded = true;
+                    break;
+                default:
                     break;
             }
         }
@@ -97,14 +99,19 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!isLoad && !hidden) {
+        if (!hidden) {
             if (!PackageInfoManager.getInstance().isComponentLoaded()) {
                 linLoading.setVisibility(View.VISIBLE);
                 GlobalDataManager.getInstance().getThreadPool().execute(() -> {
                     PackageInfoManager.getInstance().loadAllComponent();
-                    mHandler.sendEmptyMessage(LOAD_SUCCESS);
+                    mHandler.sendEmptyMessage(LOAD_UI);
                 });
-
+                return;
+            }
+            if (PackageInfoManager.getInstance().isComponentLoaded()) {
+                if (!isLoaded){
+                    mHandler.sendEmptyMessage(LOAD_UI);
+                }
             }
         }
         if (hidden) {
