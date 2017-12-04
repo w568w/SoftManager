@@ -112,9 +112,7 @@ public class PackageInfoManager {
                 PackageManager pm = mContext.getPackageManager();
                 List<PackageInfo> packInfos = pm.getInstalledPackages(0);
 
-                //加载权限
-                PermissionManager.getInstance().loadPermissionConfig();
-                PermissionManager.getInstance().loadAllPermission();
+
 
 
                 List<AppInfo> appinfos = new ArrayList<AppInfo>();
