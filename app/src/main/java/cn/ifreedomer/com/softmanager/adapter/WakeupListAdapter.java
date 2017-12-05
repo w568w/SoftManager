@@ -32,8 +32,7 @@ public class WakeupListAdapter extends CommonAdapter<AppInfo> {
     @Override
     protected void convert(ViewHolder holder, AppInfo appInfo, int position) {
         ComponentEntity componentEntity = mComponentEntitylist.get(position);
-
-        holder.setText(R.id.tv_name, appInfo.getAppName());
+        holder.setText(R.id.tv_name, appInfo.getAppName() );
         holder.setText(R.id.tv_category, componentEntity.getName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         Switch aSwitch = holder.getView(R.id.cb);

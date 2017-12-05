@@ -13,6 +13,11 @@ public class ComponentEntity {
     private String name;
     private String exported;
     private String belongPkg;
+    private String fullPathName;
+
+    public String getFullPathName() {
+        return fullPathName;
+    }
 
     public String getBelongPkg() {
         return belongPkg;
@@ -63,5 +68,9 @@ public class ComponentEntity {
                 ", name='" + name + '\'' +
                 ", exported='" + exported + '\'' +
                 '}';
+    }
+
+    public void setFullPathName(String s) {
+        this.fullPathName = s;
     }
 }

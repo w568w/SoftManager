@@ -113,8 +113,6 @@ public class PackageInfoManager {
                 List<PackageInfo> packInfos = pm.getInstalledPackages(0);
 
 
-
-
                 List<AppInfo> appinfos = new ArrayList<AppInfo>();
                 for (PackageInfo packInfo : packInfos) {
                     publishProgress(++mAppCount, packInfos.size());
@@ -265,8 +263,8 @@ public class PackageInfoManager {
     }
 
 
-    public boolean isComponentEnable(String component) {
-        ComponentName componentName = new ComponentName(mContext, component);
+    public boolean isComponentEnable(String pkgName, String component) {
+        ComponentName componentName = new ComponentName(pkgName, component);
         return mContext.getPackageManager().getComponentEnabledSetting(componentName) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 
     }
@@ -298,17 +296,17 @@ public class PackageInfoManager {
 
 
     public void disableComponent(String component) {
-        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                ShellUtils.execCommand("pm disable " + component, true);
-            }
+
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            String replaceComponent = component.replace("$", "\"" + "$" + "\"");
+            ShellUtils.execCommand("pm enable " + replaceComponent, true);
         });
     }
 
     public void enableComponent(String component) {
         GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-            ShellUtils.execCommand("pm disable " + component, true);
+            String replaceComponent = component.replace("$", "\"" + "$" + "\"");
+            ShellUtils.execCommand("pm disable " + replaceComponent, true);
         });
     }
 

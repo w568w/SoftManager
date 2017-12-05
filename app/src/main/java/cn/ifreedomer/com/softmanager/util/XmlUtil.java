@@ -110,7 +110,8 @@ public class XmlUtil {
                             componentEntity = new ComponentEntity();
                             componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
                             componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
-                            componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(componentEntity.getName()));
+                            componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(pkgName, componentEntity.getName()));
+                            componentEntity.setFullPathName(pkgName + "/" + componentEntity.getName());
                             LogUtil.d(TAG, "parseAppInfo tagName=>" + xmlParser.getName());
 
                         }

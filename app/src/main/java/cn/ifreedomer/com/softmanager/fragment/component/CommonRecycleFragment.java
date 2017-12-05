@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.zhy.adapter.recyclerview.CommonAdapter;
 
@@ -25,6 +26,8 @@ public class CommonRecycleFragment extends Fragment {
 
     @InjectView(R.id.rv)
     RecyclerView rv;
+    @InjectView(R.id.tv_no_content)
+    TextView tvNoContent;
     private CommonAdapter mCommonAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -35,6 +38,9 @@ public class CommonRecycleFragment extends Fragment {
         ButterKnife.inject(this, view);
         rv.setLayoutManager(mLayoutManager);
         rv.setAdapter(mCommonAdapter);
+        if (mCommonAdapter.getDatas() == null || mCommonAdapter.getDatas().size() == 0) {
+            setNoContentVisible(View.VISIBLE);
+        }
         return view;
     }
 
@@ -54,5 +60,8 @@ public class CommonRecycleFragment extends Fragment {
         ButterKnife.reset(this);
     }
 
+    public void setNoContentVisible(int visible) {
+        tvNoContent.setVisibility(visible);
+    }
 
 }

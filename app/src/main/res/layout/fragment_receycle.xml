@@ -8,4 +8,12 @@
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/tv_no_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_content"
+        android:visibility="gone"/>
 </RelativeLayout>

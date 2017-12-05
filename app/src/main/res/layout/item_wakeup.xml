@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp20"
             android:orientation="vertical">
 
             <TextView
@@ -50,7 +51,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/icon_marginright"
-            android:alpha="0.5"
 
             />
 
