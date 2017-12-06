@@ -1,7 +1,6 @@
 package cn.ifreedomer.com.softmanager.activity.setting;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,6 +61,7 @@ public class FeedBackActivity extends BaseActivity {
                         Toast.makeText(FeedBackActivity.this, R.string.feedback_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
+                mailThread.start();
                 return false;
             }
         });

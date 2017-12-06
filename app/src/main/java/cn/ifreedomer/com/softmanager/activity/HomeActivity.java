@@ -53,7 +53,6 @@ import cn.ifreedomer.com.softmanager.util.LogUtil;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.http.HEAD;
 
 /**
  * @author HomorSmith

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-   >
+    >
 
     <include layout="@layout/toolbar"/>
 
@@ -13,22 +13,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp10"
-        android:hint="@string/select_fill"
         android:layout_marginTop="@dimen/dp10"
+        android:hint="@string/select_fill"
         android:text="@string/sender"/>
 
-
-    <EditText
-        android:paddingLeft="@dimen/dp10"
-        android:id="@+id/sender_et"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp20"
-        android:background="@color/whiteColor"
-        android:hint="@string/valid_email"
-        android:inputType="text"
-        android:minHeight="@dimen/dp50"
-        android:textSize="@dimen/sp15"/>
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/sender_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp20"
+            android:hint="@string/valid_email"
+            android:inputType="text"
+            android:minHeight="@dimen/dp50"
+            android:paddingLeft="@dimen/dp10"
+            android:textSize="@dimen/sp15"/>
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
         android:id="@+id/topic_tv"
@@ -38,18 +41,21 @@
         android:layout_marginTop="@dimen/dp20"
         android:text="@string/topic"/>
 
-
-    <EditText
-        android:paddingLeft="@dimen/dp10"
-        android:id="@+id/topic_et"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp15"
-        android:background="@color/whiteColor"
-        android:inputType="text"
-        android:minHeight="@dimen/dp50"
-        android:textSize="@dimen/sp15"
-        android:hint="标题"/>
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/topic_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp15"
+            android:hint="问题标题"
+            android:inputType="text"
+            android:minHeight="@dimen/dp50"
+            android:paddingLeft="@dimen/dp10"
+            android:textSize="@dimen/sp15"/>
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
         android:id="@+id/content_tv"
@@ -59,12 +65,12 @@
         android:layout_marginTop="@dimen/dp20"
         android:text="@string/topic"/>
 
-    <LinearLayout
-        android:layout_marginTop="@dimen/dp20"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp150"
-        android:background="@color/whiteColor"
+        android:layout_marginTop="@dimen/dp20"
         >
+
         <EditText
             android:id="@+id/content_et"
             android:layout_width="match_parent"
@@ -73,6 +79,6 @@
             android:hint="@string/describe_problem"
             android:inputType="text"
             android:textSize="15sp"/>
-    </LinearLayout>
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>
