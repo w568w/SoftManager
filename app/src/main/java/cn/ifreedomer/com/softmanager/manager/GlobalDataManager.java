@@ -15,7 +15,7 @@ import cn.ifreedomer.com.softmanager.factory.DefaultThreadFactory;
 
 public class GlobalDataManager {
 
-    private boolean isOpenRecharge = false;
+    private boolean isOpenRecharge = true;
     private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5,
             new DefaultThreadFactory());
 

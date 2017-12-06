@@ -43,6 +43,7 @@ public class ComponentListAdapter extends CommonAdapter<ComponentEntity> {
         holder.getView(R.id.cb).setOnClickListener(v -> {
             if (GlobalDataManager.getInstance().isOpenRecharge()) {
                 ((BaseActivity) mContext).showPayDialog();
+                aSwitch.setChecked(!aSwitch.isChecked());
                 return;
             }
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {

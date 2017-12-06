@@ -105,22 +105,22 @@ public class XmlUtil {
                         break;
                     case XmlPullParser.START_TAG:
                         //   LogUtil.d(TAG, "parseAppInfo PkgName=222");
+                        String tagName = xmlParser.getName();
+                        if ("activity".equals(tagName) || "provider".equals(tagName) || "receiver".equals(tagName) || "service".equals(tagName)){
+                        componentEntity = new ComponentEntity();
+                        componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+                        componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
+                        componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(pkgName, componentEntity.getName()));
+                        componentEntity.setFullPathName(pkgName + "/" + componentEntity.getName());
+                        LogUtil.d(TAG, "parseAppInfo tagName=>" + tagName);
 
-                        if ("activity".equals(xmlParser.getName()) || "provider".equals(xmlParser.getName()) || "receiver".equals(xmlParser.getName()) || "service".equals(xmlParser.getName())) {
-                            componentEntity = new ComponentEntity();
-                            componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
-                            componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
-                            componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(pkgName, componentEntity.getName()));
-                            componentEntity.setFullPathName(pkgName + "/" + componentEntity.getName());
-                            LogUtil.d(TAG, "parseAppInfo tagName=>" + xmlParser.getName());
+                    }
 
+                    if ("action".equals(tagName)) {
+                        if (componentEntity != null && componentEntity.getActionList() != null) {
+                            componentEntity.getActionList().add(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
                         }
-
-                        if ("action".equals(xmlParser.getName())) {
-                            if (componentEntity != null && componentEntity.getActionList() != null) {
-                                componentEntity.getActionList().add(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
-                            }
-                        }
+                    }
 
 //                        if ("provider".equals(xmlParser.getName())) {
 //                            componentEntity = new ComponentEntity();
@@ -142,15 +142,15 @@ public class XmlUtil {
 //                        }
 
 
-                        break;
+                    break;
                     case XmlPullParser.TEXT:
 
 //                        Log.d(TAG, "Text:" + xmlParser.getText());
                         break;
                     case XmlPullParser.END_TAG:
 //                        LogUtil.d(TAG, "parseAppInfo PkgName444=");
-
-                        if ("activity".equals(xmlParser.getName())) {
+                        tagName = xmlParser.getName();
+                        if ("activity".equals(tagName)) {
                             if (appInfo.getActivityList() == null) {
                                 appInfo.setActivityList(new ArrayList<>(5));
                             }
@@ -161,7 +161,7 @@ public class XmlUtil {
 //                        LogUtil.d(TAG, "parseAppInfo PkgName444-1");
 
 
-                        if ("provider".equals(xmlParser.getName())) {
+                        if ("provider".equals(tagName)) {
                             if (appInfo.getContentProviderList() == null) {
                                 appInfo.setContentProviderList(new ArrayList<>(5));
                             }
@@ -172,7 +172,7 @@ public class XmlUtil {
 //                        LogUtil.d(TAG, "parseAppInfo PkgName444-2");
 
 
-                        if ("service".equals(xmlParser.getName())) {
+                        if ("service".equals(tagName)) {
                             if (appInfo.getServiceList() == null) {
                                 appInfo.setServiceList(new ArrayList<>(5));
                             }
@@ -184,7 +184,7 @@ public class XmlUtil {
 
 //                        LogUtil.d(TAG, "parseAppInfo PkgName444-3");
 
-                        if ("receiver".equals(xmlParser.getName())) {
+                        if ("receiver".equals(tagName)) {
                             if (appInfo.getReceiverList() == null) {
                                 appInfo.setReceiverList(new ArrayList<>(5));
                             }
