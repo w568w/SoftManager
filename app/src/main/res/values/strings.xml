@@ -198,5 +198,6 @@
     <string name="action_listen">事件监听</string>
     <string name="push_receiver">互相唤醒</string>
     <string name="action_listener">个应用被唤醒</string>
+    <string name="loading_data">正在加载数据,请稍等...</string>
 
 </resources>

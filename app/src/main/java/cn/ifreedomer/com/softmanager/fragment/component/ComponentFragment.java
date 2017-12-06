@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,10 +107,9 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
                     PackageInfoManager.getInstance().loadAllComponent();
                     mHandler.sendEmptyMessage(LOAD_UI);
                 });
-                return;
             }
             if (PackageInfoManager.getInstance().isComponentLoaded()) {
-                if (!isLoaded){
+                if (!isLoaded) {
                     mHandler.sendEmptyMessage(LOAD_UI);
                 }
             }
@@ -140,6 +140,10 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+        if (!PackageInfoManager.getInstance().isComponentLoaded()) {
+            Toast.makeText(getActivity(), getString(R.string.loading_data), Toast.LENGTH_SHORT).show();
+            return false;
+        }
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.hide(mLastFragment);
         switch (item.getItemId()) {
