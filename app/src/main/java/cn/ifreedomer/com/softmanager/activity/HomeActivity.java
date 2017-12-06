@@ -32,20 +32,25 @@ import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
+import cn.ifreedomer.com.softmanager.bean.Channel;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.bean.json.Authority;
+import cn.ifreedomer.com.softmanager.db.DBActionUtils;
 import cn.ifreedomer.com.softmanager.fragment.clean.CleanFragment;
+import cn.ifreedomer.com.softmanager.fragment.component.ComponentFragment;
 import cn.ifreedomer.com.softmanager.fragment.device.DeviceInfoFragment;
 import cn.ifreedomer.com.softmanager.fragment.icebox.IceBoxFragment;
 import cn.ifreedomer.com.softmanager.fragment.permission.PermissionFragment;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
-import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.fragment.wakeup.CutWakeupFragment;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
+import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
-import cn.ifreedomer.com.softmanager.widget.PayDialog;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -81,6 +86,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private Fragment lastShowFragment;
     private RxPermissions mRxPermissions;
     private Fragment cutWakeUpFragment;
+    private ComponentFragment componentFragment;
+    private int mChannelState = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +113,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private void refreView() {
         initFragments();
-        checkAuthority();
+        checkChannelState();
 
     }
 
 
     private void loadData() {
+
+        //拷贝数据库
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            DBUtil.copyDB(HomeActivity.this);
+            GlobalDataManager.getInstance().setActionMap(DBActionUtils.loadActionMap(HomeActivity.this));
+        });
 
         if (PackageInfoManager.getInstance().isLoadFinish()) {
             refreView();
@@ -139,12 +152,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    public void checkAuthority() {
+    public void checkChannelState() {
 
-//        if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
-//            PayDialog payDialog = new PayDialog(HomeActivity.this);
-//            payDialog.show();
-//        }
+        Observable<RespResult<Integer>> channelObserver = ServiceManager.getChannelState(PackageInfoManager.getInstance().getVersionCode(this), PackageInfoManager.getInstance().getMetadata("UMENG_CHANNEL"));
+//        channelObserver.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(integerRespResult -> {
+//            LogUtil.e(TAG, integerRespResult.toString());
+//            GlobalDataManager.getInstance().setChannelState(integerRespResult.getData());
+//        }, throwable -> {
+//            throwable.printStackTrace();
+//        });
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             mRxPermissions
@@ -156,37 +173,42 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     });
             return;
         }
-        ServiceManager.getTime(HardwareUtil.getImei()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
+        Observable<RespResult<Authority>> timeObserver = ServiceManager.getTime(HardwareUtil.getImei());
+        channelObserver.flatMap(integerRespResult -> {
+            LogUtil.d(TAG, integerRespResult.toString());
+            mChannelState = integerRespResult.getData();
+            return timeObserver;
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
             if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
                 Authority data = authorityRespResult.getData();
                 long time = data.getExpirdTime() - System.currentTimeMillis();
-                LogUtil.e(TAG, "checkAuthority: time=" + time);
-                if (data.getExpirdTime() < System.currentTimeMillis()) {
+                LogUtil.e(TAG, "channelstate = " + mChannelState + "checkAuthority: time=" + time);
+                if (mChannelState == Channel.OPEN && time < 0) {
+                    GlobalDataManager.getInstance().setOpenRecharge(true);
                     mBuyId.setVisibility(View.VISIBLE);
-                    showPayDialog();
                 }
             }
         }, throwable -> {
             Log.e(TAG, "checkAuthority error: " + throwable);
             throwable.printStackTrace();
         });
+//        ;
+//        ServiceManager.getTime(HardwareUtil.getImei()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
+//            if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
+//                Authority data = authorityRespResult.getData();
+//                long time = data.getExpirdTime() - System.currentTimeMillis();
+//                LogUtil.e(TAG, "checkAuthority: time=" + time);
+//                if (time < 0) {
+//                    mBuyId.setVisibility(View.VISIBLE);
+//                    showPayDialog();
+//                }
+//            }
+//        }, throwable -> {
+//            Log.e(TAG, "checkAuthority error: " + throwable);
+//            throwable.printStackTrace();
+//        });
     }
 
-    private void showPayDialog() {
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions
-                .request(Manifest.permission.READ_PHONE_STATE)
-                .subscribe(granted -> {
-                            if (!granted) {
-                                Toast.makeText(this, "充值需要以设备Id作为凭证.请授权避免充值无效哦", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            PayDialog payDialog = new PayDialog(HomeActivity.this);
-                            payDialog.showPay();
-                        }
-                );
-
-    }
 
     private void initFragments() {
         softFragment = new SoftFragment();
@@ -195,6 +217,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         permissionFragment = new PermissionFragment();
         iceboxFragment = new IceBoxFragment();
         cutWakeUpFragment = new CutWakeupFragment();
+        componentFragment = new ComponentFragment();
         getSupportFragmentManager().beginTransaction().
                 add(R.id.frame_content, softFragment, SOFT_TAG).
                 add(R.id.frame_content, hardwareFragment, HARDWARE_TAG).
@@ -202,8 +225,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 add(R.id.frame_content, permissionFragment, PERMISSION_TAG).
                 add(R.id.frame_content, iceboxFragment).
                 add(R.id.frame_content, cutWakeUpFragment).
-                hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).
-                show(cleanFragment).commit();
+                add(R.id.frame_content, componentFragment).
+                hide(componentFragment).hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).
+                show(cleanFragment).commitAllowingStateLoss();
         lastShowFragment = cleanFragment;
 
     }
@@ -282,6 +306,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     getSupportActionBar().setTitle(getString(R.string.cut_wakeup));
                     fragmentTransaction.show(cutWakeUpFragment);
                     lastShowFragment = cutWakeUpFragment;
+                    break;
+                case R.id.component_manager:
+                    MobclickAgent.onEvent(HomeActivity.this, "component manager");
+                    getSupportActionBar().setTitle(getString(R.string.component_manager));
+                    fragmentTransaction.show(componentFragment);
+                    lastShowFragment = componentFragment;
                     break;
                 default:
                     break;

@@ -6,8 +6,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.ifreedomer.com.softmanager.R;
-import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
-import cn.ifreedomer.com.softmanager.util.FileUtil;
 
 
 /**
@@ -37,13 +35,7 @@ public class NumChangeHeadView extends RelativeLayout {
         mTvScanning.setText(scanningPath);
     }
 
-    public void setScanTotal(float scanTotal) {
-        if (scanTotal < FileUtil.KB) {
-            mTvScanTotal.setText(DataTypeUtil.getTwoFloat(scanTotal / FileUtil.B) + " B");
-        } else if (scanTotal > FileUtil.KB && scanTotal < FileUtil.MB) {
-            mTvScanTotal.setText(DataTypeUtil.getTwoFloat(scanTotal / FileUtil.KB) + " KB");
-        } else if (scanTotal > FileUtil.MB) {
-            mTvScanTotal.setText(DataTypeUtil.getTwoFloat(scanTotal / FileUtil.MB) + " MB");
-        }
+    public void setScanTotal(String scanTotal) {
+        mTvScanTotal.setText(scanTotal);
     }
 }

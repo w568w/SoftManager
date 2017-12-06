@@ -26,7 +26,7 @@
         <TextView
             android:textColor="@color/primary_text"
             android:textSize="18sp"
-            android:id="@+id/tv_appname"
+            android:id="@+id/tv_name"
             android:text="这是app名称"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/tv_appcache"
             android:textColor="@color/secondary_text"
-            android:layout_below="@+id/tv_appname"
+            android:layout_below="@+id/tv_name"
             android:layout_centerVertical="true"
             android:text="这是app缓存"
             android:layout_width="wrap_content"

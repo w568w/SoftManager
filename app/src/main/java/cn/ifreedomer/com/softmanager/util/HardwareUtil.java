@@ -75,7 +75,6 @@ public class HardwareUtil {
 
 
     public static String getImei() {
-
         TelephonyManager telephonyManager = (TelephonyManager) CleanApplication.INSTANCE.getSystemService(Context.TELEPHONY_SERVICE);
         if (telephonyManager != null) {
             return telephonyManager.getDeviceId();

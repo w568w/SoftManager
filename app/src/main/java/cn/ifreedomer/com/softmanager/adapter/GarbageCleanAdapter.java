@@ -119,6 +119,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
         final CheckBox cb = (CheckBox) groupView.findViewById(R.id.cb);
         cb.setChecked(garbageGroupInfo.isChecked());
         cb.setOnClickListener(v -> {
+
             garbageGroupInfo.setChecked(!garbageGroupInfo.isChecked());
             List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
             for (int i = 0; i < garbageInfos.size(); i++) {

@@ -1,0 +1,162 @@
+package cn.ifreedomer.com.softmanager.fragment.component;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.activity.component.ComponentListActivity;
+import cn.ifreedomer.com.softmanager.adapter.ActivityAdapter;
+import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
+import cn.ifreedomer.com.softmanager.model.AppInfo;
+
+/**
+ * @author:eavawu
+ * @since: 02/12/2017.
+ * TODO:
+ */
+
+public class ActivityFragment extends Fragment implements TabLayout.OnTabSelectedListener {
+
+    @InjectView(R.id.tab)
+    TabLayout tab;
+    @InjectView(R.id.viewpager)
+    ViewPager viewpager;
+    private int[] tabIds = new int[]{R.string.mine, R.string.system};
+    private List<Fragment> fragmentList = new ArrayList<>();
+    private static final int LOAD_SUCCESS = 1;
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOAD_SUCCESS:
+                    break;
+            }
+        }
+    };
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_tab_viewpager, container, false);
+        ButterKnife.inject(this, view);
+        initAllFragment();
+        return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
+
+
+    private void initAllFragment() {
+        CommonRecycleFragment mineFragment = new CommonRecycleFragment();
+        ActivityAdapter mineAdapter = new ActivityAdapter(getActivity(), R.layout.item_common_recycle, PackageInfoManager.getInstance().getUserApps());
+        List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
+
+        mineAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if (userApps == null || userApps.size() == 0 || userApps.get(position).getActivityList() == null || userApps.get(position).getActivityList().size() == 0) {
+                    Toast.makeText(getActivity(), getString(R.string.no_content), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, PackageInfoManager.getInstance().getUserApps().get(position));
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.SHOW_TYPE, ComponentListActivity.ACTIVITY);
+                startActivity(new Intent(getActivity(), ComponentListActivity.class));
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+        mineFragment.setAdapter(mineAdapter);
+        mineFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
+        fragmentList.add(mineFragment);
+
+
+        CommonRecycleFragment systemFragment = new CommonRecycleFragment();
+        systemFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
+        fragmentList.add(systemFragment);
+
+        PackageInfoManager.getInstance().getUserApps();
+        List<AppInfo> systemApps = PackageInfoManager.getInstance().getSystemApps();
+        ActivityAdapter systemAdapter = new ActivityAdapter(getActivity(), R.layout.item_common_recycle, PackageInfoManager.getInstance().getSystemApps());
+        systemAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if (systemApps == null || systemApps.size() == 0 || systemApps.get(position).getActivityList() == null || systemApps.get(position).getActivityList().size() == 0) {
+                    Toast.makeText(getActivity(), getString(R.string.no_content), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, systemApps.get(position));
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.SHOW_TYPE, ComponentListActivity.ACTIVITY);
+                startActivity(new Intent(getActivity(), ComponentListActivity.class));
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+        systemFragment.setAdapter(systemAdapter);
+
+
+        // init view pager
+        ViewPagerFragmentAdapter pagerAdapter = new ViewPagerFragmentAdapter(getChildFragmentManager(), fragmentList);
+        viewpager.setAdapter(pagerAdapter);
+        viewpager.setOffscreenPageLimit(2);
+        tab.setupWithViewPager(viewpager);
+        for (int i = 0; i < tab.getTabCount(); i++) {
+            tab.getTabAt(i).setText(getString(tabIds[i]));
+        }
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        viewpager.setCurrentItem(tab.getPosition());
+
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+}

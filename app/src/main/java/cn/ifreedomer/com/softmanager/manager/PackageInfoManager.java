@@ -2,6 +2,7 @@ package cn.ifreedomer.com.softmanager.manager;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
@@ -17,6 +18,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
+import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,6 +29,8 @@ import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
+import cn.ifreedomer.com.softmanager.util.ShellUtils;
+import cn.ifreedomer.com.softmanager.util.XmlUtil;
 
 /**
  * @author:eavawu
@@ -42,6 +46,7 @@ public class PackageInfoManager {
     private StatFs mStat;
     private boolean isLoaded = false;
     private boolean isLoadFinish = false;
+    private boolean isComponentLoaded = false;
 
     private PackageInfoManager() {
 
@@ -95,7 +100,6 @@ public class PackageInfoManager {
 
             @Override
             protected List<AppInfo> doInBackground(Object... params) {
-
                 Method mGetPackageSizeInfoMethod = null;
 
                 try {
@@ -108,10 +112,6 @@ public class PackageInfoManager {
                 }
                 PackageManager pm = mContext.getPackageManager();
                 List<PackageInfo> packInfos = pm.getInstalledPackages(0);
-
-                //加载权限
-                PermissionManager.getInstance().loadPermissionConfig();
-                PermissionManager.getInstance().loadAllPermission();
 
 
                 List<AppInfo> appinfos = new ArrayList<AppInfo>();
@@ -175,11 +175,8 @@ public class PackageInfoManager {
                                 }
                         });
                     } catch (Exception e) {
-
-
                         e.printStackTrace();
                     }
-                    appInfo.setPermissionDetailList(PermissionManager.getInstance().getAppPermission(appInfo.getPackname()));
                     appinfos.add(appInfo);
                 }
 
@@ -266,6 +263,13 @@ public class PackageInfoManager {
         return applicationEnabledSetting != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
     }
 
+
+    public boolean isComponentEnable(String pkgName, String component) {
+        ComponentName componentName = new ComponentName(pkgName, component);
+        return mContext.getPackageManager().getComponentEnabledSetting(componentName) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+
+    }
+
     public boolean isLoadFinish() {
         return isLoadFinish;
     }
@@ -276,4 +280,58 @@ public class PackageInfoManager {
         allApps.addAll(systemAppInfos);
         return allApps;
     }
+
+
+    //加载所有组件
+    public void loadAllComponent() {
+        List<AppInfo> allApp = getAllApp();
+        LogUtil.d(TAG, "loadAllComponent size=>" + allApp.size());
+
+        for (int i = 0; i < allApp.size(); i++) {
+            AppInfo appInfo = allApp.get(i);
+            LogUtil.d(TAG, "loadAllComponent=>" + appInfo.getPackname());
+            XmlUtil.parseAppInfo(mContext, appInfo.getPackname(), appInfo);
+        }
+        isComponentLoaded = true;
+    }
+
+
+    public void disableComponent(String component) {
+
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            String replaceComponent = component.replace("$", "\"" + "$" + "\"");
+            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm enable " + replaceComponent, true);
+            LogUtil.d(TAG, "enableComponent = " + commandResult.toString());
+
+        });
+    }
+
+    public void enableComponent(String component) {
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            String replaceComponent = component.replace("$", "\"" + "$" + "\"");
+            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm disable " + replaceComponent, true);
+            LogUtil.d(TAG, "enableComponent = " + commandResult.toString());
+        });
+    }
+
+
+    public String getMetadata(String channel) {
+        ApplicationInfo appInfo = null;
+        try {
+            appInfo = mContext.getPackageManager()
+                    .getApplicationInfo(mContext.getPackageName(),
+                            PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String msg = appInfo.metaData.getString(channel);
+        Log.d(TAG, " msg == " + msg);
+        return msg;
+    }
+
+
+    public boolean isComponentLoaded() {
+        return isComponentLoaded;
+    }
+
 }

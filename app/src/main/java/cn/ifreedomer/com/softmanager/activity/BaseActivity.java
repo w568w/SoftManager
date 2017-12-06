@@ -6,13 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import cn.ifreedomer.com.softmanager.widget.PayDialog;
+
 /**
+ * Activity基础类
  *
- *  Activity基础类
  * @author HomorSmith
- *
  */
 public class BaseActivity extends AppCompatActivity {
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,12 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+
+    public void showPayDialog() {
+        PayDialog payDialog = new PayDialog(BaseActivity.this);
+        payDialog.showPay();
+
+    }
 
 
 }

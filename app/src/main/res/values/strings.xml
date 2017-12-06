@@ -119,6 +119,7 @@
     <string name="get_permission">获取敏感权限</string>
     <string name="parse_permission_xml">解析permission.xml</string>
     <string name="permission_count">项权限</string>
+
     <string name="fee">资费</string>
     <string name="privacy">隐私相关</string>
     <string name="setting_about">设置相关</string>
@@ -178,4 +179,24 @@
     <string name="device_id_request">充值需要获取设备id做标记.请授权哦</string>
     <string name="loading">正在加载数据...</string>
     <string name="cut_wakeup">切断唤醒</string>
+    <string name="base_function">基础功能</string>
+    <string name="high_function">高级功能</string>
+    <string name="component_manager">组件管理</string>
+    <string name="ui_component">界面组件</string>
+    <string name="receiver">广播接收器</string>
+    <string name="service">服务</string>
+    <string name="content_provider">内容提供者</string>
+    <string name="activity">界面</string>
+    <string name="receiver_suffix">个广播</string>
+    <string name="ui_suffix">个界面</string>
+    <string name="activity_suffix">个界面</string>
+    <string name="content_provider_suffix">个内容提供者</string>
+    <string name="service_suffix">个服务</string>
+    <string name="no_content">没有内容可以查看哦</string>
+    <string name="action">事件:\n</string>
+    <string name="scan_wakeup_path">正在扫描唤醒路径</string>
+    <string name="action_listen">事件监听</string>
+    <string name="push_receiver">互相唤醒</string>
+    <string name="action_listener">个应用被唤醒</string>
+
 </resources>

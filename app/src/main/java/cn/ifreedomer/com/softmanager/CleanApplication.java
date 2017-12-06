@@ -6,6 +6,7 @@ import android.util.Log;
 
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author:eavawu
@@ -38,7 +39,7 @@ public class CleanApplication extends Application {
 
             @Override
             public void loadFinish() {
-
+                LogUtil.d(TAG,"loadFinish");
             }
         });
 

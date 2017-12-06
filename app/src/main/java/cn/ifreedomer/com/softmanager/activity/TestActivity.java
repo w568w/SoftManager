@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
@@ -23,11 +24,15 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.bean.PayResult;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
+import cn.ifreedomer.com.softmanager.db.DBActionUtils;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
+import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 import io.reactivex.schedulers.Schedulers;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
@@ -45,6 +50,12 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     Button btnRecharge;
 
     private static final int SDK_PAY_FLAG = 1;
+    @InjectView(R.id.btn_load_component)
+    Button btnLoadComponent;
+    @InjectView(R.id.activity_test)
+    LinearLayout activityTest;
+    @InjectView(R.id.btn_load_action)
+    Button btnLoadAction;
 
 
     @SuppressLint("HandlerLeak")
@@ -88,7 +99,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         btnDeleteCache.setOnClickListener(this);
         btnGetPermission.setOnClickListener(this);
         btnParsePermissionXml.setOnClickListener(this);
+        btnLoadComponent.setOnClickListener(this);
         btnRecharge.setOnClickListener(this);
+        btnLoadAction.setOnClickListener(this);
     }
 
 
@@ -132,6 +145,17 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 break;
+
+            case R.id.btn_load_component:
+                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+                    PackageInfoManager.getInstance().loadAllComponent();
+                    LogUtil.d(TAG, "loadAllComponent");
+                });
+                break;
+            case R.id.btn_load_action:
+                Map<String, String> stringStringMap = DBActionUtils.loadActionMap(this);
+                Log.d(TAG, "stringStringMap = " + stringStringMap.toString());
+                break;
             default:
                 break;
         }
@@ -152,7 +176,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 public void onScanProcess(float process, FileInfo fileInfo) {
 
                 }
-
 
 
                 @Override

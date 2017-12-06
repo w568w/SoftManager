@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
 import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 
 public class AppInfo {
@@ -17,6 +18,51 @@ public class AppInfo {
     private String codePath;
     private float cacheSize;
     private boolean isEnable = true;
+    private List<ComponentEntity> activityList = null;
+    private List<ComponentEntity> receiverList = null;
+    private List<ComponentEntity> serviceList = null;
+    private List<ComponentEntity> contentProviderList = null;
+    private List<ComponentEntity> wakeupList = new ArrayList<>();
+
+    public List<ComponentEntity> getWakeupList() {
+        return wakeupList;
+    }
+
+    public void setWakeupList(List<ComponentEntity> wakeupList) {
+        this.wakeupList = wakeupList;
+    }
+
+    public List<ComponentEntity> getActivityList() {
+        return activityList;
+    }
+
+    public void setActivityList(List<ComponentEntity> activityList) {
+        this.activityList = activityList;
+    }
+
+    public List<ComponentEntity> getReceiverList() {
+        return receiverList;
+    }
+
+    public void setReceiverList(List<ComponentEntity> receiverList) {
+        this.receiverList = receiverList;
+    }
+
+    public List<ComponentEntity> getServiceList() {
+        return serviceList;
+    }
+
+    public void setServiceList(List<ComponentEntity> serviceList) {
+        this.serviceList = serviceList;
+    }
+
+    public List<ComponentEntity> getContentProviderList() {
+        return contentProviderList;
+    }
+
+    public void setContentProviderList(List<ComponentEntity> contentProviderList) {
+        this.contentProviderList = contentProviderList;
+    }
 
     public boolean isEnable() {
         return isEnable;

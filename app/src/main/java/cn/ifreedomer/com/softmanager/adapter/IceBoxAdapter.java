@@ -11,6 +11,7 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.activity.BaseActivity;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
@@ -30,11 +31,16 @@ public class IceBoxAdapter extends CommonAdapter<AppInfo> {
 
     @Override
     protected void convert(ViewHolder holder, AppInfo appInfo, int position) {
-        holder.setText(R.id.tv_appname, appInfo.getAppName());
+        holder.setText(R.id.tv_name, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         Switch switchView = holder.getView(R.id.switch_enable);
         switchView.setChecked(appInfo.isEnable());
         holder.setOnClickListener(R.id.switch_enable, (View v) -> {
+            if (GlobalDataManager.getInstance().isOpenRecharge()){
+                switchView.setChecked(!switchView.isChecked());
+                ((BaseActivity)mContext).showPayDialog();
+                return;
+            }
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 switchView.setChecked(!switchView.isChecked());
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();

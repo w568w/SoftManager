@@ -1,9 +1,12 @@
 package cn.ifreedomer.com.softmanager.manager;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import cn.ifreedomer.com.softmanager.factory.DefaultThreadFactory;
+
 /**
  * @author wuyihua
  * @Date 2017/10/24
@@ -12,6 +15,7 @@ import cn.ifreedomer.com.softmanager.factory.DefaultThreadFactory;
 
 public class GlobalDataManager {
 
+    private boolean isOpenRecharge = true;
     private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5,
             new DefaultThreadFactory());
 
@@ -24,9 +28,36 @@ public class GlobalDataManager {
     }
 
 
-    public ScheduledExecutorService getThreadPool(){
+    public ScheduledExecutorService getThreadPool() {
         return executorService;
     }
 
 
+    private Map<String, String> actionMap = null;
+
+    public Map<String, String> getActionMap() {
+        return actionMap;
+    }
+
+    public void setActionMap(Map<String, String> actionMap) {
+        this.actionMap = actionMap;
+    }
+
+    private ConcurrentHashMap<String, Object> tempMap = new ConcurrentHashMap<>();
+
+    public ConcurrentHashMap<String, Object> getTempMap() {
+        return tempMap;
+    }
+
+    public void setTempMap(ConcurrentHashMap<String, Object> tempMap) {
+        this.tempMap = tempMap;
+    }
+
+    public void setOpenRecharge(boolean openRecharge) {
+        isOpenRecharge = openRecharge;
+    }
+
+    public boolean isOpenRecharge() {
+        return isOpenRecharge;
+    }
 }

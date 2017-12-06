@@ -31,6 +31,7 @@ import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DBUtil;
+import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
@@ -61,7 +62,7 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
             switch (msg.what) {
                 case MSG_UPDATE_TOTAL_SIZE:
                     mTotalSize = mTotalSize + (Float) msg.obj;
-                    mGarbageHeadView.setScanTotal(mTotalSize);
+                    mGarbageHeadView.setScanTotal(DataTypeUtil.getTextBySize(mTotalSize));
                     LogUtil.e(TAG, "mTotalSize:" + mTotalSize + "");
                     break;
                 case MSG_UPDATE_UI:
@@ -284,7 +285,7 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
 
 
     public void refreshTotalCache() {
-        mGarbageHeadView.setScanTotal(mTotalSize);
+        mGarbageHeadView.setScanTotal(DataTypeUtil.getTextBySize(mTotalSize));
     }
 
     @Override
