@@ -32,6 +32,7 @@ import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.setting.SettingActivity;
+import cn.ifreedomer.com.softmanager.bean.Channel;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.bean.json.Authority;
 import cn.ifreedomer.com.softmanager.db.DBActionUtils;
@@ -49,7 +50,7 @@ import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
-import cn.ifreedomer.com.softmanager.widget.PayDialog;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -86,6 +87,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private RxPermissions mRxPermissions;
     private Fragment cutWakeUpFragment;
     private ComponentFragment componentFragment;
+    private int mChannelState = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +113,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private void refreView() {
         initFragments();
-        checkAuthority();
+        checkChannelState();
 
     }
 
@@ -150,12 +152,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    public void checkAuthority() {
+    public void checkChannelState() {
 
-//        if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
-//            PayDialog payDialog = new PayDialog(HomeActivity.this);
-//            payDialog.show();
-//        }
+        Observable<RespResult<Integer>> channelObserver = ServiceManager.getChannelState(PackageInfoManager.getInstance().getVersionCode(this), PackageInfoManager.getInstance().getMetadata("UMENG_CHANNEL"));
+//        channelObserver.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(integerRespResult -> {
+//            LogUtil.e(TAG, integerRespResult.toString());
+//            GlobalDataManager.getInstance().setChannelState(integerRespResult.getData());
+//        }, throwable -> {
+//            throwable.printStackTrace();
+//        });
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             mRxPermissions
@@ -167,27 +173,42 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     });
             return;
         }
-        ServiceManager.getTime(HardwareUtil.getImei()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
+        Observable<RespResult<Authority>> timeObserver = ServiceManager.getTime(HardwareUtil.getImei());
+        channelObserver.flatMap(integerRespResult -> {
+            LogUtil.d(TAG, integerRespResult.toString());
+            mChannelState = integerRespResult.getData();
+            return timeObserver;
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
             if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
                 Authority data = authorityRespResult.getData();
                 long time = data.getExpirdTime() - System.currentTimeMillis();
-                LogUtil.e(TAG, "checkAuthority: time=" + time);
-                if (time < 0) {
+                LogUtil.e(TAG, "channelstate = " + mChannelState + "checkAuthority: time=" + time);
+                if (mChannelState == Channel.OPEN && time < 0) {
+                    GlobalDataManager.getInstance().setOpenRecharge(true);
                     mBuyId.setVisibility(View.VISIBLE);
-                    showPayDialog();
                 }
             }
         }, throwable -> {
             Log.e(TAG, "checkAuthority error: " + throwable);
             throwable.printStackTrace();
         });
+//        ;
+//        ServiceManager.getTime(HardwareUtil.getImei()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(authorityRespResult -> {
+//            if (authorityRespResult.getResultCode() == RespResult.SUCCESS) {
+//                Authority data = authorityRespResult.getData();
+//                long time = data.getExpirdTime() - System.currentTimeMillis();
+//                LogUtil.e(TAG, "checkAuthority: time=" + time);
+//                if (time < 0) {
+//                    mBuyId.setVisibility(View.VISIBLE);
+//                    showPayDialog();
+//                }
+//            }
+//        }, throwable -> {
+//            Log.e(TAG, "checkAuthority error: " + throwable);
+//            throwable.printStackTrace();
+//        });
     }
 
-    private void showPayDialog() {
-        PayDialog payDialog = new PayDialog(HomeActivity.this);
-        payDialog.showPay();
-
-    }
 
     private void initFragments() {
         softFragment = new SoftFragment();

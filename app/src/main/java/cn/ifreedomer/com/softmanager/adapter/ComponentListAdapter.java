@@ -10,7 +10,9 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.activity.BaseActivity;
 import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
@@ -39,6 +41,10 @@ public class ComponentListAdapter extends CommonAdapter<ComponentEntity> {
         Switch aSwitch = holder.getView(R.id.cb);
         aSwitch.setChecked(componentEntity.isChecked());
         holder.getView(R.id.cb).setOnClickListener(v -> {
+            if (GlobalDataManager.getInstance().isOpenRecharge()) {
+                ((BaseActivity) mContext).showPayDialog();
+                return;
+            }
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
                 aSwitch.setChecked(componentEntity.isChecked());

@@ -15,7 +15,7 @@ import cn.ifreedomer.com.softmanager.factory.DefaultThreadFactory;
 
 public class GlobalDataManager {
 
-
+    private boolean isOpenRecharge = false;
     private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(5,
             new DefaultThreadFactory());
 
@@ -51,5 +51,13 @@ public class GlobalDataManager {
 
     public void setTempMap(ConcurrentHashMap<String, Object> tempMap) {
         this.tempMap = tempMap;
+    }
+
+    public void setOpenRecharge(boolean openRecharge) {
+        isOpenRecharge = openRecharge;
+    }
+
+    public boolean isOpenRecharge() {
+        return isOpenRecharge;
     }
 }

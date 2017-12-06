@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
+import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -299,15 +300,33 @@ public class PackageInfoManager {
 
         GlobalDataManager.getInstance().getThreadPool().execute(() -> {
             String replaceComponent = component.replace("$", "\"" + "$" + "\"");
-            ShellUtils.execCommand("pm enable " + replaceComponent, true);
+            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm enable " + replaceComponent, true);
+            LogUtil.d(TAG, "enableComponent = " + commandResult.toString());
+
         });
     }
 
     public void enableComponent(String component) {
         GlobalDataManager.getInstance().getThreadPool().execute(() -> {
             String replaceComponent = component.replace("$", "\"" + "$" + "\"");
-            ShellUtils.execCommand("pm disable " + replaceComponent, true);
+            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm disable " + replaceComponent, true);
+            LogUtil.d(TAG, "enableComponent = " + commandResult.toString());
         });
+    }
+
+
+    public String getMetadata(String channel) {
+        ApplicationInfo appInfo = null;
+        try {
+            appInfo = mContext.getPackageManager()
+                    .getApplicationInfo(mContext.getPackageName(),
+                            PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String msg = appInfo.metaData.getString(channel);
+        Log.d(TAG, " msg == " + msg);
+        return msg;
     }
 
 
