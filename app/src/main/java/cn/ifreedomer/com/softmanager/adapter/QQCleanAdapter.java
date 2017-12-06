@@ -58,6 +58,9 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
+        if (mFileInfoGroupList.size() <= groupPosition) {
+            return 0;
+        }
         return mFileInfoGroupList.get(groupPosition).size();
     }
 
@@ -109,6 +112,13 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
         cb.setChecked(qqGroupTitle.isChecked());
         cb.setOnClickListener(v -> {
             qqGroupTitle.setChecked(!qqGroupTitle.isChecked());
+            if (mFileInfoGroupList == null || mFileInfoGroupList.size() == 0) {
+                notifyDataSetChanged();
+                return;
+            }
+            if (mFileInfoGroupList.size() <= groupPosition) {
+                return;
+            }
             List<FileInfo> garbageInfos = mFileInfoGroupList.get(groupPosition);
             for (int i = 0; i < garbageInfos.size(); i++) {
                 garbageInfos.get(i).setChecked(cb.isChecked());

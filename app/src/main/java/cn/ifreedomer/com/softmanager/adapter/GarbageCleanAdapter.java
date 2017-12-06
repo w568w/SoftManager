@@ -121,6 +121,13 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
         cb.setOnClickListener(v -> {
 
             garbageGroupInfo.setChecked(!garbageGroupInfo.isChecked());
+            if (mGarbageInfoGroupList == null || mGarbageInfoGroupList.size() == 0) {
+                notifyDataSetChanged();
+                return;
+            }
+            if (mGarbageInfoGroupList.size() <= groupPosition) {
+                return;
+            }
             List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
             for (int i = 0; i < garbageInfos.size(); i++) {
                 garbageInfos.get(i).setChecked(cb.isChecked());
