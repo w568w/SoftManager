@@ -162,7 +162,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 //            throwable.printStackTrace();
 //        });
 
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             mRxPermissions
                     .request(Manifest.permission.READ_PHONE_STATE)
@@ -186,6 +185,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 if (mChannelState == Channel.OPEN && time < 0) {
                     GlobalDataManager.getInstance().setOpenRecharge(true);
                     mBuyId.setVisibility(View.VISIBLE);
+                } else {
+                    GlobalDataManager.getInstance().setOpenRecharge(false);
                 }
             }
         }, throwable -> {
@@ -229,7 +230,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 hide(componentFragment).hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).
 
                 show(cleanFragment).commitAllowingStateLoss();
-               lastShowFragment = cleanFragment;
+        lastShowFragment = cleanFragment;
 
     }
 
@@ -264,7 +265,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         public boolean onNavigationItemSelected(MenuItem menuItem) {
             Log.e(TAG, "onNavigationItemSelected: 0000");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            if (lastShowFragment!=null){
+            if (lastShowFragment != null) {
                 fragmentTransaction.hide(lastShowFragment);
             }
             switch (menuItem.getItemId()) {
