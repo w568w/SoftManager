@@ -107,6 +107,9 @@ public class FileUtil {
                         System.out.println("文件夹:" + file2.getAbsolutePath());
                         list.add(file2);
                         folderNum++;
+                        if (file2.listFiles()==null) {
+                            continue;
+                        }
                         if (file2.listFiles().length == 0) {
                             scanSize = scanSize + file2.length();
                         }
