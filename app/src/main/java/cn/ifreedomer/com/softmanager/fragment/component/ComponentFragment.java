@@ -122,20 +122,24 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
     }
 
     private void setTitleBar() {
-        mToolBar.inflateMenu(R.menu.component_menu);
-        mToolBar.setOverflowIcon(getResources().getDrawable(R.mipmap.ic_switch));
-        mToolBar.getMenu().findItem(R.id.activity).setOnMenuItemClickListener(this);
-        mToolBar.getMenu().findItem(R.id.receiver).setOnMenuItemClickListener(this);
-        mToolBar.getMenu().findItem(R.id.content_provider).setOnMenuItemClickListener(this);
-        mToolBar.getMenu().findItem(R.id.service).setOnMenuItemClickListener(this);
-
+        if (mToolBar != null) {
+            mToolBar.inflateMenu(R.menu.component_menu);
+            mToolBar.setOverflowIcon(getResources().getDrawable(R.mipmap.ic_switch));
+            mToolBar.getMenu().findItem(R.id.activity).setOnMenuItemClickListener(this);
+            mToolBar.getMenu().findItem(R.id.receiver).setOnMenuItemClickListener(this);
+            mToolBar.getMenu().findItem(R.id.content_provider).setOnMenuItemClickListener(this);
+            mToolBar.getMenu().findItem(R.id.service).setOnMenuItemClickListener(this);
+        }
 
     }
 
 
     private void resetTitleBar() {
-        mToolBar.getMenu().clear();
-        mToolBar.setOverflowIcon(null);
+        if (mToolBar != null) {
+            mToolBar.getMenu().clear();
+            mToolBar.setOverflowIcon(null);
+        }
+
     }
 
     @Override

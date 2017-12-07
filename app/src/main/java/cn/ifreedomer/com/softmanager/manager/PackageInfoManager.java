@@ -300,7 +300,7 @@ public class PackageInfoManager {
 
         GlobalDataManager.getInstance().getThreadPool().execute(() -> {
             String replaceComponent = component.replace("$", "\"" + "$" + "\"");
-            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm enable " + replaceComponent, true);
+            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm disable " + replaceComponent, true);
             LogUtil.d(TAG, "enableComponent = " + commandResult.toString());
 
         });
@@ -309,7 +309,7 @@ public class PackageInfoManager {
     public void enableComponent(String component) {
         GlobalDataManager.getInstance().getThreadPool().execute(() -> {
             String replaceComponent = component.replace("$", "\"" + "$" + "\"");
-            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm disable " + replaceComponent, true);
+            ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm enable " + replaceComponent, true);
             LogUtil.d(TAG, "enableComponent = " + commandResult.toString());
         });
     }
