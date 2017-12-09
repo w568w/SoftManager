@@ -20,6 +20,8 @@ import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
 import cn.ifreedomer.com.softmanager.fragment.soft.SoftFragment;
+import cn.ifreedomer.com.softmanager.util.SPUtil;
+import cn.ifreedomer.com.softmanager.widget.ContentDialog;
 
 public class IceBoxFragment extends Fragment implements TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
     private static final int MINE_INDEX = 0;
@@ -46,6 +48,24 @@ public class IceBoxFragment extends Fragment implements TabLayout.OnTabSelectedL
         return view;
     }
 
+    private void isShowDialog() {
+        boolean isShowIce = (boolean) SPUtil.get(getActivity(), "isShowIce", true);
+        if (isShowIce) {
+            ContentDialog contentDialog = new ContentDialog(getActivity());
+            contentDialog.show();
+            contentDialog.setData(getString(R.string.icebox_title), getString(R.string.icebox_des));
+            SPUtil.put(getActivity(), "isShowIce", false);
+        }
+    }
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            isShowDialog();
+        }
+    }
 
     private void initView() {
 //        toolbar.inflateMenu(R.menu.action_menu);

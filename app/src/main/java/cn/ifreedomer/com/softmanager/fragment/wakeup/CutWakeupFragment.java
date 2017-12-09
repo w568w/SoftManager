@@ -40,6 +40,8 @@ import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.model.WakeupPathInfo;
+import cn.ifreedomer.com.softmanager.util.SPUtil;
+import cn.ifreedomer.com.softmanager.widget.ContentDialog;
 
 /**
  * @author:eavawu
@@ -158,6 +160,7 @@ public class CutWakeupFragment extends Fragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
+
             if (!PackageInfoManager.getInstance().isComponentLoaded()) {
                 linLoading.setVisibility(View.VISIBLE);
                 GlobalDataManager.getInstance().getThreadPool().execute(() -> {
@@ -170,6 +173,18 @@ public class CutWakeupFragment extends Fragment {
                     loadData();
                 }
             }
+            isShowDialog();
+        }
+    }
+
+
+    private void isShowDialog() {
+        boolean isShowIce = (boolean) SPUtil.get(getActivity(), "isShowWake", true);
+        if (isShowIce) {
+            ContentDialog contentDialog = new ContentDialog(getActivity());
+            contentDialog.show();
+            contentDialog.setData(getString(R.string.cut_wakeup), getString(R.string.wakeup_des));
+            SPUtil.put(getActivity(), "isShowWake", false);
         }
     }
 

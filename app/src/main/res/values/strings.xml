@@ -199,5 +199,11 @@
     <string name="push_receiver">互相唤醒</string>
     <string name="action_listener">个应用被唤醒</string>
     <string name="loading_data">正在加载数据,请稍等...</string>
+    <string name="icebox_des">把App放入冰箱后,App无法在后台偷跑流量、启动，甚至连桌面都不可见，避免消耗手机资源，移出冰箱之后一切正常使用</string>
+    <string name="icebox_title">冰箱说明</string>
+    <string name="ok">好的</string>
+    <string name="title">标题</string>
+    <string name="wakeup_des">切断唤醒是可以禁用任意组件,防止APP被其他App事件唤醒、全家桶一样的不道德唤醒，能有效节省手机电量，延长续航时间(使用得当，最少延长一天)</string>
+    <string name="component_manager_des">组件管理适用于，你需要使用这个app，但是这个app被流氓唤醒，你只想阻止这个流氓，不想冰冻app，就可以禁用与流氓相关的组件，自由度较大</string>
 
 </resources>

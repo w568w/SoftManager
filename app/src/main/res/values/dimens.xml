@@ -59,6 +59,7 @@
     <dimen name="dp32">32dp</dimen>
     <dimen name="dp8">8dp</dimen>
     <dimen name="dp12">12dp</dimen>
+    <dimen name="dp25">25dp</dimen>
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 </resources>

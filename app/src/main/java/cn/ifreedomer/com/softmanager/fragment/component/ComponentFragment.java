@@ -27,6 +27,8 @@ import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
+import cn.ifreedomer.com.softmanager.util.SPUtil;
+import cn.ifreedomer.com.softmanager.widget.ContentDialog;
 
 /**
  * @author:eavawu
@@ -118,6 +120,7 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
             resetTitleBar();
         } else {
             setTitleBar();
+            isShowDialog();
         }
     }
 
@@ -140,6 +143,17 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
             mToolBar.setOverflowIcon(null);
         }
 
+    }
+
+
+    private void isShowDialog() {
+        boolean isShowIce = (boolean) SPUtil.get(getActivity(), "isShowComponent", true);
+        if (isShowIce) {
+            ContentDialog contentDialog = new ContentDialog(getActivity());
+            contentDialog.show();
+            contentDialog.setData(getString(R.string.component_manager), getString(R.string.component_manager_des));
+            SPUtil.put(getActivity(), "isShowComponent", false);
+        }
     }
 
     @Override
