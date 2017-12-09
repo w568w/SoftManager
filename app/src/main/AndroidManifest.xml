@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.ifreedomer.com.softmanager"
-          android:versionCode="1"
-          android:versionName="1.0.0">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="cn.ifreedomer.com.softmanager">
+
+    <!--package="cn.ifreedomer.com.softmanager"-->
+
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
@@ -18,17 +20,17 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
-        android:name=".CleanApplication"
+        android:name="cn.ifreedomer.com.softmanager.CleanApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.setting.FeedBackActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.setting.FeedBackActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.HomeActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -47,40 +49,40 @@
 
         <!-- <activity android:name=".activity.TestActivity"></activity> -->
         <activity
-            android:name=".activity.clean.BigFileCleanActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.clean.BigFileCleanActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.clean.QQCleanActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.clean.QQCleanActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.clean.MemoryCleanActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.clean.MemoryCleanActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.clean.GarbageActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.clean.GarbageActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.setting.SettingActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.setting.SettingActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.setting.HelpActivity"/>
+        <activity android:name="cn.ifreedomer.com.softmanager.activity.setting.HelpActivity"/>
         <activity
-            android:name=".activity.PermissionSetActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name=".activity.component.WakeupListActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.PermissionSetActivity"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name="cn.ifreedomer.com.softmanager.activity.component.WakeupListActivity"
+            android:screenOrientation="portrait"/>
+
 
         <activity
-            android:name=".activity.component.ReceiverListActivity"
+            android:name="cn.ifreedomer.com.softmanager.activity.component.ReceiverListActivity"
             android:screenOrientation="portrait"/>
 
         <service
-            android:name=".service.FileScanService"
+            android:name="cn.ifreedomer.com.softmanager.service.FileScanService"
             android:exported="false"/>
 
-        <activity android:name=".activity.clean.CleanSuccessActivity"/>
-        <activity android:name=".activity.setting.AboutActivity"/>
+        <activity android:name="cn.ifreedomer.com.softmanager.activity.clean.CleanSuccessActivity"/>
+        <activity android:name="cn.ifreedomer.com.softmanager.activity.setting.AboutActivity"/>
 
         <!-- alipay sdk begin -->
 
@@ -98,8 +100,16 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <!-- alipay sdk end -->
-        <activity android:name=".activity.component.ComponentListActivity">
+        <activity android:name="cn.ifreedomer.com.softmanager.activity.component.ComponentListActivity">
         </activity>
+
+
+        <provider
+            android:name="com.zzzmode.appopsx.OpsxConfigProvider"
+            android:authorities="${authority}"
+            tools:replace="android:authorities"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

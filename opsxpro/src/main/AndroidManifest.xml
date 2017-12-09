@@ -10,7 +10,7 @@
 
         <provider
             android:name="com.zzzmode.appopsx.OpsxConfigProvider"
-            android:authorities="cn.ifreedomer.com.softmanager"
+            android:authorities="com.zzzmode.appopsx"
             android:enabled="true"
             android:exported="true" />
     </application>

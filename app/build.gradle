@@ -49,7 +49,27 @@ android {
         noCompress 'jar', 'sh', 'db'
     }
 
-//    flavorDimensions "mode"
+    flavorDimensions "mode"
+    productFlavors {
+        main {
+            applicationId "cn.ifreedomer.com.softmanager"
+            manifestPlaceholders = [authority: "cn.ifreedomer.com.purification"]
+            resValue "string", "app_name", "极速清理大师"
+        }
+
+        purification {
+            applicationId "cn.ifreedomer.com.purification"
+            manifestPlaceholders = [authority: "cn.ifreedomer.com.purification"]
+            resValue "string", "app_name", "安卓净化大师"
+        }
+
+        optimization {
+            applicationId "cn.ifreedomer.com.purification"
+            manifestPlaceholders = [authority: "cn.ifreedomer.com.optimization"]
+            resValue "string", "app_name", "安卓优化大师"
+        }
+
+    }
 //
 //    // 友盟多渠道打包
 //    productFlavors {
@@ -101,7 +121,7 @@ android {
 //    }
 //
 //    productFlavors.all { flavor ->
-//        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//        manifestPlaceholders = [authority: name]
 //        printf "flavor name="+name
 //    }
 
