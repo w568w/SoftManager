@@ -69,6 +69,13 @@ android {
             resValue "string", "app_name", "安卓优化大师"
         }
 
+        optimization {
+            applicationId "cn.ifreedomer.com.simpleclean"
+            manifestPlaceholders = [authority: "cn.ifreedomer.com.simpleclean"]
+            resValue "string", "app_name", "极简清理"
+        }
+
+
     }
 //
 //    // 友盟多渠道打包

@@ -56,6 +56,10 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
         LogUtil.e(TAG, "mTitleList size = " + mTitleList.size() + "   mGarbageInfoGroupList size = " + mGarbageInfoGroupList.size() + "   groupPosition = " + groupPosition);
+
+        if (mGarbageInfoGroupList.size() <= groupPosition) {
+            return 0;
+        }
         return mGarbageInfoGroupList.get(groupPosition).size();
     }
 

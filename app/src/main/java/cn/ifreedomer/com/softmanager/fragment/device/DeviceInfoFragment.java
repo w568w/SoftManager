@@ -29,6 +29,7 @@ import cn.ifreedomer.com.softmanager.bean.DeviceInfoWrap;
 import cn.ifreedomer.com.softmanager.bean.DeviceTitle;
 import cn.ifreedomer.com.softmanager.bean.FourValue;
 import cn.ifreedomer.com.softmanager.bean.TwoValue;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.util.CameraUtils;
 import cn.ifreedomer.com.softmanager.util.DateUtil;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
@@ -55,7 +56,7 @@ public class DeviceInfoFragment extends Fragment {
     @InjectView(R.id.hardware_rv)
     RecyclerView hardwareRv;
 
-
+    private boolean isLoaded = false;
     private MultiItemTypeAdapter mMultiAdapter;
     private List<DeviceInfoWrap> mDatalist;
     private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
@@ -81,10 +82,8 @@ public class DeviceInfoFragment extends Fragment {
     }
 
 
-
-
     @Override
-    public void onHiddenChanged(boolean ishide){
+    public void onHiddenChanged(boolean ishide) {
         super.onHiddenChanged(ishide);
         if (!ishide) {
             //相当于Fragment的onResume
@@ -92,7 +91,15 @@ public class DeviceInfoFragment extends Fragment {
             rxPermissions
                     .request(Manifest.permission.CAMERA)
                     .subscribe(granted -> {
-                            initData();
+                        if (!isLoaded) {
+                            GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    initData();
+                                    isLoaded = true;
+                                }
+                            });
+                        }
 
                     });
         }
