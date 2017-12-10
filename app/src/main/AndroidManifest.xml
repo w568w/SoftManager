@@ -45,7 +45,7 @@
             android:value="5a1764a8b27b0a0485000971"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="oppo"/>
+            android:value="test"/>
 
         <!-- <activity android:name=".activity.TestActivity"></activity> -->
         <activity
