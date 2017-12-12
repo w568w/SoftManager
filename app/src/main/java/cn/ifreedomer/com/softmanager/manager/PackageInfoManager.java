@@ -1,6 +1,5 @@
 package cn.ifreedomer.com.softmanager.manager;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,11 +10,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
@@ -32,14 +28,8 @@ import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
 import cn.ifreedomer.com.softmanager.util.XmlUtil;
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -86,6 +76,7 @@ public class PackageInfoManager {
     }
 
     public List<AppInfo> getUserApps() {
+        LogUtil.d(TAG, "getUserApps size = " + userAppInfos.size());
         return userAppInfos;
     }
 
@@ -105,6 +96,7 @@ public class PackageInfoManager {
         if (isLoaded) {
             return;
         }
+        isLoaded = true;
 
         mGetPackageSizeInfoMethod = null;
         try {
@@ -120,12 +112,19 @@ public class PackageInfoManager {
         if (packInfos == null || packInfos.size() == 0) {
             return;
         }
-        List<PackageInfo> firstPart = packInfos.subList(0, packInfos.size() / 3);
-        List<PackageInfo> secondPart = packInfos.subList(packInfos.size() / 3, packInfos.size() / 3 * 2);
-        List<PackageInfo> thirdPart = packInfos.subList(packInfos.size() / 3 * 2, packInfos.size());
+        int taotalSize = packInfos.size();
+        int firstSize = packInfos.size() / 3;
+        int secondSize = packInfos.size() / 3 * 2;
+        int thirdSize = packInfos.size();
+
+        LogUtil.d(TAG, String.format("totalSize = %d firstSize = %d secondsize = %d thirdsize = %d", taotalSize, firstSize, secondSize, thirdSize));
+
+        List<PackageInfo> firstPart = packInfos.subList(0, firstSize);
+        List<PackageInfo> secondPart = packInfos.subList(firstSize , secondSize);
+        List<PackageInfo> thirdPart = packInfos.subList(secondSize , packInfos.size());
         String curPkgName = mContext.getPackageName();
-        Observable.just(firstPart, secondPart, thirdPart).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(packageInfos -> {
-            List<AppInfo> appInfoList = getAppInfoList(packageInfos, curPkgName);
+        Observable.just(firstPart, secondPart, thirdPart).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(packageInfoList -> {
+            List<AppInfo> appInfoList = getAppInfoList(packageInfoList, curPkgName);
             return Observable.just(appInfoList);
         }).subscribe(appInfos -> {
             for (AppInfo appInfo : appInfos) {
@@ -134,10 +133,19 @@ public class PackageInfoManager {
                 } else {
                     systemAppInfos.add(appInfo);
                 }
+
+                LogUtil.d(TAG, "App name = " + appInfo.getAppName());
+
             }
+
+
+            LogUtil.e(TAG, "load part ");
+
         }, throwable -> {
             LogUtil.e(TAG, "load all app failed");
         }, () -> {
+            LogUtil.e(TAG, "load all app complete");
+
             for (LoadStateCallback loadStateCallbackItem : loadStateCallbackList) {
                 if (loadStateCallbackItem != null) {
                     loadStateCallbackItem.loadFinish();
@@ -146,131 +154,12 @@ public class PackageInfoManager {
         });
 
 
-        isLoaded = true;
-        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask<Object, Integer, List<AppInfo>>() {
-            private int mAppCount = 0;
-
-            @Override
-            protected List<AppInfo> doInBackground(Object... params) {
-                Method mGetPackageSizeInfoMethod = null;
-
-                try {
-                    mGetPackageSizeInfoMethod = mContext.getPackageManager().getClass().getMethod(
-                            "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
-
-
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
-                PackageManager pm = mContext.getPackageManager();
-                List<PackageInfo> packInfos = pm.getInstalledPackages(0);
-
-
-                List<AppInfo> appinfos = new ArrayList<AppInfo>();
-                for (PackageInfo packInfo : packInfos) {
-                    publishProgress(++mAppCount, packInfos.size());
-                    final AppInfo appInfo = new AppInfo();
-                    Drawable appIcon = packInfo.applicationInfo.loadIcon(pm);
-                    ApplicationInfo info = packInfo.applicationInfo;
-                    appInfo.setAppIcon(appIcon);
-                    if (info.sourceDir == null) {
-                        continue;
-                    }
-                    appInfo.setCodePath(info.sourceDir);
-                    if (info.packageName.equals(mContext.getPackageName())) {
-                        continue;
-                    }
-                    int flags = packInfo.applicationInfo.flags;
-
-                    int uid = packInfo.applicationInfo.uid;
-
-                    appInfo.setUid(uid);
-
-                    if ((flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                        appInfo.setUserApp(false);//系统应用
-
-                    } else {
-                        appInfo.setUserApp(true);//用户应用
-                    }
-
-                    boolean flag = false;
-                    if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                        flag = true;
-                    } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                        flag = true;
-                    }
-                    if (flag) {
-                        userAppInfos.add(appInfo);
-                    } else {
-                        systemAppInfos.add(appInfo);
-                    }
-                    String appName = packInfo.applicationInfo.loadLabel(pm).toString();
-                    appInfo.setAppName(appName);
-                    String packname = packInfo.packageName;
-                    appInfo.setPackname(packname);
-                    appInfo.setEnable(PackageInfoManager.getInstance().isAppEnable(packname));
-                    String version = packInfo.versionName;
-                    appInfo.setVersion(version);
-                    try {
-
-                        mGetPackageSizeInfoMethod.invoke(mContext.getPackageManager(), new Object[]{
-                                packname,
-                                new IPackageStatsObserver.Stub() {
-                                    @Override
-                                    public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
-                                        synchronized (appInfo) {
-                                            appInfo.setPkgSize(DataTypeUtil.getTwoFloat((pStats.cacheSize + pStats.codeSize + pStats.dataSize)));
-                                            appInfo.setCacheSize(DataTypeUtil.getTwoFloat(pStats.cacheSize));
-
-                                        }
-                                    }
-                                }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    appinfos.add(appInfo);
-                }
-
-
-                return appinfos;
-            }
-
-            @Override
-            protected void onProgressUpdate(final Integer... values) {
-                new Handler(Looper.getMainLooper()).post(() -> loadStateCallback.loadProgress(values[0], values[1]));
-
-            }
-
-            @Override
-            protected void onPreExecute() {
-
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(List<AppInfo> result) {
-                LogUtil.e(TAG, "onPostExecute");
-                isLoadFinish = true;
-                super.onPostExecute(result);
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    for (int i = 0; i < loadStateCallbackList.size(); i++) {
-                        loadStateCallbackList.get(i).loadFinish();
-                    }
-                });
-
-
-            }
-
-        };
-        task.execute();
-
     }
 
     @NonNull
-    private List<AppInfo> getAppInfoList(List<PackageInfo> packageInfos, String curPkgName) {
+    private List<AppInfo> getAppInfoList(List<PackageInfo> packageInfoList, String curPkgName) {
         List<AppInfo> appInfoList = new ArrayList<>();
-        for (PackageInfo packInfo : packageInfos) {
+        for (PackageInfo packInfo : packageInfoList) {
             if (packInfo.packageName.equals(curPkgName)) {
                 continue;
             }
@@ -305,11 +194,6 @@ public class PackageInfoManager {
             flag = true;
         } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
             flag = true;
-        }
-        if (flag) {
-            userAppInfos.add(appInfo);
-        } else {
-            systemAppInfos.add(appInfo);
         }
         String appName = packInfo.applicationInfo.loadLabel(pm).toString();
         appInfo.setAppName(appName);
