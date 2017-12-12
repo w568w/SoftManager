@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +32,15 @@ import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
 import cn.ifreedomer.com.softmanager.util.XmlUtil;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author:eavawu
@@ -47,6 +57,7 @@ public class PackageInfoManager {
     private boolean isLoaded = false;
     private boolean isLoadFinish = false;
     private boolean isComponentLoaded = false;
+    private Method mGetPackageSizeInfoMethod;
 
     private PackageInfoManager() {
 
@@ -94,6 +105,47 @@ public class PackageInfoManager {
         if (isLoaded) {
             return;
         }
+
+        mGetPackageSizeInfoMethod = null;
+        try {
+            mGetPackageSizeInfoMethod = mContext.getPackageManager().getClass().getMethod(
+                    "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+
+        PackageManager pm = mContext.getPackageManager();
+        List<PackageInfo> packInfos = pm.getInstalledPackages(0);
+        if (packInfos == null || packInfos.size() == 0) {
+            return;
+        }
+        List<PackageInfo> firstPart = packInfos.subList(0, packInfos.size() / 3);
+        List<PackageInfo> secondPart = packInfos.subList(packInfos.size() / 3, packInfos.size() / 3 * 2);
+        List<PackageInfo> thirdPart = packInfos.subList(packInfos.size() / 3 * 2, packInfos.size());
+        String curPkgName = mContext.getPackageName();
+        Observable.just(firstPart, secondPart, thirdPart).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(packageInfos -> {
+            List<AppInfo> appInfoList = getAppInfoList(packageInfos, curPkgName);
+            return Observable.just(appInfoList);
+        }).subscribe(appInfos -> {
+            for (AppInfo appInfo : appInfos) {
+                if (appInfo.isUserApp()) {
+                    userAppInfos.add(appInfo);
+                } else {
+                    systemAppInfos.add(appInfo);
+                }
+            }
+        }, throwable -> {
+            LogUtil.e(TAG, "load all app failed");
+        }, () -> {
+            for (LoadStateCallback loadStateCallbackItem : loadStateCallbackList) {
+                if (loadStateCallbackItem != null) {
+                    loadStateCallbackItem.loadFinish();
+                }
+            }
+        });
+
+
         isLoaded = true;
         @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask<Object, Integer, List<AppInfo>>() {
             private int mAppCount = 0;
@@ -212,6 +264,79 @@ public class PackageInfoManager {
 
         };
         task.execute();
+
+    }
+
+    @NonNull
+    private List<AppInfo> getAppInfoList(List<PackageInfo> packageInfos, String curPkgName) {
+        List<AppInfo> appInfoList = new ArrayList<>();
+        for (PackageInfo packInfo : packageInfos) {
+            if (packInfo.packageName.equals(curPkgName)) {
+                continue;
+            }
+            if (packInfo.applicationInfo.sourceDir == null) {
+                continue;
+            }
+            appInfoList.add(getAppInfo(packInfo));
+        }
+        return appInfoList;
+    }
+
+
+    private AppInfo getAppInfo(PackageInfo packInfo) {
+        PackageManager pm = mContext.getPackageManager();
+        final AppInfo appInfo = new AppInfo();
+        Drawable appIcon = packInfo.applicationInfo.loadIcon(mContext.getPackageManager());
+        ApplicationInfo info = packInfo.applicationInfo;
+        appInfo.setAppIcon(appIcon);
+        appInfo.setCodePath(info.sourceDir);
+        int flags = packInfo.applicationInfo.flags;
+        int uid = packInfo.applicationInfo.uid;
+        appInfo.setUid(uid);
+        if ((flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+            appInfo.setUserApp(false);//系统应用
+
+        } else {
+            appInfo.setUserApp(true);//用户应用
+        }
+
+        boolean flag = false;
+        if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+            flag = true;
+        } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+            flag = true;
+        }
+        if (flag) {
+            userAppInfos.add(appInfo);
+        } else {
+            systemAppInfos.add(appInfo);
+        }
+        String appName = packInfo.applicationInfo.loadLabel(pm).toString();
+        appInfo.setAppName(appName);
+        String packname = packInfo.packageName;
+        appInfo.setPackname(packname);
+        appInfo.setEnable(PackageInfoManager.getInstance().isAppEnable(packname));
+        String version = packInfo.versionName;
+        appInfo.setVersion(version);
+        try {
+
+            mGetPackageSizeInfoMethod.invoke(mContext.getPackageManager(), new Object[]{
+                    packname,
+                    new IPackageStatsObserver.Stub() {
+                        @Override
+                        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+                            synchronized (appInfo) {
+                                appInfo.setPkgSize(DataTypeUtil.getTwoFloat((pStats.cacheSize + pStats.codeSize + pStats.dataSize)));
+                                appInfo.setCacheSize(DataTypeUtil.getTwoFloat(pStats.cacheSize));
+
+                            }
+                        }
+                    }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return appInfo;
 
     }
 
