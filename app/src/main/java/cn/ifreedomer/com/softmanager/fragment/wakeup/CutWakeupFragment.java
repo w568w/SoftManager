@@ -160,10 +160,7 @@ public class CutWakeupFragment extends Fragment {
         if (!hidden) {
             if (!PackageInfoManager.getInstance().isComponentLoaded()) {
                 linLoading.setVisibility(View.VISIBLE);
-                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-                    PackageInfoManager.getInstance().loadAllComponent();
-                    loadData();
-                });
+                PackageInfoManager.getInstance().loadAllComponent(() -> loadData());
             }
             if (PackageInfoManager.getInstance().isComponentLoaded()) {
                 if (!isLoaded) {

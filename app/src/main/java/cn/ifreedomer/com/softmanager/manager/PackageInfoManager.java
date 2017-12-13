@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.LoadStateCallback;
+import cn.ifreedomer.com.softmanager.listener.LoadAllComponentListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
@@ -120,13 +121,14 @@ public class PackageInfoManager {
         LogUtil.d(TAG, String.format("totalSize = %d firstSize = %d secondsize = %d thirdsize = %d", taotalSize, firstSize, secondSize, thirdSize));
 
         List<PackageInfo> firstPart = packInfos.subList(0, firstSize);
-        List<PackageInfo> secondPart = packInfos.subList(firstSize , secondSize);
-        List<PackageInfo> thirdPart = packInfos.subList(secondSize , packInfos.size());
+        List<PackageInfo> secondPart = packInfos.subList(firstSize, secondSize);
+        List<PackageInfo> thirdPart = packInfos.subList(secondSize, packInfos.size());
         String curPkgName = mContext.getPackageName();
-        Observable.just(firstPart, secondPart, thirdPart).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).flatMap(packageInfoList -> {
-            List<AppInfo> appInfoList = getAppInfoList(packageInfoList, curPkgName);
-            return Observable.just(appInfoList);
-        }).subscribe(appInfos -> {
+        Observable.just(firstPart, secondPart, thirdPart).subscribeOn(Schedulers.newThread()).
+                flatMap(packageInfoList -> {
+                    List<AppInfo> appInfoList = getAppInfoList(packageInfoList, curPkgName);
+                    return Observable.just(appInfoList);
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(appInfos -> {
             for (AppInfo appInfo : appInfos) {
                 if (appInfo.isUserApp()) {
                     userAppInfos.add(appInfo);
@@ -292,16 +294,53 @@ public class PackageInfoManager {
 
 
     //加载所有组件
-    public void loadAllComponent() {
+    public void loadAllComponent(LoadAllComponentListener loadAllComponentListener) {
+        if (isComponentLoaded) {
+            return;
+        }
         List<AppInfo> allApp = getAllApp();
-        LogUtil.d(TAG, "loadAllComponent size=>" + allApp.size());
+        int taotalSize = allApp.size();
+        int firstSize = allApp.size() / 4;
+        int secondSize = allApp.size() / 4 * 2;
+        int thirdSize = allApp.size() / 4 * 2;
+        int fourSize = allApp.size();
 
-        for (int i = 0; i < allApp.size(); i++) {
-            AppInfo appInfo = allApp.get(i);
+
+        LogUtil.d(TAG, String.format("totalSize = %d firstSize = %d secondsize = %d thirdsize = %d", taotalSize, firstSize, secondSize, thirdSize));
+
+        List<AppInfo> firstPart = allApp.subList(0, firstSize);
+        List<AppInfo> secondPart = allApp.subList(firstSize, secondSize);
+        List<AppInfo> thirdPart = allApp.subList(secondSize, allApp.size());
+        List<AppInfo> fourPart = allApp.subList(thirdSize, fourSize);
+
+        Observable.just(firstPart, secondPart, thirdPart, fourPart).subscribeOn(Schedulers.newThread()).
+                flatMap(appinfoList -> {
+                    LogUtil.d(TAG, "thread id =" + Thread.currentThread().getId());
+                    List<AppInfo> appInfoListResult = parseComponent(appinfoList);
+                    return Observable.just(appInfoListResult);
+                }).subscribe(appInfos -> {
+            LogUtil.e(TAG, "parse part ");
+        }, throwable -> {
+            LogUtil.e(TAG, "parse  all app component");
+        }, () -> {
+            LogUtil.e(TAG, "parse all app complete");
+            if (loadAllComponentListener != null) {
+                loadAllComponentListener.loadFinish();
+            }
+            isComponentLoaded = true;
+        });
+
+    }
+
+
+    private List<AppInfo> parseComponent(List<AppInfo> appInfoList) {
+        for (int i = 0; i < appInfoList.size(); i++) {
+            AppInfo appInfo = appInfoList.get(i);
             LogUtil.d(TAG, "loadAllComponent=>" + appInfo.getPackname());
             XmlUtil.parseAppInfo(mContext, appInfo.getPackname(), appInfo);
         }
-        isComponentLoaded = true;
+        return appInfoList;
+
     }
 
 
