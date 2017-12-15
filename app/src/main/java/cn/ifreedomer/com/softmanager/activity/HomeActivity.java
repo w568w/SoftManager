@@ -301,12 +301,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                     break;
 
                 case R.id.cut_wakeup:
-                    MobclickAgent.onEvent(HomeActivity.this, "cut wakeup");
+                    MobclickAgent.onEvent(HomeActivity.this, "cut_wakeup");
                     getSupportActionBar().setTitle(getString(R.string.cut_wakeup));
                     lastShowFragment = cutWakeUpFragment;
                     break;
                 case R.id.component_manager:
-                    MobclickAgent.onEvent(HomeActivity.this, "component manager");
+                    MobclickAgent.onEvent(HomeActivity.this, "component_manager");
                     getSupportActionBar().setTitle(getString(R.string.component_manager));
                     fragmentTransaction.show(componentFragment);
                     lastShowFragment = componentFragment;
