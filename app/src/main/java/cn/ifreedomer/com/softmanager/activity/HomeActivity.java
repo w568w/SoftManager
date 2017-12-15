@@ -127,6 +127,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         });
 
         if (PackageInfoManager.getInstance().isLoadFinish()) {
+            LogUtil.e(TAG, "if isLoadFinish");
+            linLoading.setVisibility(View.GONE);
             refreView();
             return;
         }

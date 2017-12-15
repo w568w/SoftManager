@@ -85,9 +85,11 @@ public class PackageInfoManager {
                     loadAppPartCount = loadAppPartCount + 1;
                     LogUtil.d(TAG, "loadAppPartCount =" + loadAppPartCount);
                     if (loadAppPartCount == LOAD_APP_MAX_PART) {
+                        isLoadFinish = true;
+                        LogUtil.d(TAG, "loadAppPartCount loadAppPartCount=" + isLoadFinish);
+
                         for (LoadStateCallback loadStateCallbackItem : loadStateCallbackList) {
                             if (loadStateCallbackItem != null) {
-                                isLoadFinish = true;
                                 loadStateCallbackItem.loadFinish();
                             }
                         }

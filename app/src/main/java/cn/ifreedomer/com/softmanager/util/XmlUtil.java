@@ -132,7 +132,7 @@ public class XmlUtil {
                             }
                         }
 
-                        LogUtil.d(TAG, "parseAppInfo PkgName=444");
+//                        LogUtil.d(TAG, "parseAppInfo PkgName=444");
 
 //                        if ("provider".equals(xmlParser.getName())) {
 //                            componentEntity = new ComponentEntity();
@@ -204,7 +204,7 @@ public class XmlUtil {
                             LogUtil.d(TAG, "receiver=" + componentEntity.toString());
 
                         }
-                        LogUtil.d(TAG, "parseAppInfo PkgName444-");
+//                        LogUtil.d(TAG, "parseAppInfo PkgName444-");
                         break;
                 }
                 event = xmlParser.next();   //将当前解析器光标往下一步移
