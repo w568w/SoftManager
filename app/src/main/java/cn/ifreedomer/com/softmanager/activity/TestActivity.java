@@ -25,12 +25,12 @@ import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.bean.PayResult;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.db.DBActionUtils;
+import cn.ifreedomer.com.softmanager.listener.LoadAllComponentListener;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
-import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import io.reactivex.schedulers.Schedulers;
@@ -148,7 +148,12 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn_load_component:
                 GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-                    PackageInfoManager.getInstance().loadAllComponent();
+                    PackageInfoManager.getInstance().loadAllComponent(new LoadAllComponentListener() {
+                        @Override
+                        public void loadFinish() {
+
+                        }
+                    });
                     LogUtil.d(TAG, "loadAllComponent");
                 });
                 break;

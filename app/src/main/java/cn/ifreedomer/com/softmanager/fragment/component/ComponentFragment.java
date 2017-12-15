@@ -25,7 +25,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
-import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.util.SPUtil;
 import cn.ifreedomer.com.softmanager.widget.ContentDialog;
@@ -105,10 +104,7 @@ public class ComponentFragment extends Fragment implements MenuItem.OnMenuItemCl
         if (!hidden) {
             if (!PackageInfoManager.getInstance().isComponentLoaded()) {
                 linLoading.setVisibility(View.VISIBLE);
-                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-                    PackageInfoManager.getInstance().loadAllComponent();
-                    mHandler.sendEmptyMessage(LOAD_UI);
-                });
+                    PackageInfoManager.getInstance().loadAllComponent(() -> mHandler.sendEmptyMessage(LOAD_UI));
             }
             if (PackageInfoManager.getInstance().isComponentLoaded()) {
                 if (!isLoaded) {

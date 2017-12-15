@@ -1,6 +1,5 @@
 package cn.ifreedomer.com.softmanager.manager;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,21 +10,24 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Message;
 import android.os.RemoteException;
 import android.os.StatFs;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 import cn.ifreedomer.com.softmanager.LoadStateCallback;
+import cn.ifreedomer.com.softmanager.listener.LoadAllComponentListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
@@ -47,6 +49,56 @@ public class PackageInfoManager {
     private boolean isLoaded = false;
     private boolean isLoadFinish = false;
     private boolean isComponentLoaded = false;
+    private Method mGetPackageSizeInfoMethod;
+    public static final int LOAD_APP_MESSAGE = 1;
+    public static final int LOAD_COMPONENT_MESSAGE = 2;
+
+
+    private int loadAppPartCount = 0;
+    private int loadComponentPartCount = 0;
+    private static final int LOAD_APP_MAX_PART = 3;
+    private static final int LOAD_COMPONENT_MAX_PART = 4;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOAD_COMPONENT_MESSAGE:
+                    loadComponentPartCount = loadComponentPartCount + 1;
+                    LogUtil.d(TAG, "loadComponentPartCount =" + loadComponentPartCount);
+                    if (loadComponentPartCount == LOAD_COMPONENT_MAX_PART) {
+                        if (mLoadAllComponentListener != null) {
+                            isComponentLoaded = true;
+                            mLoadAllComponentListener.loadFinish();
+                        }
+                    }
+                    break;
+                case LOAD_APP_MESSAGE:
+                    List<AppInfo> appInfos = (List<AppInfo>) msg.obj;
+                    for (AppInfo appInfo : appInfos) {
+                        if (appInfo.isUserApp()) {
+                            userAppInfos.add(appInfo);
+                        } else {
+                            systemAppInfos.add(appInfo);
+                        }
+                    }
+                    loadAppPartCount = loadAppPartCount + 1;
+                    LogUtil.d(TAG, "loadAppPartCount =" + loadAppPartCount);
+                    if (loadAppPartCount == LOAD_APP_MAX_PART) {
+                        for (LoadStateCallback loadStateCallbackItem : loadStateCallbackList) {
+                            if (loadStateCallbackItem != null) {
+                                isLoadFinish = true;
+                                loadStateCallbackItem.loadFinish();
+                            }
+                        }
+                    }
+
+                    break;
+            }
+        }
+    };
+    private LoadAllComponentListener mLoadAllComponentListener;
+
 
     private PackageInfoManager() {
 
@@ -75,6 +127,7 @@ public class PackageInfoManager {
     }
 
     public List<AppInfo> getUserApps() {
+        LogUtil.d(TAG, "getUserApps size = " + userAppInfos.size());
         return userAppInfos;
     }
 
@@ -95,123 +148,167 @@ public class PackageInfoManager {
             return;
         }
         isLoaded = true;
-        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask<Object, Integer, List<AppInfo>>() {
-            private int mAppCount = 0;
 
+        mGetPackageSizeInfoMethod = null;
+        try {
+            mGetPackageSizeInfoMethod = mContext.getPackageManager().getClass().getMethod(
+                    "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+
+        PackageManager pm = mContext.getPackageManager();
+        List<PackageInfo> packInfos = pm.getInstalledPackages(0);
+        if (packInfos == null || packInfos.size() == 0) {
+            return;
+        }
+        int taotalSize = packInfos.size();
+        int firstSize = packInfos.size() / 3;
+        int secondSize = packInfos.size() / 3 * 2;
+        int thirdSize = packInfos.size();
+
+        LogUtil.d(TAG, String.format("totalSize = %d firstSize = %d secondsize = %d thirdsize = %d", taotalSize, firstSize, secondSize, thirdSize));
+        String curPkgName = mContext.getPackageName();
+
+        List<PackageInfo> firstPart = packInfos.subList(0, firstSize);
+        List<PackageInfo> secondPart = packInfos.subList(firstSize, secondSize);
+        List<PackageInfo> thirdPart = packInfos.subList(secondSize, packInfos.size());
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
-            protected List<AppInfo> doInBackground(Object... params) {
-                Method mGetPackageSizeInfoMethod = null;
-
-                try {
-                    mGetPackageSizeInfoMethod = mContext.getPackageManager().getClass().getMethod(
-                            "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
-
-
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
-                PackageManager pm = mContext.getPackageManager();
-                List<PackageInfo> packInfos = pm.getInstalledPackages(0);
-
-
-                List<AppInfo> appinfos = new ArrayList<AppInfo>();
-                for (PackageInfo packInfo : packInfos) {
-                    publishProgress(++mAppCount, packInfos.size());
-                    final AppInfo appInfo = new AppInfo();
-                    Drawable appIcon = packInfo.applicationInfo.loadIcon(pm);
-                    ApplicationInfo info = packInfo.applicationInfo;
-                    appInfo.setAppIcon(appIcon);
-                    if (info.sourceDir == null) {
-                        continue;
-                    }
-                    appInfo.setCodePath(info.sourceDir);
-                    if (info.packageName.equals(mContext.getPackageName())) {
-                        continue;
-                    }
-                    int flags = packInfo.applicationInfo.flags;
-
-                    int uid = packInfo.applicationInfo.uid;
-
-                    appInfo.setUid(uid);
-
-                    if ((flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                        appInfo.setUserApp(false);//系统应用
-
-                    } else {
-                        appInfo.setUserApp(true);//用户应用
-                    }
-
-                    boolean flag = false;
-                    if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                        flag = true;
-                    } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                        flag = true;
-                    }
-                    if (flag) {
-                        userAppInfos.add(appInfo);
-                    } else {
-                        systemAppInfos.add(appInfo);
-                    }
-                    String appName = packInfo.applicationInfo.loadLabel(pm).toString();
-                    appInfo.setAppName(appName);
-                    String packname = packInfo.packageName;
-                    appInfo.setPackname(packname);
-                    appInfo.setEnable(PackageInfoManager.getInstance().isAppEnable(packname));
-                    String version = packInfo.versionName;
-                    appInfo.setVersion(version);
-                    try {
-
-                        mGetPackageSizeInfoMethod.invoke(mContext.getPackageManager(), new Object[]{
-                                packname,
-                                new IPackageStatsObserver.Stub() {
-                                    @Override
-                                    public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
-                                        synchronized (appInfo) {
-                                            appInfo.setPkgSize(DataTypeUtil.getTwoFloat((pStats.cacheSize + pStats.codeSize + pStats.dataSize)));
-                                            appInfo.setCacheSize(DataTypeUtil.getTwoFloat(pStats.cacheSize));
-
-                                        }
-                                    }
-                                }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    appinfos.add(appInfo);
-                }
-
-
-                return appinfos;
+            public void run() {
+                List<AppInfo> appInfoList = getAppInfoList(firstPart, curPkgName);
+                Message message = new Message();
+                message.obj = appInfoList;
+                message.what = LOAD_APP_MESSAGE;
+                mHandler.sendMessage(message);
             }
+        });
 
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
-            protected void onProgressUpdate(final Integer... values) {
-                new Handler(Looper.getMainLooper()).post(() -> loadStateCallback.loadProgress(values[0], values[1]));
+            public void run() {
+                List<AppInfo> appInfoList = getAppInfoList(secondPart, curPkgName);
+                Message message = new Message();
+                message.obj = appInfoList;
+                message.what = LOAD_APP_MESSAGE;
+                mHandler.sendMessage(message);
 
             }
+        });
 
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
-            protected void onPreExecute() {
+            public void run() {
+                List<AppInfo> appInfoList = getAppInfoList(thirdPart, curPkgName);
+                Message message = new Message();
+                message.obj = appInfoList;
+                message.what = LOAD_APP_MESSAGE;
+                mHandler.sendMessage(message);
 
-                super.onPreExecute();
             }
+        });
 
-            @Override
-            protected void onPostExecute(List<AppInfo> result) {
-                LogUtil.e(TAG, "onPostExecute");
-                isLoadFinish = true;
-                super.onPostExecute(result);
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    for (int i = 0; i < loadStateCallbackList.size(); i++) {
-                        loadStateCallbackList.get(i).loadFinish();
+
+//        Observable.just(firstPart, secondPart, thirdPart).subscribeOn(Schedulers.newThread()).
+//                flatMap(packageInfoList -> {
+//                    List<AppInfo> appInfoList = getAppInfoList(packageInfoList, curPkgName);
+//                    return Observable.just(appInfoList);
+//                }).observeOn(AndroidSchedulers.mainThread()).subscribe(appInfos -> {
+//            for (AppInfo appInfo : appInfos) {
+//                if (appInfo.isUserApp()) {
+//                    userAppInfos.add(appInfo);
+//                } else {
+//                    systemAppInfos.add(appInfo);
+//                }
+//
+//                LogUtil.d(TAG, "App name = " + appInfo.getAppName());
+//
+//            }
+//
+//
+//            LogUtil.e(TAG, "load part ");
+//
+//        }, throwable -> {
+//            LogUtil.e(TAG, "load all app failed");
+//        }, () -> {
+//            LogUtil.e(TAG, "load all app complete");
+//
+//            for (LoadStateCallback loadStateCallbackItem : loadStateCallbackList) {
+//                if (loadStateCallbackItem != null) {
+//                    loadStateCallbackItem.loadFinish();
+//                }
+//            }
+//        });
+
+
+    }
+
+    @NonNull
+    private List<AppInfo> getAppInfoList(List<PackageInfo> packageInfoList, String curPkgName) {
+        List<AppInfo> appInfoList = new ArrayList<>();
+        for (PackageInfo packInfo : packageInfoList) {
+            if (packInfo.packageName.equals(curPkgName)) {
+                continue;
+            }
+            if (packInfo.applicationInfo.sourceDir == null) {
+                continue;
+            }
+            appInfoList.add(getAppInfo(packInfo));
+        }
+        return appInfoList;
+    }
+
+
+    private AppInfo getAppInfo(PackageInfo packInfo) {
+        PackageManager pm = mContext.getPackageManager();
+        final AppInfo appInfo = new AppInfo();
+        Drawable appIcon = packInfo.applicationInfo.loadIcon(mContext.getPackageManager());
+        ApplicationInfo info = packInfo.applicationInfo;
+        appInfo.setAppIcon(appIcon);
+        appInfo.setCodePath(info.sourceDir);
+        int flags = packInfo.applicationInfo.flags;
+        int uid = packInfo.applicationInfo.uid;
+        appInfo.setUid(uid);
+        if ((flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+            appInfo.setUserApp(false);//系统应用
+
+        } else {
+            appInfo.setUserApp(true);//用户应用
+        }
+
+        boolean flag = false;
+        if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+            flag = true;
+        } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+            flag = true;
+        }
+        String appName = packInfo.applicationInfo.loadLabel(pm).toString();
+        appInfo.setAppName(appName);
+        String packname = packInfo.packageName;
+        appInfo.setPackname(packname);
+        appInfo.setEnable(PackageInfoManager.getInstance().isAppEnable(packname));
+        String version = packInfo.versionName;
+        appInfo.setVersion(version);
+        try {
+
+            mGetPackageSizeInfoMethod.invoke(mContext.getPackageManager(), new Object[]{
+                    packname,
+                    new IPackageStatsObserver.Stub() {
+                        @Override
+                        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+                            synchronized (appInfo) {
+                                appInfo.setPkgSize(DataTypeUtil.getTwoFloat((pStats.cacheSize + pStats.codeSize + pStats.dataSize)));
+                                appInfo.setCacheSize(DataTypeUtil.getTwoFloat(pStats.cacheSize));
+
+                            }
+                        }
                     }
-                });
-
-
-            }
-
-        };
-        task.execute();
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return appInfo;
 
     }
 
@@ -264,7 +361,7 @@ public class PackageInfoManager {
     }
 
 
-    public boolean isComponentEnable(String pkgName, String component) {
+    public synchronized boolean isComponentEnable(String pkgName, String component) {
         ComponentName componentName = new ComponentName(pkgName, component);
         return mContext.getPackageManager().getComponentEnabledSetting(componentName) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 
@@ -283,16 +380,72 @@ public class PackageInfoManager {
 
 
     //加载所有组件
-    public void loadAllComponent() {
-        List<AppInfo> allApp = getAllApp();
-        LogUtil.d(TAG, "loadAllComponent size=>" + allApp.size());
-
-        for (int i = 0; i < allApp.size(); i++) {
-            AppInfo appInfo = allApp.get(i);
-            LogUtil.d(TAG, "loadAllComponent=>" + appInfo.getPackname());
-            XmlUtil.parseAppInfo(mContext, appInfo.getPackname(), appInfo);
+    public void loadAllComponent(LoadAllComponentListener loadAllComponentListener) {
+        if (isComponentLoaded) {
+            return;
         }
-        isComponentLoaded = true;
+        this.mLoadAllComponentListener = loadAllComponentListener;
+        List<AppInfo> allApp = getAllApp();
+        int taotalSize = allApp.size();
+        int firstSize = allApp.size() / 4;
+        int secondSize = allApp.size() / 4 * 2;
+        int thirdSize = allApp.size() / 4 * 2;
+        int fourSize = allApp.size();
+
+
+        LogUtil.d(TAG, String.format("totalSize = %d firstSize = %d secondsize = %d thirdsize = %d", taotalSize, firstSize, secondSize, thirdSize));
+
+        List<AppInfo> firstPart = allApp.subList(0, firstSize);
+        List<AppInfo> secondPart = allApp.subList(firstSize, secondSize);
+        List<AppInfo> thirdPart = allApp.subList(secondSize, allApp.size());
+        List<AppInfo> fourPart = allApp.subList(thirdSize, fourSize);
+        ScheduledExecutorService threadPool = GlobalDataManager.getInstance().getThreadPool();
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<AppInfo> appInfoListResult = parseComponent(firstPart);
+                mHandler.sendEmptyMessage(LOAD_COMPONENT_MESSAGE);
+            }
+        });
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<AppInfo> appInfoListResult = parseComponent(secondPart);
+                mHandler.sendEmptyMessage(LOAD_COMPONENT_MESSAGE);
+
+
+            }
+        });
+
+
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<AppInfo> appInfoListResult = parseComponent(thirdPart);
+                mHandler.sendEmptyMessage(LOAD_COMPONENT_MESSAGE);
+            }
+        });
+
+
+        threadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<AppInfo> appInfoListResult = parseComponent(fourPart);
+                mHandler.sendEmptyMessage(LOAD_COMPONENT_MESSAGE);
+            }
+        });
+    }
+
+
+    private List<AppInfo> parseComponent(List<AppInfo> appInfoList) {
+        for (int i = 0; i < appInfoList.size(); i++) {
+            AppInfo appInfo = appInfoList.get(i);
+            LogUtil.d(TAG, "loadAllComponent=>" + appInfo.getPackname());
+            XmlUtil xmlUtil = new XmlUtil();
+            xmlUtil.parseAppInfo(mContext, appInfo.getPackname(), appInfo);
+        }
+        return appInfoList;
+
     }
 
 

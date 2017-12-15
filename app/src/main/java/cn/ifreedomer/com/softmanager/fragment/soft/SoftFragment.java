@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.adapter.ViewPagerFragmentAdapter;
-import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 
 public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
     private static final int MINE_INDEX = 0;
@@ -42,37 +41,9 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
         View view = inflater.inflate(R.layout.fragment_soft, container, false);
         ButterKnife.inject(this, view);
         initAllFragment();
-        initView();
-        initData();
         return view;
     }
 
-
-    private void initView() {
-//        toolbar.inflateMenu(R.menu.action_menu);
-//        toolbar.getMenu().findItem(R.id.m_item_edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Intent intent = new Intent(getActivity(), FeedBackActivity.class);
-//                startActivity(intent);
-//                return false;
-//            }
-//        });
-//        toolbar.setTitle(getString(R.string.uninstall_master));
-
-    }
-
-    private void initData() {
-        refreshData();
-    }
-
-    private void refreshData() {
-        RecycleFragment mineFragment = (RecycleFragment) fragmentList.get(MINE_INDEX);
-        RecycleFragment systemFragment = (RecycleFragment) fragmentList.get(SYSTEM_INDEX);
-
-        mineFragment.setData(PackageInfoManager.getInstance().getUserApps());
-        systemFragment.setData(PackageInfoManager.getInstance().getSystemApps());
-    }
 
     private void initAllFragment() {
 
@@ -90,17 +61,6 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
         }
 
     }
-
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        LogUtil.e(TAG, "onActivityResult");
-//        if (requestCode == ResultCodeConstant.UNINSTALL_SUCCESS) {
-//            UserInstallFragment userInstallFragment = (UserInstallFragment) fragmentList.get(MINE_INDEX);
-//            userInstallFragment.refreshUninstallData();
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {

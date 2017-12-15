@@ -23,6 +23,7 @@ import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
 import cn.ifreedomer.com.softmanager.fragment.component.CommonRecycleFragment;
 import cn.ifreedomer.com.softmanager.fragment.wakeup.CutWakeupFragment;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
+import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.model.WakeupPathInfo;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
@@ -69,6 +70,8 @@ public class WakeupListActivity extends BaseActivity {
         for (int i = 0; i < wakeupPathInfo.getWakeupPath().size(); i++) {
             AppInfo appInfo = wakeupPathInfo.getWakeupPath().get(i);
             boolean userApp = appInfo.isUserApp();
+            ComponentEntity componentEntity = componentEntityList.get(i);
+            componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(appInfo.getPackname(),componentEntityList.get(i).getName()));
             if (userApp) {
                 userAppInfo.add(appInfo);
                 userComponentEntityList.add(componentEntityList.get(i));

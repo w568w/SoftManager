@@ -17,7 +17,6 @@ import java.util.List;
 import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
 import cn.ifreedomer.com.softmanager.bean.PermissionDetail;
 import cn.ifreedomer.com.softmanager.bean.PermissionGroup;
-import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 
 /**
@@ -87,7 +86,7 @@ public class XmlUtil {
     }
 
 
-    public static void parseAppInfo(Context context, String pkgName, AppInfo appInfo) {
+    public void parseAppInfo(Context context, String pkgName, AppInfo appInfo) {
         LogUtil.d(TAG, "parseAppInfo PkgName=" + pkgName);
         Context createPackageContext = null;
         try {
@@ -104,23 +103,36 @@ public class XmlUtil {
                         Log.i(TAG, "xml解析开始");
                         break;
                     case XmlPullParser.START_TAG:
-                        //   LogUtil.d(TAG, "parseAppInfo PkgName=222");
+//                           LogUtil.d(TAG, "parseAppInfo PkgName=222");
                         String tagName = xmlParser.getName();
-                        if ("activity".equals(tagName) || "provider".equals(tagName) || "receiver".equals(tagName) || "service".equals(tagName)){
-                        componentEntity = new ComponentEntity();
-                        componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
-                        componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
-                        componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(pkgName, componentEntity.getName()));
-                        componentEntity.setFullPathName(pkgName + "/" + componentEntity.getName());
-                        LogUtil.d(TAG, "parseAppInfo tagName=>" + tagName);
+//                        LogUtil.d(TAG, "parseAppInfo PkgName=222-1");
 
-                    }
+                        if ("activity".equals(tagName) || "provider".equals(tagName) || "receiver".equals(tagName) || "service".equals(tagName)) {
+                            componentEntity = new ComponentEntity();
+//                            LogUtil.d(TAG, "parseAppInfo PkgName=222-2");
 
-                    if ("action".equals(tagName)) {
-                        if (componentEntity != null && componentEntity.getActionList() != null) {
-                            componentEntity.getActionList().add(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+                            componentEntity.setName(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+//                            LogUtil.d(TAG, "parseAppInfo PkgName=222-3");
+
+                            componentEntity.setExported(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "exported"));
+//                            LogUtil.d(TAG, "parseAppInfo PkgName=222-4");
+//
+//                            LogUtil.d(TAG, "parseAppInfo PkgName=222-5");
+
+                            componentEntity.setFullPathName(pkgName + "/" + componentEntity.getName());
+                            LogUtil.d(TAG, "parseAppInfo tagName=>" + tagName);
+
                         }
-                    }
+//                        LogUtil.d(TAG, "parseAppInfo PkgName=333");
+
+
+                        if ("action".equals(tagName)) {
+                            if (componentEntity != null && componentEntity.getActionList() != null) {
+                                componentEntity.getActionList().add(xmlParser.getAttributeValue(ANDROID_NAMESPACE, "name"));
+                            }
+                        }
+
+                        LogUtil.d(TAG, "parseAppInfo PkgName=444");
 
 //                        if ("provider".equals(xmlParser.getName())) {
 //                            componentEntity = new ComponentEntity();
@@ -142,7 +154,7 @@ public class XmlUtil {
 //                        }
 
 
-                    break;
+                        break;
                     case XmlPullParser.TEXT:
 
 //                        Log.d(TAG, "Text:" + xmlParser.getText());
@@ -192,7 +204,7 @@ public class XmlUtil {
                             LogUtil.d(TAG, "receiver=" + componentEntity.toString());
 
                         }
-//                        LogUtil.d(TAG, "parseAppInfo PkgName444-");
+                        LogUtil.d(TAG, "parseAppInfo PkgName444-");
                         break;
                 }
                 event = xmlParser.next();   //将当前解析器光标往下一步移
