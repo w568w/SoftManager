@@ -44,7 +44,7 @@ public class CameraUtils {
             return "无";
         }
         Camera.Parameters localParameters = localCamera.getParameters();
-        localParameters.set("camera-id", 1);
+        localParameters.set("camera-id", paramInt);
         List<Size> localList = localParameters.getSupportedPictureSizes();
         if (localList != null) {
             int heights[] = new int[localList.size()];

@@ -177,18 +177,22 @@ public class DeviceInfoFragment extends Fragment {
 
         //后置摄像头
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            try {
 
-            String backCameraValue = CameraUtils.getCameraPixels(CameraUtils.CAMERA_FACING_BACK);
-            String backCameraTitle = getString(R.string.back_camera);
-            DeviceInfoWrap<TwoValue> backCameraWrap = DeviceInfoWrap.createTwoValue(backCameraTitle, backCameraValue);
-            mDatalist.add(backCameraWrap);
+                String backCameraValue = CameraUtils.getCameraPixels(CameraUtils.CAMERA_FACING_BACK);
+                String backCameraTitle = getString(R.string.back_camera);
+                DeviceInfoWrap<TwoValue> backCameraWrap = DeviceInfoWrap.createTwoValue(backCameraTitle, backCameraValue);
+                mDatalist.add(backCameraWrap);
 
 
-            //后置摄像头
-            String foreCameraValue = CameraUtils.getCameraPixels(CameraUtils.CAMERA_FACING_FRONT);
-            String foreCameraTitle = getString(R.string.fore_camera);
-            DeviceInfoWrap<TwoValue> foreCameraWrap = DeviceInfoWrap.createTwoValue(foreCameraTitle, foreCameraValue);
-            mDatalist.add(foreCameraWrap);
+                //后置摄像头
+                String foreCameraValue = CameraUtils.getCameraPixels(CameraUtils.CAMERA_FACING_FRONT);
+                String foreCameraTitle = getString(R.string.fore_camera);
+                DeviceInfoWrap<TwoValue> foreCameraWrap = DeviceInfoWrap.createTwoValue(foreCameraTitle, foreCameraValue);
+                mDatalist.add(foreCameraWrap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
         //三轴陀螺仪
