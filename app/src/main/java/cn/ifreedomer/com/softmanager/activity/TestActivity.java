@@ -29,10 +29,12 @@ import cn.ifreedomer.com.softmanager.listener.LoadAllComponentListener;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
+import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
 import cn.ifreedomer.com.softmanager.service.FileScanService;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
+import cn.ifreedomer.com.softmanager.util.ShellUtils;
 import io.reactivex.schedulers.Schedulers;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
@@ -115,6 +117,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 //                PackageInfoManager.getInstance().clearCache();
                 break;
             case R.id.btn_get_permission:
+                mountTest();
 //                List<PermissionDetail> allPermission = PermissionManager.getInstance().loadAllPermission("com.tencent.qqpimsecure");
 //                for (int i = 0; i < allPermission.size(); i++) {
 //                    LogUtil.e(TAG, allPermission.get(i).toString());
@@ -164,6 +167,69 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+
+
+    private void mountTest() {
+        if (PermissionManager.getInstance().checkOrRequestedRootPermission()) {
+            GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+                AppInfo appInfo = new AppInfo();
+                appInfo.setPackname("com.xiaomi.pass");
+                appInfo.setCodePath("/system/app/XMPass/XMPass.apk");
+                uninstallSystemApp(appInfo);
+            });
+        }
+    }
+
+
+    public static boolean uninstallSystemApp(AppInfo appItem) {
+        ShellUtils.CommandResult mount = ShellUtils.execCommand("mount", true);
+        ShellUtils.CommandResult mount1 = ShellUtils.execCommand("mount -o remount,rw /dev/block/system /system", true);
+
+
+//        String absolutePath = Environment.getExternalStorageDirectory().getName();
+//        ShellUtils.CommandResult mount1 = ShellUtils.execCommand("cd " + absolutePath, true);
+//
+//        String str2 = "/mnt/shell/emulated/" + Environment.getExternalStorageDirectory().getName();
+//
+//
+//        ShellUtils.CommandResult mount2 = ShellUtils.execCommand("cd " + str2, true);
+//
+//        ShellUtils.CommandResult mount5 = ShellUtils.execCommand("ln -s \"" + str2 + "\" \"" + absolutePath + "\"", true);
+//
+//        ShellUtils.CommandResult mount6 = null;
+//        ShellUtils.CommandResult mount7 = null;
+//        ShellUtils.CommandResult mount8 = null;
+//        ShellUtils.execCommand("su",false);
+//        if (mount5.errorMsg != null && mount5.errorMsg.length() > 0 && mount5.errorMsg.contains("Read-only file system")) {
+//            mount6 = ShellUtils.execCommand("mount -o rw,remount /", false);
+//            mount7 = ShellUtils.execCommand("ln -s \"" + str2 + "\" \"" + absolutePath + "\"", true);
+//            mount8 = ShellUtils.execCommand("mount -o ro,remount /", false);
+//
+//            return false;
+//        }
+//
+//
+//        ShellUtils.CommandResult mount3 = ShellUtils.execCommand("mount -o rw,remount /", true);
+//
+//
+//        String command = "rm " + appItem.getCodePath() + "\n";
+//        command += "pm uninstall " + appItem.getPackname() + "\n";
+//        ShellUtils.CommandResult mount4 = ShellUtils.execCommand(command, true);
+//
+//
+        LogUtil.d(TAG, "MOUNT = " + mount.toString());
+        LogUtil.d(TAG, "MOUNT1 = " + mount1.toString());
+//        LogUtil.d(TAG, "mount2 = " + mount2.toString());
+//        LogUtil.d(TAG, "mount3 = " + mount3.toString());
+//        LogUtil.d(TAG, "mount4 = " + mount4.toString());
+//        LogUtil.d(TAG, "mount5 = " + mount5.toString());
+//        LogUtil.d(TAG, "mount6 = " + mount6.toString());
+//        LogUtil.d(TAG, "mount7 = " + mount7.toString());
+//        LogUtil.d(TAG, "mount8 = " + mount8.toString());
+
+
+        return false;
     }
 
 
