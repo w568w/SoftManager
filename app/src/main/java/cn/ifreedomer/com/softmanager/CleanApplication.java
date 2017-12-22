@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
@@ -24,6 +26,7 @@ public class CleanApplication extends Application {
         //需要先初始化permission
         Log.e(TAG, "onCreate: ");
         INSTANCE = this;
+        CrashReport.initCrashReport(getApplicationContext(), "67e74d679c", false);
         PermissionManager.getInstance().init(this);
         PackageInfoManager.getInstance().init(this);
         PackageInfoManager.getInstance().loadData(new LoadStateCallback() {
@@ -39,7 +42,7 @@ public class CleanApplication extends Application {
 
             @Override
             public void loadFinish() {
-                LogUtil.d(TAG,"loadFinish");
+                LogUtil.d(TAG, "loadFinish");
             }
         });
 
