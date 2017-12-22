@@ -30,7 +30,7 @@
             android:name="cn.ifreedomer.com.softmanager.activity.setting.FeedBackActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="cn.ifreedomer.com.softmanager.activity.HomeActivity"
+            android:name=".activity.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>

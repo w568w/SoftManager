@@ -204,5 +204,7 @@
     <string name="title">标题</string>
     <string name="wakeup_des">切断唤醒是可以禁用任意组件,防止APP被其他App事件唤醒、全家桶一样的不道德唤醒，能有效节省手机电量，延长续航时间(使用得当，最少延长一天)</string>
     <string name="component_manager_des">组件管理适用于，你需要使用这个app，但是这个app被流氓唤醒，你只想阻止这个流氓，不想冰冻app，就可以禁用与流氓相关的组件，自由度较大</string>
+    <string name="uninstall_failed">卸载失败</string>
+    <string name="uninstalling">正在卸载...</string>
 
 </resources>

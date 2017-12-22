@@ -174,11 +174,27 @@ public class Terminal {
 
     public static boolean uninstallSystemApp(AppInfo appItem) {
         Terminal.RootCommand("mount -o remount rw /system");
-        Terminal.RootCommand("PATH='/system/bin';'mount' '-o' 'remount,rw' '' '/system'");
+        Terminal.RootCommand("PATH='"+getSuCommand()+"';'mount' '-o' 'remount,rw' '' '/system'");
         String command = "rm " + appItem.getCodePath() + "\n";
         command += "pm uninstall " + appItem.getPackname() + "\n";
         int code = Terminal.RootCommand(command);
         return code == 0;
+    }
+
+
+    public static String getSuCommand(){
+        String suCommand = "";
+        if (new File("/system/bin/su").exists()) {
+            suCommand = "/system/bin/su";
+        } else if (new File("/system/xbin/su").exists()) {
+            suCommand= "/system/xbin/su";
+        } else if (new File("/data/bin/su").exists()) {
+            suCommand= "/data/bin/su";
+        } else if (new File("/sbin/su").exists()) {
+            suCommand = "/sbin/su";
+        }
+        return suCommand;
+
     }
 
     public static boolean uninstallUserApp(AppItem appItem) {

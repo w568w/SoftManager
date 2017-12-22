@@ -31,21 +31,28 @@ public class SystemInstallFragment extends RecycleFragment {
         appAdapter.setUnInstallListener(appInfo -> {
             if (PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getActivity(), getString(R.string.uninstalling), Toast.LENGTH_SHORT).show();
+                    });
                     boolean b = Terminal.uninstallSystemApp(appInfo);
 
-                    if (b){
+                    if (b) {
                         appAdapter.getDatas().remove(appInfo);
-                        getActivity().runOnUiThread(() -> appAdapter.notifyDataSetChanged());
-                    }else{
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getActivity(), R.string.uninstall_failed,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.uninstall_success), Toast.LENGTH_SHORT).show();
+                            appAdapter.notifyDataSetChanged();
+                        });
+                    } else {
+                        getActivity().runOnUiThread(() -> {
+                            Toast.makeText(getActivity(), R.string.uninstall_failed, Toast.LENGTH_SHORT).show();
                         });
                     }
                 });
 
             } else {
                 Terminal.grantRoot(getActivity());
-                Toast.makeText(getActivity(), getString(R.string.no_permission),Toast.LENGTH_SHORT).show();;
+                Toast.makeText(getActivity(), getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
+                ;
             }
         });
     }
