@@ -18,6 +18,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
@@ -250,9 +251,6 @@ public class PackageInfoManager {
     private List<AppInfo> getAppInfoList(List<PackageInfo> packageInfoList, String curPkgName) {
         List<AppInfo> appInfoList = new ArrayList<>();
         for (PackageInfo packInfo : packageInfoList) {
-            if (packInfo.packageName.equals(curPkgName)) {
-                continue;
-            }
             if (packInfo.applicationInfo.sourceDir == null) {
                 continue;
             }
@@ -364,6 +362,9 @@ public class PackageInfoManager {
 
 
     public synchronized boolean isComponentEnable(String pkgName, String component) {
+        if (TextUtils.isEmpty(pkgName) || TextUtils.isEmpty(component)) {
+            return false;
+        }
         ComponentName componentName = new ComponentName(pkgName, component);
         return mContext.getPackageManager().getComponentEnabledSetting(componentName) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 

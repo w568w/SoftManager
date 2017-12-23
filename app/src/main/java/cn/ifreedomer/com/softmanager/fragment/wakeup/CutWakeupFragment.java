@@ -207,6 +207,9 @@ public class CutWakeupFragment extends Fragment {
             for (int j = 0; j < receiverList.size(); j++) {
 
                 ComponentEntity componentEntity = receiverList.get(j);
+                if (componentEntity==null){
+                    continue;
+                }
 //                LogUtil.d(TAG, "scanWakeupPath pkgName  receiver= " + componentEntity.getName());
                 componentEntity.setBelongPkg(appInfo.getPackname());
                 List<String> actionList = componentEntity.getActionList();
