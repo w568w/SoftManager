@@ -97,6 +97,7 @@ public class DeviceInfoFragment extends Fragment {
                                 public void run() {
                                     initData();
                                     isLoaded = true;
+                                    getActivity().runOnUiThread(() -> mHeaderAndFooterWrapper.notifyDataSetChanged());
                                 }
                             });
                         }
@@ -232,7 +233,6 @@ public class DeviceInfoFragment extends Fragment {
         String barometerTitle = getString(R.string.barometer);
         DeviceInfoWrap<TwoValue> barometerWrap = DeviceInfoWrap.createTwoValue(barometerTitle, barometerValue);
         mDatalist.add(barometerWrap);
-        mHeaderAndFooterWrapper.notifyDataSetChanged();
     }
 
 
