@@ -23,6 +23,8 @@ public class AppInfo {
     private List<ComponentEntity> serviceList = null;
     private List<ComponentEntity> contentProviderList = null;
     private List<ComponentEntity> wakeupList = new ArrayList<>();
+    private String backupPath;
+    private int versionCode;
 
     public List<ComponentEntity> getWakeupList() {
         return wakeupList;
@@ -186,5 +188,21 @@ public class AppInfo {
                 ", inRom=" + inRom +
                 ", userApp=" + userApp +
                 '}';
+    }
+
+    public String getBackupPath() {
+        return backupPath;
+    }
+
+    public void setBackupPath(String backupPath) {
+        this.backupPath = backupPath;
+    }
+
+    public void setVersionCode(int versionCode) {
+        this.versionCode = versionCode;
+    }
+
+    public int getVersionCode() {
+        return versionCode;
     }
 }

@@ -34,8 +34,16 @@ public class SystemInstallFragment extends RecycleFragment {
                     getActivity().runOnUiThread(() -> {
                         Toast.makeText(getActivity(), getString(R.string.uninstalling), Toast.LENGTH_SHORT).show();
                     });
-                    boolean b = Terminal.uninstallSystemApp(appInfo);
+                    boolean isBackupSusccess = Terminal.backupApp(appInfo);
+                    if (!isBackupSusccess) {
+                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.backup_failed, Toast.LENGTH_SHORT).show());
 
+                    } else {
+                        PackageInfoManager.getInstance().getBackupList().add(appInfo);
+                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.back_success, Toast.LENGTH_SHORT).show());
+
+                    }
+                    boolean b = Terminal.uninstallSystemApp(appInfo);
                     if (b) {
                         appAdapter.getDatas().remove(appInfo);
                         getActivity().runOnUiThread(() -> {
@@ -52,8 +60,18 @@ public class SystemInstallFragment extends RecycleFragment {
             } else {
                 Terminal.grantRoot(getActivity());
                 Toast.makeText(getActivity(), getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
-                ;
             }
         });
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            getData().clear();
+            getData().addAll(PackageInfoManager.getInstance().getSystemApps());
+            appAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -29,7 +29,7 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
     ProgressBar pb;
 
     private List<Fragment> fragmentList = new ArrayList<>();
-    private int[] tabIds = new int[]{R.string.mine, R.string.system, R.string.auto_start};
+    private int[] tabIds = new int[]{R.string.mine, R.string.system, R.string.auto_start,R.string.backup};
     @InjectView(R.id.tab)
     TabLayout tab;
     @InjectView(R.id.viewpager)
@@ -50,10 +50,11 @@ public class SoftFragment extends Fragment implements TabLayout.OnTabSelectedLis
         fragmentList.add(new UserInstallFragment());
         fragmentList.add(new SystemInstallFragment());
         fragmentList.add(new AutoStartFragment());
+        fragmentList.add(new BackupFragment());
         // init view pager
         ViewPagerFragmentAdapter pagerAdapter = new ViewPagerFragmentAdapter(getChildFragmentManager(), fragmentList);
         viewpager.setAdapter(pagerAdapter);
-        viewpager.setOffscreenPageLimit(3);
+        viewpager.setOffscreenPageLimit(4);
         viewpager.addOnPageChangeListener(this);
         tab.setupWithViewPager(viewpager);
         for (int i = 0; i < tab.getTabCount(); i++) {

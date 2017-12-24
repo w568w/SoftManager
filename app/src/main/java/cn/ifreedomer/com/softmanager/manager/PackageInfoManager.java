@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
+import cn.ifreedomer.com.softmanager.util.Terminal;
 import cn.ifreedomer.com.softmanager.util.XmlUtil;
 
 /**
@@ -47,6 +49,7 @@ public class PackageInfoManager {
     private Context mContext;
     private Method mDeleteApplicationCacheFiles;
     private StatFs mStat;
+    private List<AppInfo> backupList = new ArrayList<>();
     private boolean isLoaded = false;
     private boolean isLoadFinish = false;
     private boolean isComponentLoaded = false;
@@ -266,7 +269,8 @@ public class PackageInfoManager {
         Drawable appIcon = packInfo.applicationInfo.loadIcon(mContext.getPackageManager());
         ApplicationInfo info = packInfo.applicationInfo;
         appInfo.setAppIcon(appIcon);
-        appInfo.setCodePath(info.sourceDir);
+        String sourceDir = info.sourceDir;
+        appInfo.setCodePath(sourceDir);
         int flags = packInfo.applicationInfo.flags;
         int uid = packInfo.applicationInfo.uid;
         appInfo.setUid(uid);
@@ -490,4 +494,23 @@ public class PackageInfoManager {
         return isComponentLoaded;
     }
 
+
+    public void loadBackup() {
+        File file = new File(Terminal.SYSTEM_BACKUP_PATH);
+        if (file.exists()) {
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                AppInfo appInfo = new AppInfo();
+                appInfo.setBackupPath(files[i].getPath());
+                Terminal.fillApkModel(appInfo);
+                backupList.add(appInfo);
+            }
+
+        }
+
+    }
+
+    public List<AppInfo> getBackupList() {
+        return backupList;
+    }
 }

@@ -5,6 +5,12 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -327,5 +333,100 @@ public class FileUtil {
         return ShellUtils.execCommand("rm -r " + path, true);
     }
 
+
+    /**
+     * Copy file
+     *
+     * @param srcFilePath
+     * @param destFilePath
+     * @return
+     * @throws FileNotFoundException
+     */
+    public static boolean copyFile(String srcFilePath, String destFilePath) throws FileNotFoundException {
+        InputStream inputStream = new FileInputStream(srcFilePath);
+        return writeFile(new File(destFilePath), inputStream);
+    }
+
+
+    /**
+     * Write file
+     *
+     * @param file
+     * @param is
+     * @return
+     */
+    public static boolean writeFile(File file, InputStream is) {
+        return writeFile(file, is, false);
+    }
+
+    /**
+     * Write file
+     *
+     * @param file
+     * @param is
+     * @param append
+     * @return
+     */
+    public static boolean writeFile(File file, InputStream is, boolean append) {
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file, append);
+            byte data[] = new byte[1024];
+            int length = -1;
+            while ((length = is.read(data)) != -1) {
+                outputStream.write(data, 0, length);
+            }
+            outputStream.flush();
+            return true;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("FileNotFoundException", e);
+        } catch (IOException e) {
+            throw new RuntimeException("IOException", e);
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+    /**
+     * Create the directory
+     *
+     * @param filePath
+     * @return
+     */
+    public static boolean makeDirs(String filePath) {
+        File folder = new File(filePath);
+        return (folder.exists() && folder.isDirectory()) ? true : folder.mkdirs();
+    }
+
+
+
+    public  static void inputStream2File(InputStream ins, File file) {
+//        File file = new File(path);
+        OutputStream outputStream = null;
+        try {
+
+            outputStream = new FileOutputStream(file);
+            int bytesRead = 0;
+            byte[] bytes = new byte[1024];
+            int read = 0;
+            while ((read = ins.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+            outputStream.close();
+            ins.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
