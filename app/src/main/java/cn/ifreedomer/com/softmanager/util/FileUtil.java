@@ -107,7 +107,7 @@ public class FileUtil {
                         System.out.println("文件夹:" + file2.getAbsolutePath());
                         list.add(file2);
                         folderNum++;
-                        if (file2.listFiles()==null) {
+                        if (file2.listFiles() == null) {
                             continue;
                         }
                         if (file2.listFiles().length == 0) {
@@ -172,7 +172,11 @@ public class FileUtil {
             return null;
         }
         for (int i = 0; i < folder.list().length; i++) {
+
             File[] files = folder.listFiles();
+            if (files == null || files.length == 0) {
+                continue;
+            }
             if (files[i].getName().startsWith(".")) {
                 continue;
             }

@@ -64,7 +64,7 @@
     <string name="wifi_network">WIFI网络</string>
     <string name="do_has">没有</string>
     <string name="imei">IMEI</string>
-    <string name="for_given">还你一个清爽的手机</string>
+    <string name="for_given">还你一个清爽的手机\n企鹅群:587521420</string>
     <string name="clean_garbage">清理垃圾</string>
     <string name="see_detail">查看详情</string>
     <string name="apk_clean">Apk清理</string>
@@ -174,7 +174,7 @@
     <string name="qqgroup">qq群</string>
     <string name="group_name">587521420</string>
     <string name="thanks">鸣谢</string>
-    <string name="thanks_names">卡基猫.老曾.灰灰</string>
+    <string name="thanks_names">卡基猫.老曾.灰灰.假面小哥哥</string>
     <string name="device_id_request">充值需要获取设备id做标记.请授权哦</string>
     <string name="loading">正在加载数据...</string>
     <string name="cut_wakeup">切断唤醒</string>
