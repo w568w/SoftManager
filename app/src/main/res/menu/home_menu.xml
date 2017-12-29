@@ -54,7 +54,10 @@
                 android:icon="@mipmap/component_manager"
                 android:title="@string/component_manager"/>
 
-
+            <item
+                android:id="@+id/operation"
+                android:icon="@mipmap/operation"
+                android:title="@string/operation"/>
 
         </menu>
     </item>

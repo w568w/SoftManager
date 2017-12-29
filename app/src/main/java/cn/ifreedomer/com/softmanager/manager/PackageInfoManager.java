@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 import cn.ifreedomer.com.softmanager.LoadStateCallback;
+import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
+import cn.ifreedomer.com.softmanager.db.DBSoftUtil;
 import cn.ifreedomer.com.softmanager.listener.LoadAllComponentListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
@@ -472,6 +474,17 @@ public class PackageInfoManager {
             ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm enable " + replaceComponent, true);
             LogUtil.d(TAG, "enableComponent = " + commandResult.toString());
         });
+    }
+
+
+    public void enableAndSaveComponent(ComponentEntity componentEntity) {
+        enableComponent(componentEntity.getFullPathName());
+        DBSoftUtil.save(componentEntity);
+    }
+
+    public void disableAndRemoveComponent(ComponentEntity componentEntity) {
+        disableComponent(componentEntity.getFullPathName());
+        DBSoftUtil.remove(componentEntity);
     }
 
 

@@ -217,4 +217,6 @@
     <string name="restore">还原</string>
     <string name="restore_sucess">还原成功</string>
     <string name="restore_failed">还原失败</string>
+    <string name="has_disable">已经禁止的组件</string>
+    <string name="operation">高级操作</string>
 </resources>

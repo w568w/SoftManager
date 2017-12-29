@@ -5,7 +5,7 @@
 
     <!--package="cn.ifreedomer.com.softmanager"-->
 
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -102,14 +102,16 @@
         <!-- alipay sdk end -->
         <activity android:name="cn.ifreedomer.com.softmanager.activity.component.ComponentListActivity">
         </activity>
+        <activity android:name="cn.ifreedomer.com.softmanager.activity.operation.DisableActivity">
+        </activity>
 
 
         <provider
             android:name="com.zzzmode.appopsx.OpsxConfigProvider"
             android:authorities="${authority}"
-            tools:replace="android:authorities"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            tools:replace="android:authorities"/>
     </application>
 
 </manifest>

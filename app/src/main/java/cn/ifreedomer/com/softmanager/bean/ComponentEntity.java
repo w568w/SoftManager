@@ -10,10 +10,12 @@ import java.util.List;
  */
 
 public class ComponentEntity {
+    private String id = System.currentTimeMillis() + "";
     private String name;
     private String exported;
     private String belongPkg;
     private String fullPathName;
+    private boolean enable;
 
     public String getFullPathName() {
         return fullPathName;
@@ -72,5 +74,13 @@ public class ComponentEntity {
 
     public void setFullPathName(String s) {
         this.fullPathName = s;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public boolean isEnable() {
+        return enable;
     }
 }

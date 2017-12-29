@@ -55,9 +55,9 @@ public class ReceiverListAdapter extends CommonAdapter<ComponentEntity> {
             componentEntity.setChecked(!componentEntity.isChecked());
             aSwitch.setChecked(componentEntity.isChecked());
             if (componentEntity.isChecked()) {
-                PackageInfoManager.getInstance().enableComponent(componentEntity.getName());
+                PackageInfoManager.getInstance().enableAndSaveComponent(componentEntity);
             } else {
-                PackageInfoManager.getInstance().disableComponent(componentEntity.getName());
+                PackageInfoManager.getInstance().disableAndRemoveComponent(componentEntity);
             }
         });
     }
