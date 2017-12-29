@@ -55,7 +55,7 @@ public class OperationFragment extends Fragment {
         mSettingAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                startActivity(new Intent(getActivity(), settingInfoList.get(position).getClass()));
+                startActivity(new Intent(getActivity(), settingInfoList.get(position).getActivity()));
             }
 
             @Override

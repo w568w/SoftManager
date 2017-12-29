@@ -479,12 +479,22 @@ public class PackageInfoManager {
 
     public void enableAndSaveComponent(ComponentEntity componentEntity) {
         enableComponent(componentEntity.getFullPathName());
-        DBSoftUtil.save(componentEntity);
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                DBSoftUtil.remove(componentEntity);
+            }
+        });
     }
 
     public void disableAndRemoveComponent(ComponentEntity componentEntity) {
         disableComponent(componentEntity.getFullPathName());
-        DBSoftUtil.remove(componentEntity);
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                DBSoftUtil.save(componentEntity);
+            }
+        });
     }
 
 

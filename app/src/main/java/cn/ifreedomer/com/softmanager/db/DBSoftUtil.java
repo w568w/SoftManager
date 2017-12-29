@@ -9,6 +9,7 @@ import java.util.List;
 
 import cn.ifreedomer.com.softmanager.CleanApplication;
 import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author eavawu
@@ -16,32 +17,65 @@ import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
  */
 
 public class DBSoftUtil {
-    public static void save(ComponentEntity componentEntity) {
+    private static final String TAG = DBSoftUtil.class.getSimpleName();
+    private static SQLiteDatabase writableDatabase;
+    private static SQLiteDatabase readableDatabase;
+
+    public static boolean isExist(ComponentEntity componentEntity) {
+        isOpen();
+//        String sql = String.format("select * from %s where name = %s", DBSoftHelper.SOFT_DISABLE_TABLE, componentEntity.getName());
+//        LogUtil.d(TAG, "isExist sql = " + sql);
+        Cursor cursor = readableDatabase.rawQuery("select * from  " + DBSoftHelper.SOFT_DISABLE_TABLE + " where name = ?", new String[]{componentEntity.getName()});
+        if (cursor.moveToNext()) {
+            cursor.close();
+            return true;
+        }
+        cursor.close();
+        return false;
+    }
+
+    public static void isOpen() {
+        if (writableDatabase != null && readableDatabase != null) {
+            return;
+        }
         DBSoftHelper dbSoftHelper = new DBSoftHelper(CleanApplication.INSTANCE);
-        SQLiteDatabase writableDatabase = dbSoftHelper.getWritableDatabase();
+        writableDatabase = dbSoftHelper.getWritableDatabase();
+        readableDatabase = dbSoftHelper.getReadableDatabase();
+    }
+
+    public static boolean save(ComponentEntity componentEntity) {
+        isOpen();
+        if (isExist(componentEntity)) {
+            return false;
+        }
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", componentEntity.getName());
         contentValues.put("exported", componentEntity.getExported());
         contentValues.put("belongPkg", componentEntity.getBelongPkg());
         contentValues.put("fullPathName", componentEntity.getFullPathName());
         contentValues.put("enable", componentEntity.isEnable());
-        writableDatabase.insert(DBSoftHelper.SOFT_DISABLE_TABLE, null, contentValues);
-        writableDatabase.close();
+        long offset = writableDatabase.insert(DBSoftHelper.SOFT_DISABLE_TABLE, null, contentValues);
+        LogUtil.d(TAG, "save offset = " + offset);
+        return offset > 0;
     }
 
 
     public static void remove(ComponentEntity componentEntity) {
+        isOpen();
+        if (!isExist(componentEntity)) {
+            return;
+        }
         DBSoftHelper dbSoftHelper = new DBSoftHelper(CleanApplication.INSTANCE);
         SQLiteDatabase writableDatabase = dbSoftHelper.getWritableDatabase();
         String[] params = new String[]{componentEntity.getName()};
-        writableDatabase.delete(DBSoftHelper.SOFT_DISABLE_TABLE, "name = ?", params);
+        int offset = writableDatabase.delete(DBSoftHelper.SOFT_DISABLE_TABLE, "name = ?", params);
+        LogUtil.d(TAG, "remove offset = " + offset);
         writableDatabase.close();
     }
 
     public static List<ComponentEntity> getAll() {
-        DBSoftHelper dbSoftHelper = new DBSoftHelper(CleanApplication.INSTANCE);
-        SQLiteDatabase readableDatabase = dbSoftHelper.getReadableDatabase();
-        readableDatabase.beginTransaction();
+
+        isOpen();
         Cursor cursor = readableDatabase.rawQuery(String.format("select * from %s", DBSoftHelper.SOFT_DISABLE_TABLE), null);
         List<ComponentEntity> componentEntitieList = new ArrayList<>();
         while (cursor.moveToNext()) {
@@ -58,10 +92,19 @@ public class DBSoftUtil {
             componentEntity.setEnable(enable);
             componentEntitieList.add(componentEntity);
         }
-
         cursor.close();
-        readableDatabase.close();
         return componentEntitieList;
     }
+
+
+    public static void close() {
+        if (readableDatabase != null) {
+            readableDatabase.close();
+        }
+        if (writableDatabase != null) {
+            writableDatabase.close();
+        }
+    }
+
 
 }

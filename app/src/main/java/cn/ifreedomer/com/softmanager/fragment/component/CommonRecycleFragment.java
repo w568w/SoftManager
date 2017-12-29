@@ -38,7 +38,7 @@ public class CommonRecycleFragment extends Fragment {
         ButterKnife.inject(this, view);
         rv.setLayoutManager(mLayoutManager);
         rv.setAdapter(mCommonAdapter);
-        if (mCommonAdapter.getDatas() == null || mCommonAdapter.getDatas().size() == 0) {
+        if (mCommonAdapter==null||mCommonAdapter.getDatas() == null || mCommonAdapter.getDatas().size() == 0) {
             setNoContentVisible(View.VISIBLE);
         }
         return view;
