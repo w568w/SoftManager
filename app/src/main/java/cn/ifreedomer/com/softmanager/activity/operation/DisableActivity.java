@@ -73,9 +73,5 @@ public class DisableActivity extends BaseActivity {
         mDisableComponentAdapter = new DisableComponentAdapter(this, R.layout.item_component_detail, mAllComponent);
         rv.setAdapter(mDisableComponentAdapter);
         rv.setLayoutManager(new LinearLayoutManager(this));
-
-
     }
-
-
 }
