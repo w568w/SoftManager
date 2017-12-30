@@ -53,9 +53,9 @@ public class WakeupListAdapter extends CommonAdapter<AppInfo> {
             componentEntity.setChecked(!componentEntity.isChecked());
             aSwitch.setChecked(componentEntity.isChecked());
             if (componentEntity.isChecked()) {
-                PackageInfoManager.getInstance().enableAndSaveComponent(componentEntity);
+                PackageInfoManager.getInstance().enableAndRemoveComponent(componentEntity);
             } else {
-                PackageInfoManager.getInstance().disableAndRemoveComponent(componentEntity);
+                PackageInfoManager.getInstance().disableAndSaveComponent(componentEntity);
             }
         });
     }

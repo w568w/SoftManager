@@ -477,7 +477,8 @@ public class PackageInfoManager {
     }
 
 
-    public void enableAndSaveComponent(ComponentEntity componentEntity) {
+    public void enableAndRemoveComponent(ComponentEntity componentEntity) {
+        componentEntity.setEnable(true);
         enableComponent(componentEntity.getFullPathName());
         GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
@@ -487,7 +488,8 @@ public class PackageInfoManager {
         });
     }
 
-    public void disableAndRemoveComponent(ComponentEntity componentEntity) {
+    public void disableAndSaveComponent(ComponentEntity componentEntity) {
+        componentEntity.setEnable(false);
         disableComponent(componentEntity.getFullPathName());
         GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
@@ -533,7 +535,26 @@ public class PackageInfoManager {
 
     }
 
+    public AppInfo getAppInfo(String pkgName) {
+        for (int i = 0; i < getAllApp().size(); i++) {
+            AppInfo appInfo = getAllApp().get(i);
+            if (appInfo.getPackname().equals(pkgName)) {
+                return appInfo;
+            }
+
+        }
+        return null;
+    }
+
     public List<AppInfo> getBackupList() {
         return backupList;
+    }
+
+    public ComponentEntity getAppComponent(String belongPkg, String componentName) {
+        AppInfo appInfo = getAppInfo(belongPkg);
+        if (appInfo == null) {
+            return null;
+        }
+        return appInfo.getComponent(componentName);
     }
 }

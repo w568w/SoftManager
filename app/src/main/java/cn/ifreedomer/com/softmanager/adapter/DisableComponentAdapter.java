@@ -51,9 +51,17 @@ public class DisableComponentAdapter extends CommonAdapter<ComponentEntity> {
             componentEntity.setChecked(!componentEntity.isChecked());
             aSwitch.setChecked(componentEntity.isChecked());
             if (componentEntity.isChecked()) {
-                PackageInfoManager.getInstance().enableComponent(componentEntity.getFullPathName());
+                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+                    ComponentEntity appComponent = PackageInfoManager.getInstance().getAppComponent(componentEntity.getBelongPkg(), componentEntity.getName());
+                    PackageInfoManager.getInstance().enableAndRemoveComponent(appComponent);
+                });
+
             } else {
-                PackageInfoManager.getInstance().disableComponent(componentEntity.getFullPathName());
+                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+                    ComponentEntity appComponent = PackageInfoManager.getInstance().getAppComponent(componentEntity.getBelongPkg(), componentEntity.getName());
+                    PackageInfoManager.getInstance().disableAndSaveComponent(appComponent);
+                });
+
             }
         });
     }

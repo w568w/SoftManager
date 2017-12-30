@@ -1,6 +1,7 @@
 package cn.ifreedomer.com.softmanager.model;
 
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -204,5 +205,36 @@ public class AppInfo {
 
     public int getVersionCode() {
         return versionCode;
+    }
+
+    public List<ComponentEntity> getAllComponent() {
+        List<ComponentEntity> allComponent = new ArrayList<>();
+        if (receiverList != null) {
+            allComponent.addAll(receiverList);
+        }
+        if (activityList != null) {
+            allComponent.addAll(activityList);
+        }
+        if (serviceList != null) {
+            allComponent.addAll(serviceList);
+        }
+        if (contentProviderList != null) {
+            allComponent.addAll(contentProviderList);
+        }
+        return allComponent;
+    }
+
+
+    public ComponentEntity getComponent(String componentName) {
+        for (int i = 0; i < getAllComponent().size(); i++) {
+            ComponentEntity componentEntity = getAllComponent().get(i);
+            if (componentEntity == null || TextUtils.isEmpty(componentEntity.getName())) {
+                continue;
+            }
+            if (componentEntity.getName().contains(componentName)) {
+                return componentEntity;
+            }
+        }
+        return null;
     }
 }

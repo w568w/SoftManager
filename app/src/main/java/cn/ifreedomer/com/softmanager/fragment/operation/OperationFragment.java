@@ -47,10 +47,9 @@ public class OperationFragment extends Fragment {
     }
 
     private void initData() {
-        for (int i = 0; i < 10; i++) {
-            SettingInfo settingInfo = new SettingInfo(getString(R.string.has_disable), DisableActivity.class);
-            settingInfoList.add(settingInfo);
-        }
+
+        SettingInfo settingInfo = new SettingInfo(getString(R.string.has_disable), DisableActivity.class);
+        settingInfoList.add(settingInfo);
         mSettingAdapter.notifyDataSetChanged();
         mSettingAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override

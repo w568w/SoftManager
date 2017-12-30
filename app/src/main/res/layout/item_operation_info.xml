@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp15"
-            android:layout_toLeftOf="@id/iv_go"
             android:orientation="vertical">
 
             <TextView
@@ -39,5 +38,19 @@
         </LinearLayout>
 
 
+        <ImageView
+            android:id="@+id/iv_go"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/icon_marginright"
+            android:alpha="0.5"
+            android:padding="5dp"
+            android:src="@mipmap/right_arrow"/>
+
     </RelativeLayout>
+
+
+
 </RelativeLayout>
