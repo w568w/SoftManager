@@ -36,7 +36,8 @@ public class DisableComponentAdapter extends CommonAdapter<ComponentEntity> {
         int suffixBegin = componentEntityName.lastIndexOf(".") + 1;
         holder.setText(R.id.tv_name, componentEntityName.substring(suffixBegin, componentEntityName.length()));
         holder.setText(R.id.tv_category, componentEntityName);
-//        holder.setImageDrawable(R.id.iv_icon, mAppInfo.getAppIcon());
+
+        holder.setImageDrawable(R.id.iv_icon, PackageInfoManager.getInstance().getAppInfo(componentEntity.getBelongPkg()).getAppIcon());
         Switch aSwitch = holder.getView(R.id.cb);
         aSwitch.setChecked(componentEntity.isEnable());
         holder.getView(R.id.cb).setOnClickListener(v -> {

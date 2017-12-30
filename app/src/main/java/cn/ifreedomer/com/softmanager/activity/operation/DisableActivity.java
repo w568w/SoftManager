@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -56,11 +57,19 @@ public class DisableActivity extends BaseActivity {
 
     private void initData() {
         GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-                    mAllComponent.clear();
-                    mAllComponent.addAll(DBSoftUtil.getAll());
-                    runOnUiThread(() -> mDisableComponentAdapter.notifyDataSetChanged());
-                }
-        );
+            mAllComponent.clear();
+            mAllComponent.addAll(DBSoftUtil.getAll());
+            runOnUiThread(() ->
+                    {
+                        if (mAllComponent == null || mAllComponent.size() == 0) {
+                            tvNoContent.setVisibility(View.VISIBLE);
+                        } else {
+                            tvNoContent.setVisibility(View.GONE);
+                        }
+                        mDisableComponentAdapter.notifyDataSetChanged();
+                    }
+            );
+        });
     }
 
     private void initView() {

@@ -3,7 +3,6 @@ package cn.ifreedomer.com.softmanager.activity.setting;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
+import cn.ifreedomer.com.softmanager.BuildConfig;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.BaseActivity;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
@@ -35,19 +34,19 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         ButterKnife.inject(this);
-        ToolbarUtil.setTitleBarWhiteBack(this,toolbar);
+        ToolbarUtil.setTitleBarWhiteBack(this, toolbar);
         initItems();
     }
 
     private void initItems() {
         AboutItemView versionItemView = new AboutItemView(this);
         versionItemView.setTitle(getString(R.string.version_title));
-        versionItemView.setContent(PackageInfoManager.getInstance().getVersionCode(this) + "");
+        versionItemView.setContent(BuildConfig.VERSION_NAME);
         installLl.addView(versionItemView);
 
         AboutItemView copyRightItemView = new AboutItemView(this);
-        versionItemView.setTitle(getString(R.string.authority));
-        versionItemView.setContent(getString(R.string.baihua));
+        copyRightItemView.setTitle(getString(R.string.authority));
+        copyRightItemView.setContent(getString(R.string.baihua));
         installLl.addView(copyRightItemView);
 
         AboutItemView emailItemView = new AboutItemView(this);
@@ -55,7 +54,6 @@ public class AboutActivity extends BaseActivity {
         emailItemView.setContent(getString(R.string.email));
         emailItemView.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         installLl.addView(emailItemView);
-
 
 
         AboutItemView qqGroup = new AboutItemView(this);
@@ -70,14 +68,7 @@ public class AboutActivity extends BaseActivity {
         installLl.addView(githubItemView);
 
 
-//        installList.add(0,"0.0.8");
-//
-//        for (int i = 0; i < 3; i++) {
-//            installLl.addView(new AboutItemView(this));
-//        }
-//        for (int i = 0; i < 3; i++) {
-//            visitLl.addView(new AboutItemView(this));
-//        }
+
     }
 
 
