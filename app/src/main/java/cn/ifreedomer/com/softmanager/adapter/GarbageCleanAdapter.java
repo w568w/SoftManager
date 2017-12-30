@@ -210,7 +210,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 //        fileIv.setImageDrawable(garbageInfo.getDrawable());
 //
 //        final CheckBox cb = (CheckBox) childView.findViewById(R.id.cb);
-//        cb.setChecked(garbageInfo.isChecked());
+//        cb.setEnable(garbageInfo.isEnable());
 
 //
 //

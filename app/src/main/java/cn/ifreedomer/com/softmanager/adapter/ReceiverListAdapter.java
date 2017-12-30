@@ -37,7 +37,7 @@ public class ReceiverListAdapter extends CommonAdapter<ComponentEntity> {
         holder.setText(R.id.tv_category, componentEntityName);
         holder.setImageDrawable(R.id.iv_icon, mAppInfo.getAppIcon());
         Switch aSwitch = holder.getView(R.id.cb);
-        aSwitch.setChecked(componentEntity.isChecked());
+        aSwitch.setChecked(componentEntity.isEnable());
         if (componentEntity.getActionList() != null && componentEntity.getActionList().size() > 0) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(mContext.getString(R.string.action));
@@ -49,12 +49,12 @@ public class ReceiverListAdapter extends CommonAdapter<ComponentEntity> {
         holder.getView(R.id.cb).setOnClickListener(v -> {
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
-                aSwitch.setChecked(componentEntity.isChecked());
+                aSwitch.setChecked(componentEntity.isEnable());
                 return;
             }
-            componentEntity.setChecked(!componentEntity.isChecked());
-            aSwitch.setChecked(componentEntity.isChecked());
-            if (componentEntity.isChecked()) {
+            componentEntity.setEnable(!componentEntity.isEnable());
+            aSwitch.setChecked(componentEntity.isEnable());
+            if (componentEntity.isEnable()) {
                 PackageInfoManager.getInstance().enableAndRemoveComponent(componentEntity);
             } else {
                 PackageInfoManager.getInstance().disableAndSaveComponent(componentEntity);

@@ -122,6 +122,8 @@ public class XmlUtil {
                             componentEntity.setFullPathName(pkgName + "/" + componentEntity.getName());
                             LogUtil.d(TAG, "parseAppInfo tagName=>" + tagName);
 
+                            componentEntity.setBelongPkg(pkgName);
+
                         }
 //                        LogUtil.d(TAG, "parseAppInfo PkgName=333");
 

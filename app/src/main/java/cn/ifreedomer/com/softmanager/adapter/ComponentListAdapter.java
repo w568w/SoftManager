@@ -39,7 +39,7 @@ public class ComponentListAdapter extends CommonAdapter<ComponentEntity> {
         holder.setText(R.id.tv_category, componentEntityName);
         holder.setImageDrawable(R.id.iv_icon, mAppInfo.getAppIcon());
         Switch aSwitch = holder.getView(R.id.cb);
-        aSwitch.setChecked(componentEntity.isChecked());
+        aSwitch.setChecked(componentEntity.isEnable());
         holder.getView(R.id.cb).setOnClickListener(v -> {
             if (GlobalDataManager.getInstance().isOpenRecharge()) {
                 ((BaseActivity) mContext).showPayDialog();
@@ -48,15 +48,15 @@ public class ComponentListAdapter extends CommonAdapter<ComponentEntity> {
             }
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
-                aSwitch.setChecked(componentEntity.isChecked());
+                aSwitch.setChecked(componentEntity.isEnable());
                 return;
             }
-            componentEntity.setChecked(!componentEntity.isChecked());
-            aSwitch.setChecked(componentEntity.isChecked());
-            if (componentEntity.isChecked()) {
-                PackageInfoManager.getInstance().enableComponent(componentEntity.getFullPathName());
+            componentEntity.setEnable(!componentEntity.isEnable());
+            aSwitch.setChecked(componentEntity.isEnable());
+            if (componentEntity.isEnable()) {
+                PackageInfoManager.getInstance().enableAndRemoveComponent(componentEntity);
             } else {
-                PackageInfoManager.getInstance().disableComponent(componentEntity.getFullPathName());
+                PackageInfoManager.getInstance().disableAndSaveComponent(componentEntity);
             }
         });
     }

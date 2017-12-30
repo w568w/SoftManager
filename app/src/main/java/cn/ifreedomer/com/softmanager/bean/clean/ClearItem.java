@@ -97,7 +97,7 @@ public class ClearItem {
     public String toString() {
         return "ClearItem{" +
                 "packageName='" + packageName + '\'' +
-                ", isChecked=" + isChecked +
+                ", isEnable=" + isChecked +
                 ", filePath='" + filePath + '\'' +
                 ", fileSize=" + fileSize +
                 ", includeEBook=" + includeEBook +

@@ -55,7 +55,7 @@ public class GarbageGroupTitle {
         return "GarbageGroupTitle{" +
                 "title='" + title + '\'' +
                 ", totalSize='" + totalSize + '\'' +
-                ", isChecked=" + isChecked +
+                ", isEnable=" + isChecked +
                 ", type=" + type +
                 '}';
     }

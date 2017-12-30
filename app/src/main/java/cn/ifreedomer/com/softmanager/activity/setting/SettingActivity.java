@@ -214,7 +214,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 //    }
 //
 //    @Override
-//    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//    public void onCheckedChanged(CompoundButton buttonView, boolean isEnable) {
 //        switch (buttonView.getId()) {
 //
 ////            break;

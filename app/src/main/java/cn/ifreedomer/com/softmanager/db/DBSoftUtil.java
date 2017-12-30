@@ -46,6 +46,8 @@ public class DBSoftUtil {
     public static boolean save(ComponentEntity componentEntity) {
         isOpen();
         if (isExist(componentEntity)) {
+            LogUtil.d(TAG, " exist. add failed");
+
             return false;
         }
         ContentValues contentValues = new ContentValues();
@@ -63,6 +65,7 @@ public class DBSoftUtil {
     public static void remove(ComponentEntity componentEntity) {
         isOpen();
         if (!isExist(componentEntity)) {
+            LogUtil.d(TAG, "not exist. remove failed");
             return;
         }
         DBSoftHelper dbSoftHelper = new DBSoftHelper(CleanApplication.INSTANCE);

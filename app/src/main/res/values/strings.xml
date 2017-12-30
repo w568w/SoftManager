@@ -219,4 +219,5 @@
     <string name="restore_failed">还原失败</string>
     <string name="has_disable">已经禁止的组件</string>
     <string name="operation">高级操作</string>
+    <string name="component_not_exist">组件不存在</string>
 </resources>

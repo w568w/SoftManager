@@ -71,7 +71,7 @@ public class WakeupListActivity extends BaseActivity {
             AppInfo appInfo = wakeupPathInfo.getWakeupPath().get(i);
             boolean userApp = appInfo.isUserApp();
             ComponentEntity componentEntity = componentEntityList.get(i);
-            componentEntity.setChecked(PackageInfoManager.getInstance().isComponentEnable(appInfo.getPackname(),componentEntityList.get(i).getName()));
+            componentEntity.setEnable(PackageInfoManager.getInstance().isComponentEnable(appInfo.getPackname(), componentEntityList.get(i).getName()));
             if (userApp) {
                 userAppInfo.add(appInfo);
                 userComponentEntityList.add(componentEntityList.get(i));

@@ -15,7 +15,7 @@ public class ComponentEntity {
     private String exported;
     private String belongPkg;
     private String fullPathName;
-    private boolean enable;
+    private boolean enable = true;
 
     public String getFullPathName() {
         return fullPathName;
@@ -30,14 +30,13 @@ public class ComponentEntity {
     }
 
     private List<String> actionList = new ArrayList<>();
-    private boolean isChecked = false;
 
-    public boolean isChecked() {
-        return isChecked;
+    public boolean isEnable() {
+        return enable;
     }
 
-    public void setChecked(boolean checked) {
-        isChecked = checked;
+    public void setEnable(boolean enable) {
+       this.enable = enable;
     }
 
     public List<String> getActionList() {
@@ -67,8 +66,13 @@ public class ComponentEntity {
     @Override
     public String toString() {
         return "ComponentEntity{" +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", exported='" + exported + '\'' +
+                ", belongPkg='" + belongPkg + '\'' +
+                ", fullPathName='" + fullPathName + '\'' +
+                ", enable=" + enable +
+                ", actionList=" + actionList +
                 '}';
     }
 
@@ -76,11 +80,5 @@ public class ComponentEntity {
         this.fullPathName = s;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
 
-    public boolean isEnable() {
-        return enable;
-    }
 }

@@ -15,6 +15,7 @@ import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
  * @author:eavawu
@@ -23,6 +24,7 @@ import cn.ifreedomer.com.softmanager.manager.PermissionManager;
  */
 
 public class DisableComponentAdapter extends CommonAdapter<ComponentEntity> {
+    private static final String TAG = DisableComponentAdapter.class.getSimpleName();
 
     public DisableComponentAdapter(Context context, int layoutId, List<ComponentEntity> datas) {
         super(context, layoutId, datas);
@@ -36,7 +38,7 @@ public class DisableComponentAdapter extends CommonAdapter<ComponentEntity> {
         holder.setText(R.id.tv_category, componentEntityName);
 //        holder.setImageDrawable(R.id.iv_icon, mAppInfo.getAppIcon());
         Switch aSwitch = holder.getView(R.id.cb);
-        aSwitch.setChecked(componentEntity.isChecked());
+        aSwitch.setChecked(componentEntity.isEnable());
         holder.getView(R.id.cb).setOnClickListener(v -> {
             if (GlobalDataManager.getInstance().isOpenRecharge()) {
                 ((BaseActivity) mContext).showPayDialog();
@@ -45,22 +47,33 @@ public class DisableComponentAdapter extends CommonAdapter<ComponentEntity> {
             }
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
-                aSwitch.setChecked(componentEntity.isChecked());
+                aSwitch.setChecked(componentEntity.isEnable());
                 return;
             }
-            componentEntity.setChecked(!componentEntity.isChecked());
-            aSwitch.setChecked(componentEntity.isChecked());
-            if (componentEntity.isChecked()) {
-                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-                    ComponentEntity appComponent = PackageInfoManager.getInstance().getAppComponent(componentEntity.getBelongPkg(), componentEntity.getName());
-                    PackageInfoManager.getInstance().enableAndRemoveComponent(appComponent);
-                });
+            componentEntity.setEnable(!componentEntity.isEnable());
+            aSwitch.setChecked(componentEntity.isEnable());
+            if (componentEntity.isEnable()) {
+                LogUtil.d(TAG, String.format("pkgName = %s component name = %s", componentEntity.getBelongPkg(), componentEntity.getName()));
+                ComponentEntity appComponent = PackageInfoManager.getInstance().getAppComponent(componentEntity.getBelongPkg(), componentEntity.getName());
+                //组件数据已经加载
+                if (appComponent != null) {
+                    appComponent.setEnable(true);
+                }
+                LogUtil.d(TAG, "appComponent = " + appComponent);
+
+                PackageInfoManager.getInstance().enableAndRemoveComponent(componentEntity);
 
             } else {
-                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-                    ComponentEntity appComponent = PackageInfoManager.getInstance().getAppComponent(componentEntity.getBelongPkg(), componentEntity.getName());
-                    PackageInfoManager.getInstance().disableAndSaveComponent(appComponent);
-                });
+                LogUtil.d(TAG, String.format("pkgName = %s component name = %s", componentEntity.getBelongPkg(), componentEntity.getName()));
+
+                ComponentEntity appComponent = PackageInfoManager.getInstance().getAppComponent(componentEntity.getBelongPkg(), componentEntity.getName());
+                //组件数据已经加载
+                if (appComponent != null) {
+                    appComponent.setEnable(false);
+                }
+                LogUtil.d(TAG, "appComponent = " + appComponent);
+
+                PackageInfoManager.getInstance().disableAndSaveComponent(componentEntity);
 
             }
         });

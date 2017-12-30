@@ -38,7 +38,7 @@ public class WakeupListAdapter extends CommonAdapter<AppInfo> {
         holder.setText(R.id.tv_category, componentEntity.getName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
         Switch aSwitch = holder.getView(R.id.cb);
-        aSwitch.setChecked(mComponentEntitylist.get(position).isChecked());
+        aSwitch.setChecked(mComponentEntitylist.get(position).isEnable());
         holder.getView(R.id.cb).setOnClickListener(v -> {
             if (GlobalDataManager.getInstance().isOpenRecharge()) {
                 aSwitch.setChecked(!aSwitch.isChecked());
@@ -47,12 +47,12 @@ public class WakeupListAdapter extends CommonAdapter<AppInfo> {
             }
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
-                aSwitch.setChecked(componentEntity.isChecked());
+                aSwitch.setChecked(componentEntity.isEnable());
                 return;
             }
-            componentEntity.setChecked(!componentEntity.isChecked());
-            aSwitch.setChecked(componentEntity.isChecked());
-            if (componentEntity.isChecked()) {
+            componentEntity.setEnable(!componentEntity.isEnable());
+            aSwitch.setChecked(componentEntity.isEnable());
+            if (componentEntity.isEnable()) {
                 PackageInfoManager.getInstance().enableAndRemoveComponent(componentEntity);
             } else {
                 PackageInfoManager.getInstance().disableAndSaveComponent(componentEntity);

@@ -64,7 +64,7 @@ public class FileInfo {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", size=" + size +
-                ", isChecked=" + isChecked +
+                ", isEnable=" + isChecked +
                 '}';
     }
 

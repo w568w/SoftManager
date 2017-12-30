@@ -478,7 +478,6 @@ public class PackageInfoManager {
 
 
     public void enableAndRemoveComponent(ComponentEntity componentEntity) {
-        componentEntity.setEnable(true);
         enableComponent(componentEntity.getFullPathName());
         GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
@@ -489,7 +488,6 @@ public class PackageInfoManager {
     }
 
     public void disableAndSaveComponent(ComponentEntity componentEntity) {
-        componentEntity.setEnable(false);
         disableComponent(componentEntity.getFullPathName());
         GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
