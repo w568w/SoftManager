@@ -40,16 +40,19 @@ public class WakeupListAdapter extends CommonAdapter<AppInfo> {
         Switch aSwitch = holder.getView(R.id.cb);
         aSwitch.setChecked(mComponentEntitylist.get(position).isEnable());
         holder.getView(R.id.cb).setOnClickListener(v -> {
-            if (GlobalDataManager.getInstance().isOpenRecharge()) {
-                aSwitch.setChecked(!aSwitch.isChecked());
-                ((BaseActivity) mContext).showPayDialog();
-                return;
-            }
+
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
                 aSwitch.setChecked(componentEntity.isEnable());
                 return;
             }
+
+            if (GlobalDataManager.getInstance().isOpenRecharge()) {
+                aSwitch.setChecked(!aSwitch.isChecked());
+                ((BaseActivity) mContext).showPayDialog();
+                return;
+            }
+
             componentEntity.setEnable(!componentEntity.isEnable());
             aSwitch.setChecked(componentEntity.isEnable());
             if (componentEntity.isEnable()) {

@@ -36,16 +36,19 @@ public class IceBoxAdapter extends CommonAdapter<AppInfo> {
         Switch switchView = holder.getView(R.id.switch_enable);
         switchView.setChecked(appInfo.isEnable());
         holder.setOnClickListener(R.id.switch_enable, (View v) -> {
-            if (GlobalDataManager.getInstance().isOpenRecharge()){
-                switchView.setChecked(!switchView.isChecked());
-                ((BaseActivity)mContext).showPayDialog();
-                return;
-            }
+
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 switchView.setChecked(!switchView.isChecked());
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            if (GlobalDataManager.getInstance().isOpenRecharge()){
+                switchView.setChecked(!switchView.isChecked());
+                ((BaseActivity)mContext).showPayDialog();
+                return;
+            }
+
             if (mDatas.get(position).isEnable()) {
                 GlobalDataManager.getInstance().getThreadPool().execute(() -> Terminal.disableApp(appInfo.getPackname()));
             } else {

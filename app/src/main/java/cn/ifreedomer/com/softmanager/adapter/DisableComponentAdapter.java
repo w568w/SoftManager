@@ -41,16 +41,19 @@ public class DisableComponentAdapter extends CommonAdapter<ComponentEntity> {
         Switch aSwitch = holder.getView(R.id.cb);
         aSwitch.setChecked(componentEntity.isEnable());
         holder.getView(R.id.cb).setOnClickListener(v -> {
-            if (GlobalDataManager.getInstance().isOpenRecharge()) {
-                ((BaseActivity) mContext).showPayDialog();
-                aSwitch.setChecked(!aSwitch.isChecked());
-                return;
-            }
+
             if (!PermissionManager.getInstance().checkOrRequestedRootPermission()) {
                 Toast.makeText(mContext, R.string.no_root, Toast.LENGTH_SHORT).show();
                 aSwitch.setChecked(componentEntity.isEnable());
                 return;
             }
+
+            if (GlobalDataManager.getInstance().isOpenRecharge()) {
+                ((BaseActivity) mContext).showPayDialog();
+                aSwitch.setChecked(!aSwitch.isChecked());
+                return;
+            }
+
             componentEntity.setEnable(!componentEntity.isEnable());
             aSwitch.setChecked(componentEntity.isEnable());
             if (componentEntity.isEnable()) {
