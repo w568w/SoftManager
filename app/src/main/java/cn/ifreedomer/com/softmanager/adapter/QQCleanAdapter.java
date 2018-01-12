@@ -175,6 +175,7 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
                         Intent intent = new Intent();
 //action还可以通过set方法进行设置
                         intent.setAction(Intent.ACTION_VIEW);
+                        intent.addCategory(Intent.CATEGORY_DEFAULT);
 //既然是查看图片，就要指定打开哪张图片，通过setData，传入图片的uri
                         intent.setData(Uri.parse(fileInfo.getPath()));
 //然后指定打开文件的类型，图片的话可用用image/*
