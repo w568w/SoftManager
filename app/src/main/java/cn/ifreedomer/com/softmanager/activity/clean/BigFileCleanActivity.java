@@ -1,17 +1,20 @@
 package cn.ifreedomer.com.softmanager.activity.clean;
 
-import android.os.AsyncTask;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +24,13 @@ import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.BaseActivity;
 import cn.ifreedomer.com.softmanager.adapter.BigFileAdapter;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
-import cn.ifreedomer.com.softmanager.service.FileScanService;
+import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.util.MemoryUtils;
+import cn.ifreedomer.com.softmanager.util.SPUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
+import cn.ifreedomer.com.softmanager.widget.BigFileDialog;
 import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 
 public class BigFileCleanActivity extends BaseActivity implements View.OnClickListener {
@@ -36,11 +42,52 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
     RecyclerView mRv;
     @InjectView(R.id.btn_clean)
     Button mBtnClean;
-
     private List<FileInfo> mFileInfoList = new ArrayList<>();
     private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
     private BigFileAdapter mBigFileAdapter;
     private NumChangeHeadView mHeaderView;
+    private static final int MSG_START_SCAN = 0;
+    private static final int MSG_SCANNING = 1;
+    private static final int MSG_FINISH_SCAN = 2;
+    private long mBigTotalSize = 0;
+    private long mScanTotalSize = 0;
+    private int mScanMinSize = 10;
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_START_SCAN:
+                    mHeaderView.setScanningText(getString(R.string.begin_scan));
+                    mBtnClean.setVisibility(View.GONE);
+
+                    break;
+                case MSG_SCANNING:
+                    File file = (File) msg.obj;
+                    mHeaderView.setScanTotal(DataTypeUtil.getTextBySize(mBigTotalSize));
+                    mScanTotalSize = mScanTotalSize + file.length();
+                    long percent = mScanTotalSize * 100 / (-mAvailableExternalMemorySize);
+                    mHeaderView.setScanningText(percent + "%   " + file.getName());
+                    if (file.length() > mScanMinSize * FileUtil.MB) {
+                        FileInfo fileInfo = new FileInfo();
+                        fileInfo.setName(file.getName());
+                        fileInfo.setChecked(false);
+                        fileInfo.setPath(file.getPath());
+                        fileInfo.setSize(file.length());
+                        fileInfo.setType(FileUtil.getMimeType(file.getPath()));
+                        mFileInfoList.add(fileInfo);
+                        mBigTotalSize = mBigTotalSize + file.length();
+                    }
+                    break;
+                case MSG_FINISH_SCAN:
+                    mHeaderView.setScanningText(getString(R.string.scan_finish));
+                    mBtnClean.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
+    private long mAvailableExternalMemorySize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +97,14 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
         initTitleBar();
         initRv();
         initListener();
+        initLogic();
         startScan();
+
+
+    }
+
+    private void initLogic() {
+        mScanMinSize = (int) SPUtil.get(this, "scanMinSize", mScanMinSize);
 
     }
 
@@ -82,76 +136,51 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
 
     private void initTitleBar() {
         ToolbarUtil.setTitleBarWhiteBack(this, mToolbar);
-
         getSupportActionBar().setTitle(getString(R.string.big_file_clean));
     }
 
-    private void startScan() {
 
-        asyncTask.execute();
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        mToolbar.inflateMenu(R.menu.bigfile_menu);
+        mToolbar.getMenu().findItem(R.id.m_item_edit).setOnMenuItemClickListener(item -> {
+            showEtDialog();
+            return false;
+        });
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void startScan() {
+        mFileInfoList.clear();
+        mBigTotalSize = 0;
+        mAvailableExternalMemorySize = MemoryUtils.getSDUsedSize();
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> FileUtil.scanFile(Environment.getExternalStorageDirectory().getPath(), mScanListener));
+
     }
 
 
-    private AsyncTask<String, Integer, List<FileInfo>> asyncTask = new AsyncTask<String, Integer, List<FileInfo>>() {
+    private FileUtil.ScanListener mScanListener = new FileUtil.ScanListener() {
         @Override
-        protected List<FileInfo> doInBackground(String... params) {
-
-
-            return FileUtil.scanSDCard4BigFile(Environment.getExternalStorageDirectory().getPath(), new FileScanService.ScanListener() {
-                @Override
-                public void onScanStart() {
-                    Log.e(TAG, "onScanStart: ");
-
-                }
-
-                @Override
-                public void onScanProcess(float process, FileInfo fileInfo) {
-                    publishProgress((int) process);
-                    mFileInfoList.add(fileInfo);
-
-                }
-
-
-                @Override
-                public void onScanFinish(float garbageSize, List<FileInfo> garbageList) {
-                    publishProgress(100);
-                }
-            });
-
+        public void onScanStart() {
+            mHandler.sendEmptyMessage(MSG_START_SCAN);
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
-
-            if (values[0] == 100) {
-                mBtnClean.setVisibility(View.VISIBLE);
-                mHeaderView.setScanningText("扫描进度:100%");
-                return;
-            }
-            float totalSize = 0;
-            for (int i = 0; i < mFileInfoList.size(); i++) {
-                totalSize = totalSize + mFileInfoList.get(i).getSize();
-            }
-            float finalTotalSize = totalSize;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mHeaderView.setScanTotal(DataTypeUtil.getTextBySize(finalTotalSize * FileUtil.MB));
-                    mHeaderView.setScanningText("扫描进度:" + values[0] + " % ");
-                    mHeaderAndFooterWrapper.notifyDataSetChanged();
-
-
-                }
-            });
-
+        public void onScanProcess(File file) {
+            Message message = new Message();
+            message.obj = file;
+            message.what = MSG_SCANNING;
+            mHandler.sendMessage(message);
         }
 
         @Override
-        protected void onPostExecute(List<FileInfo> fileInfos) {
-//            mFileInfoList.clear();
-//            mFileInfoList.addAll(fileInfos);
+        public void onScanFinish() {
+            mHandler.sendEmptyMessage(MSG_FINISH_SCAN);
+
         }
     };
+
+
 
     @Override
     public void onClick(View v) {
@@ -166,11 +195,22 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
     }
 
 
+    public void showEtDialog() {
+
+        BigFileDialog etDialog = new BigFileDialog(this);
+        etDialog.show();
+        etDialog.setData(mScanMinSize);
+        mHandler.postDelayed(() -> showSoftKeyboard(etDialog.getEt()),1000);
+        etDialog.setOnEditContent(content -> {
+            mScanMinSize = Integer.parseInt(content);
+            SPUtil.put(BigFileCleanActivity.this, "scanMinSize", mScanMinSize);
+        });
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (asyncTask != null && (asyncTask.getStatus() == AsyncTask.Status.RUNNING)) {
-            asyncTask.cancel(true);
-        }
+
     }
 }

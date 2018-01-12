@@ -220,4 +220,8 @@
     <string name="has_disable">已经禁止的组件</string>
     <string name="operation">高级操作</string>
     <string name="component_not_exist">组件不存在</string>
+    <string name="begin_scan">开始扫描</string>
+    <string name="big_file_maxsize">最大文件阀</string>
+    <string name="cannot_null">不能为空哦</string>
+    <string name="not_number">输入不是数字.不要想搞我..</string>
 </resources>

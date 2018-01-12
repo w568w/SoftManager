@@ -43,8 +43,9 @@ public class BaseActivity extends AppCompatActivity {
     public void showPayDialog() {
         PayDialog payDialog = new PayDialog(BaseActivity.this);
         payDialog.showPay();
-
     }
+
+
 
 
 }

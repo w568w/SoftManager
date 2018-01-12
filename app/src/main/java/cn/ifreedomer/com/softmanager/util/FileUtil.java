@@ -5,19 +5,14 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import cn.ifreedomer.com.softmanager.bean.EmptyFolder;
-import cn.ifreedomer.com.softmanager.bean.FileInfo;
-import cn.ifreedomer.com.softmanager.service.FileScanService;
 
 /**
  * @author wuyihua
@@ -32,132 +27,62 @@ public class FileUtil {
     public static final float MB = 1000 * 1000.0f;
     public static final float B = 1.0f;
     public static final float KB = 1000.0f;
-//
-//    public static List<FileInfo> getBigFiles() {
-//        String sdCard = Environment.getExternalStorageDirectory().toString();
-//        return scanBigFile(new File(sdCard));
-//    }
 
-//
-//    public static List<FileInfo> scanBigFile(File file) {
-//        List<FileInfo> fileInfoList = new ArrayList<>();
-//        if (file != null && file.exists() && file.isDirectory()) {
-//            File[] files = file.listFiles();
-//            for (File curFile : files) {
-//                if (curFile.listFiles() == null) {
-//                    if (curFile.length() > FileInfo.BIG_FILE_SIZE) {
-//                        FileInfo fileInfo = new FileInfo();
-//                        fileInfo.setName(curFile.getName());
-//                        fileInfo.setPath(curFile.getPath());
-//                        String mimeType = new MimetypesFileTypeMap().getContentType(curFile);
-//                        fileInfo.setType(mimeType);
-//                        fileInfo.setSize(curFile.length());
-//                        fileInfoList.add(fileInfo);
-//                    }
-//                } else {
-//                    scanBigFile(curFile);
-//                }
-//            }
-//        }
-//        return fileInfoList;
-//    }
+    public static void scanFile(String path, ScanListener scanListener) {
+        if (scanListener != null) {
+            scanListener.onScanStart();
+        }
+        LinkedList<File> folderList = new LinkedList<>();
 
-
-    public static List<FileInfo> scanSDCard4BigFile(String path, FileScanService.ScanListener scanListener) {
-
-        List<FileInfo> bigFileInfoList = new ArrayList<>();
-        float scanSize = 0;
-        float totalSize = SDCardUtil.getUsedInternalMemorySize() / (1000 * 1000);
-        Log.e(TAG, "totalSize: " + totalSize);
-        int fileNum = 0, folderNum = 0;
         File file = new File(path);
         if (file.exists()) {
-            LinkedList<File> list = new LinkedList<File>();
-            File[] files = file.listFiles();
-            if (files == null) {
-                return null;
-            }
-            for (File file2 : files) {
-                if (file2.isDirectory()) {
-                    System.out.println("文件夹:" + file2.getAbsolutePath());
-                    list.add(file2);
-                    if (file2.listFiles() == null) {
-                        continue;
-                    }
-                    if (file2.listFiles().length == 0) {
-                        scanSize = scanSize + file2.length();
-                    }
-
+            //跟目录下的列表
+            File[] rootFiles = file.listFiles();
+            for (File rootFile : rootFiles) {
+                if (rootFile.isDirectory()) {
+                    folderList.add(rootFile);
                 } else {
-                    System.out.println("文件:" + file2.getAbsolutePath());
-                    fileNum++;
-                    FileInfo fileInfo = processBigFile(file2, bigFileInfoList);
-                    scanSize = scanSize + file2.length();
-                    if (fileInfo == null) {
-                        continue;
-                    }
-
-                    scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize, fileInfo);
-
+                    processFile(rootFile, scanListener);
                 }
             }
-            File temp_file;
-            while (!list.isEmpty()) {
-                temp_file = list.removeFirst();
-                files = temp_file.listFiles();
-                if (files == null || files.length == 0) {
+
+            while (!folderList.isEmpty()) {
+                File curFile = folderList.removeFirst();
+                File[] listFiles = curFile.listFiles();
+                if (listFiles == null || listFiles.length == 0) {
                     continue;
                 }
-                for (File file2 : files) {
-                    if (file2.isDirectory()) {
-                        System.out.println("文件夹:" + file2.getAbsolutePath());
-                        list.add(file2);
-                        folderNum++;
-                        if (file2.listFiles() == null) {
-                            continue;
-                        }
-                        if (file2.listFiles().length == 0) {
-                            scanSize = scanSize + file2.length();
-                        }
-
-
+                for (int i = 0; i < listFiles.length; i++) {
+                    if (listFiles[i].isDirectory()) {
+                        folderList.add(listFiles[i]);
                     } else {
-                        System.out.println("文件:" + file2.getAbsolutePath());
-                        fileNum++;
-
-                        FileInfo fileInfo = processBigFile(file2, bigFileInfoList);
-                        scanSize = scanSize + file2.length();
-
-                        if (fileInfo == null) {
-                            continue;
-                        }
-                        scanListener.onScanProcess(scanSize / (1000 * 1000) * 100 / totalSize, fileInfo);
-
-
+                        processFile(listFiles[i], scanListener);
                     }
                 }
             }
-        } else {
-            System.out.println("文件不存在!");
-        }
-        float bigSize = 0;
-        for (int i = 0; i < bigFileInfoList.size(); i++) {
-            bigSize = bigSize + bigFileInfoList.get(i).getSize();
+
         }
 
-        scanListener.onScanFinish(bigSize, bigFileInfoList);
-        System.out.println("文件夹共有:" + folderNum + ",文件共有:" + fileNum);
-        return bigFileInfoList;
+        if (scanListener != null) {
+            scanListener.onScanFinish();
+        }
     }
 
-    public static FileInfo processBigFile(File curFile, List<FileInfo> fileInfoList) {
-        if (curFile.length() > FileInfo.BIG_FILE_SIZE) {
-            FileInfo fileInfo = FileInfo.getFileInfo(curFile);
-            fileInfo.setSize(DataTypeUtil.getTwoFloat(fileInfo.getSize() / (MB)));
-            fileInfoList.add(fileInfo);
-            return fileInfo;
+
+    public interface ScanListener {
+        void onScanStart();
+
+        void onScanProcess(File file);
+
+        void onScanFinish();
+    }
+
+
+    public static void processFile(File file, ScanListener scanListener) {
+        if (scanListener != null) {
+            LogUtil.d(TAG, "processFile = " + file.getPath());
+            scanListener.onScanProcess(file);
         }
-        return null;
     }
 
 
@@ -171,38 +96,11 @@ public class FileUtil {
     }
 
 
-    public static List<FileInfo> getFolderFiles(String folderPath, List<FileInfo> fileInfoList) {
-        File folder = new File(folderPath);
-        if (!folder.exists() || folder.list().length == 0) {
-            Log.e(TAG, "getFolderFiles: ");
-            return null;
-        }
-        for (int i = 0; i < folder.list().length; i++) {
-
-            File[] files = folder.listFiles();
-            if (files == null || files.length == 0) {
-                continue;
-            }
-            if (files[i].getName().startsWith(".")) {
-                continue;
-            }
-            if (files[i].isDirectory()) {
-                getFolderFiles(files[i].getPath(), fileInfoList);
-            } else {
-
-                FileInfo fileInfo = FileInfo.getFileInfo(folder.listFiles()[i]);
-                fileInfoList.add(fileInfo);
-                LogUtil.e(TAG, fileInfo.toString());
-            }
-        }
-        return fileInfoList;
-    }
-
 
     /**
      * 获取空文件夹的集合
      *
-     * @return
+     * @return 空文件夹集合
      */
     public static EmptyFolder getEmptyFile() {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -235,8 +133,8 @@ public class FileUtil {
     /**
      * 判断一个文件夹是不是空文件夹
      *
-     * @param folder
-     * @return
+     * @param folder 文件夹
+     * @return 是否为空
      */
     public static boolean isEmpty(File folder) {
         File[] files = folder.listFiles();
@@ -256,28 +154,11 @@ public class FileUtil {
     }
 
 
-    /**
-     * 删除单个文件
-     *
-     * @param sPath 被删除文件的文件名
-     * @return 单个文件删除成功返回true，否则返回false
-     */
-    public boolean deleteFile(String sPath) {
-        boolean flag = false;
-        File file = new File(sPath);
-        // 路径为文件且不为空则进行删除
-        if (file.isFile() && file.exists()) {
-            file.delete();
-            flag = true;
-        }
-        return flag;
-    }
-
 
     /**
      * 根据目录删除所有的文件
      *
-     * @param filePath
+     * @param filePath 文件路径
      */
     public static void deleteFileByPath(String filePath) {
         File rootfile = new File(filePath);
@@ -301,123 +182,23 @@ public class FileUtil {
     }
 
 
-    /**
-     * 删除空目录
-     *
-     * @param dir 将要删除的目录路径
-     */
-    private static void doDeleteEmptyDir(String dir) {
-        boolean success = (new File(dir)).delete();
-        if (success) {
-            System.out.println("Successfully deleted empty directory: " + dir);
-        } else {
-            System.out.println("Failed to delete empty directory: " + dir);
-        }
-    }
 
-    /**
-     * 递归删除目录下的所有文件及子目录下所有文件
-     *
-     * @param dir 将要删除的文件目录
-     * @return boolean Returns "true" if all deletions were successful.
-     * If a deletion fails, the method stops attempting to
-     * delete and returns "false".
-     */
     public static boolean deleteDir(File dir) {
         return ShellUtils.execCommand("rm -r " + dir.getPath(), false).result == 0;
 
     }
-
 
     public static ShellUtils.CommandResult deleteFolderByRoot(String path) {
         return ShellUtils.execCommand("rm -r " + path, true);
     }
 
 
-    /**
-     * Copy file
-     *
-     * @param srcFilePath
-     * @param destFilePath
-     * @return
-     * @throws FileNotFoundException
-     */
-    public static boolean copyFile(String srcFilePath, String destFilePath) throws FileNotFoundException {
-        InputStream inputStream = new FileInputStream(srcFilePath);
-        return writeFile(new File(destFilePath), inputStream);
-    }
-
-
-    /**
-     * Write file
-     *
-     * @param file
-     * @param is
-     * @return
-     */
-    public static boolean writeFile(File file, InputStream is) {
-        return writeFile(file, is, false);
-    }
-
-    /**
-     * Write file
-     *
-     * @param file
-     * @param is
-     * @param append
-     * @return
-     */
-    public static boolean writeFile(File file, InputStream is, boolean append) {
-        OutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(file, append);
-            byte data[] = new byte[1024];
-            int length = -1;
-            while ((length = is.read(data)) != -1) {
-                outputStream.write(data, 0, length);
-            }
-            outputStream.flush();
-            return true;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("FileNotFoundException", e);
-        } catch (IOException e) {
-            throw new RuntimeException("IOException", e);
-        } finally {
-            try {
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-
-    /**
-     * Create the directory
-     *
-     * @param filePath
-     * @return
-     */
-    public static boolean makeDirs(String filePath) {
-        File folder = new File(filePath);
-        return (folder.exists() && folder.isDirectory()) ? true : folder.mkdirs();
-    }
-
-
-
     public  static void inputStream2File(InputStream ins, File file) {
-//        File file = new File(path);
         OutputStream outputStream = null;
         try {
-
             outputStream = new FileOutputStream(file);
-            int bytesRead = 0;
             byte[] bytes = new byte[1024];
-            int read = 0;
+            int read;
             while ((read = ins.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }

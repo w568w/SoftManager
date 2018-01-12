@@ -7,7 +7,6 @@
         android:title="@string/base_function"
         app:showAsAction="ifRoom|withText">
 
-        <menu>
             <item
                 android:id="@+id/clean"
                 android:icon="@mipmap/clean"
@@ -28,14 +27,12 @@
                 android:title="@string/permission_manager"/>
 
 
-        </menu>
     </item>
 
 
     <item
         android:title="@string/high_function"
         app:showAsAction="ifRoom|withText">
-        <menu>
 
             <item
                 android:id="@+id/cut_wakeup"
@@ -59,7 +56,6 @@
                 android:icon="@mipmap/operation"
                 android:title="@string/operation"/>
 
-        </menu>
     </item>
     <!--<item-->
     <!--android:id="@+id/photo"-->

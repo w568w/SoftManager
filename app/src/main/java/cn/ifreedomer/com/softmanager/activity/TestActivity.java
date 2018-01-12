@@ -2,7 +2,6 @@ package cn.ifreedomer.com.softmanager.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +14,11 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 
-import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.ifreedomer.com.softmanager.R;
-import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.bean.PayResult;
 import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.db.DBActionUtils;
@@ -31,8 +28,6 @@ import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
-import cn.ifreedomer.com.softmanager.service.FileScanService;
-import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
 import io.reactivex.schedulers.Schedulers;
@@ -239,23 +234,23 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void run() {
             long beginTime = System.currentTimeMillis();
-            FileUtil.scanSDCard4BigFile(Environment.getExternalStorageDirectory().toString(), new FileScanService.ScanListener() {
-                @Override
-                public void onScanStart() {
-                    Log.e(TAG, "onScanStart: ");
-                }
-
-                @Override
-                public void onScanProcess(float process, FileInfo fileInfo) {
-
-                }
-
-
-                @Override
-                public void onScanFinish(float garbageSize, List<FileInfo> garbageList) {
-                    Log.e(TAG, "onScanFinish: garbageSize=" + garbageSize + "MB    garbageList" + garbageList + toString());
-                }
-            });
+//            FileUtil.scanSDCard4BigFile(Environment.getExternalStorageDirectory().toString(), new FileScanService.ScanListener() {
+//                @Override
+//                public void onScanStart() {
+//                    Log.e(TAG, "onScanStart: ");
+//                }
+//
+//                @Override
+//                public void onScanProcess(float process, FileInfo fileInfo) {
+//
+//                }
+//
+//
+//                @Override
+//                public void onScanFinish(float garbageSize, List<FileInfo> garbageList) {
+//                    Log.e(TAG, "onScanFinish: garbageSize=" + garbageSize + "MB    garbageList" + garbageList + toString());
+//                }
+//            });
 
 //            Log.e(TAG, "size: " + bigFiles.size() + "   time:" + (System.currentTimeMillis() - beginTime));
         }

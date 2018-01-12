@@ -26,7 +26,6 @@ import cn.ifreedomer.com.softmanager.adapter.QQCleanAdapter;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.bean.clean.QQGroupTitle;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
-import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
 import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 
@@ -132,47 +131,47 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
         @Override
         protected List<FileInfo> doInBackground(String... params) {
 
-
-            List<FileInfo> receiveFiles = new ArrayList<>();
-            FileUtil.getFolderFiles(QQ_FILE_RECV, receiveFiles);
-            fileInfoGroupList.add(receiveFiles);
-            publishProgress(20);
-
-            List<FileInfo> shortVideoFiles = new ArrayList<>();
-            FileUtil.getFolderFiles(QQ_SHORT_VIDEO, shortVideoFiles);
-            fileInfoGroupList.add(shortVideoFiles);
-
-            publishProgress(30);
-
-            List<FileInfo> userHeadFiles = new ArrayList<>();
-            FileUtil.getFolderFiles(QQ_USER_HEAD, userHeadFiles);
-            for (int i = 0; i < userHeadFiles.size(); i++) {
-                FileInfo fileInfo = userHeadFiles.get(i);
-                fileInfo.setType("image/jpeg");
-            }
-            fileInfoGroupList.add(userHeadFiles);
-
-            publishProgress(40);
-
-            List<FileInfo> thumbnails = new ArrayList<>();
-            FileUtil.getFolderFiles(QQ_THUMBNAILS, thumbnails);
-            for (int i = 0; i < thumbnails.size(); i++) {
-                FileInfo fileInfo = thumbnails.get(i);
-                fileInfo.setType("image/jpeg");
-            }
-            fileInfoGroupList.add(thumbnails);
-            publishProgress(90);
-
-
-            List<FileInfo> chatPhotos = new ArrayList<>();
-            FileUtil.getFolderFiles(QQ_CHAT_DISK_CACHE, chatPhotos);
-            for (int i = 0; i < chatPhotos.size(); i++) {
-                FileInfo fileInfo = chatPhotos.get(i);
-                fileInfo.setType("image/jpeg");
-            }
-            fileInfoGroupList.add(chatPhotos);
-
-            publishProgress(100);
+//
+//            List<FileInfo> receiveFiles = new ArrayList<>();
+//            FileUtil.getFolderFiles(QQ_FILE_RECV, receiveFiles);
+//            fileInfoGroupList.add(receiveFiles);
+//            publishProgress(20);
+//
+//            List<FileInfo> shortVideoFiles = new ArrayList<>();
+//            FileUtil.getFolderFiles(QQ_SHORT_VIDEO, shortVideoFiles);
+//            fileInfoGroupList.add(shortVideoFiles);
+//
+//            publishProgress(30);
+//
+//            List<FileInfo> userHeadFiles = new ArrayList<>();
+//            FileUtil.getFolderFiles(QQ_USER_HEAD, userHeadFiles);
+//            for (int i = 0; i < userHeadFiles.size(); i++) {
+//                FileInfo fileInfo = userHeadFiles.get(i);
+//                fileInfo.setType("image/jpeg");
+//            }
+//            fileInfoGroupList.add(userHeadFiles);
+//
+//            publishProgress(40);
+//
+//            List<FileInfo> thumbnails = new ArrayList<>();
+//            FileUtil.getFolderFiles(QQ_THUMBNAILS, thumbnails);
+//            for (int i = 0; i < thumbnails.size(); i++) {
+//                FileInfo fileInfo = thumbnails.get(i);
+//                fileInfo.setType("image/jpeg");
+//            }
+//            fileInfoGroupList.add(thumbnails);
+//            publishProgress(90);
+//
+//
+//            List<FileInfo> chatPhotos = new ArrayList<>();
+//            FileUtil.getFolderFiles(QQ_CHAT_DISK_CACHE, chatPhotos);
+//            for (int i = 0; i < chatPhotos.size(); i++) {
+//                FileInfo fileInfo = chatPhotos.get(i);
+//                fileInfo.setType("image/jpeg");
+//            }
+//            fileInfoGroupList.add(chatPhotos);
+//
+//            publishProgress(100);
 
             return null;
         }

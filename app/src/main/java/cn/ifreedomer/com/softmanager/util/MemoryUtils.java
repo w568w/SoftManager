@@ -155,6 +155,15 @@ public class MemoryUtils {
         return totalBlocks * blockSize;
     }
 
+
+    public static long getSDUsedSize(){
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long free_memory = (stat.getBlockCount() - stat.getAvailableBlocks()) * stat.getBlockSize(); //return value is in bytes
+
+        return free_memory;
+    }
+
     /**
      * 获取SD卡可用内存
      *

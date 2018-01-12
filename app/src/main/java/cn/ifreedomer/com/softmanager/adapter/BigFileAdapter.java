@@ -15,6 +15,7 @@ import java.util.List;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
+import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 
@@ -42,7 +43,7 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
     @Override
     protected void convert(ViewHolder holder, final FileInfo fileInfo, int position) {
         holder.setText(R.id.tv_name, fileInfo.getName());
-        holder.setText(R.id.tv_size, fileInfo.getSize() + " MB");
+        holder.setText(R.id.tv_size, DataTypeUtil.getTextBySize(fileInfo.getSize()));
         LogUtil.e(TAG, fileInfo.toString());
         int icon = R.mipmap.unknow_file;
         if (!TextUtils.isEmpty(fileInfo.getType())) {

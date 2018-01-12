@@ -77,9 +77,7 @@
             android:name="cn.ifreedomer.com.softmanager.activity.component.ReceiverListActivity"
             android:screenOrientation="portrait"/>
 
-        <service
-            android:name="cn.ifreedomer.com.softmanager.service.FileScanService"
-            android:exported="false"/>
+
 
         <activity android:name="cn.ifreedomer.com.softmanager.activity.clean.CleanSuccessActivity"/>
         <activity android:name="cn.ifreedomer.com.softmanager.activity.setting.AboutActivity"/>

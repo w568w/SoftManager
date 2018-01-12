@@ -1,6 +1,7 @@
 package cn.ifreedomer.com.softmanager.util;
 
 import java.math.BigDecimal;
+import java.util.regex.Pattern;
 
 /**
  * @author:eavawu
@@ -27,4 +28,10 @@ public class DataTypeUtil {
         }
         return "";
     }
+
+    public static boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]+$");
+        return pattern.matcher(str).matches();
+    }
+
 }
