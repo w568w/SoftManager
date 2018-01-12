@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
@@ -64,21 +65,8 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
 
                     break;
                 case MSG_SCANNING:
-                    File file = (File) msg.obj;
                     mHeaderView.setScanTotal(DataTypeUtil.getTextBySize(mBigTotalSize));
-                    mScanTotalSize = mScanTotalSize + file.length();
-                    long percent = mScanTotalSize * 100 / (-mAvailableExternalMemorySize);
-                    mHeaderView.setScanningText(percent + "%   " + file.getName());
-                    if (file.length() > mScanMinSize * FileUtil.MB) {
-                        FileInfo fileInfo = new FileInfo();
-                        fileInfo.setName(file.getName());
-                        fileInfo.setChecked(false);
-                        fileInfo.setPath(file.getPath());
-                        fileInfo.setSize(file.length());
-                        fileInfo.setType(FileUtil.getMimeType(file.getPath()));
-                        mFileInfoList.add(fileInfo);
-                        mBigTotalSize = mBigTotalSize + file.length();
-                    }
+                    mHeaderView.setScanningText(msg.arg1 + "%   " + msg.obj);
                     break;
                 case MSG_FINISH_SCAN:
                     mHeaderView.setScanningText(getString(R.string.scan_finish));
@@ -153,8 +141,10 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
     private void startScan() {
         mFileInfoList.clear();
         mBigTotalSize = 0;
-        mAvailableExternalMemorySize = MemoryUtils.getSDUsedSize();
-        GlobalDataManager.getInstance().getThreadPool().execute(() -> FileUtil.scanFile(Environment.getExternalStorageDirectory().getPath(), mScanListener));
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            mAvailableExternalMemorySize = MemoryUtils.getTotalExternalMemorySize() - MemoryUtils.getAvailableExternalMemorySize();
+            FileUtil.scanFile(Environment.getExternalStorageDirectory().getPath(), mScanListener);
+        });
 
     }
 
@@ -167,9 +157,24 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onScanProcess(File file) {
+
+            mScanTotalSize = mScanTotalSize + file.length();
+            long percent = mScanTotalSize * 100 / (mAvailableExternalMemorySize);
+            if (file.length() > mScanMinSize * FileUtil.MB) {
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setName(file.getName());
+                fileInfo.setChecked(false);
+                fileInfo.setPath(file.getPath());
+                fileInfo.setSize(file.length());
+                fileInfo.setType(FileUtil.getMimeType(file.getPath()));
+                mFileInfoList.add(fileInfo);
+                mBigTotalSize = mBigTotalSize + file.length();
+            }
+
             Message message = new Message();
-            message.obj = file;
             message.what = MSG_SCANNING;
+            message.arg1 = (int) percent;
+            message.obj = file.getName();
             mHandler.sendMessage(message);
         }
 
@@ -187,6 +192,11 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btn_clean:
                 mBigFileAdapter.removeCheckedItems();
+                mBigTotalSize = 0;
+                for (int i = 0; i < mFileInfoList.size(); i++) {
+                    mBigTotalSize = mBigTotalSize + (long) mFileInfoList.get(i).getSize();
+                }
+                mHeaderView.setScanTotal(DataTypeUtil.getTextBySize(mBigTotalSize) );
                 mHeaderAndFooterWrapper.notifyDataSetChanged();
                 break;
             default:
@@ -200,7 +210,7 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
         BigFileDialog etDialog = new BigFileDialog(this);
         etDialog.show();
         etDialog.setData(mScanMinSize);
-        mHandler.postDelayed(() -> showSoftKeyboard(etDialog.getEt()),1000);
+        etDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         etDialog.setOnEditContent(content -> {
             mScanMinSize = Integer.parseInt(content);
             SPUtil.put(BigFileCleanActivity.this, "scanMinSize", mScanMinSize);

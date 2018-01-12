@@ -68,12 +68,9 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
             boolean checked = mDatas.get(i).isChecked();
             final FileInfo fileInfo = mDatas.get(i);
             if (checked) {
-                GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        File file = new File(fileInfo.getPath());
-                        file.delete();
-                    }
+                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+                    File file = new File(fileInfo.getPath());
+                    file.delete();
                 });
 
                 mDatas.remove(i);
