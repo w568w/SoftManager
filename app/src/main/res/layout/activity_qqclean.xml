@@ -17,7 +17,7 @@
         android:id="@+id/expand_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rel_top"
+        android:layout_below="@id/toolbar"
         android:layout_marginBottom="@dimen/dp60"
         android:childDivider="#eaeaea"
         android:divider="@null"

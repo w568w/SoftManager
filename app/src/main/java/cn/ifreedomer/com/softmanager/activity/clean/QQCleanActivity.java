@@ -26,6 +26,7 @@ import cn.ifreedomer.com.softmanager.adapter.QQCleanAdapter;
 import cn.ifreedomer.com.softmanager.bean.FileInfo;
 import cn.ifreedomer.com.softmanager.bean.clean.QQGroupTitle;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
+import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.ToolbarUtil;
 import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 
@@ -50,6 +51,13 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
     public static final String QQ_USER_HEAD = QQ_PATH + "MobileQQ/head/_hd";
     private static final String QQ_CHAT_DISK_CACHE = QQ_PATH + "MobileQQ/diskcache";
     public static final int MSG_CLEAN_FINISH = 0;
+    public static final int MSG_REFRESH = 1;
+    List<FileInfo> mReceiveFiles = new ArrayList<>();
+    List<FileInfo> mShortVideoFiles = new ArrayList<>();
+    List<FileInfo> mHeadIconFiles = new ArrayList<>();
+    List<FileInfo> mThumbFiles = new ArrayList<>();
+    List<FileInfo> mChatPhotoFiles = new ArrayList<>();
+
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -60,7 +68,8 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
                     float calculateTotalSize = calculateTotalSize();
                     mNumChangeHeadView.setScanTotal(DataTypeUtil.getTextBySize(calculateTotalSize));
                     break;
-
+                case MSG_REFRESH:
+                    break;
             }
         }
     };
@@ -126,15 +135,125 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
         getSupportActionBar().setTitle(getString(R.string.qq_clean));
     }
 
+
+    FileUtil.ScanListener mShortScanListener = new FileUtil.ScanListener() {
+        @Override
+        public void onScanStart() {
+            mShortVideoFiles.clear();
+        }
+
+        @Override
+        public void onScanProcess(File file) {
+            FileInfo fileInfo = FileInfo.getFileInfo(file);
+            mShortVideoFiles.add(fileInfo);
+        }
+
+        @Override
+        public void onScanFinish() {
+            fileInfoGroupList.add(mShortVideoFiles);
+        }
+    };
+
+
+    FileUtil.ScanListener mReceiverScanListener = new FileUtil.ScanListener() {
+        @Override
+        public void onScanStart() {
+
+        }
+
+        @Override
+        public void onScanProcess(File file) {
+            FileInfo fileInfo = FileInfo.getFileInfo(file);
+            mReceiveFiles.add(fileInfo);
+        }
+
+        @Override
+        public void onScanFinish() {
+
+        }
+    };
+
+    FileUtil.ScanListener mQQUserHeadScanListener = new FileUtil.ScanListener() {
+        @Override
+        public void onScanStart() {
+
+        }
+
+        @Override
+        public void onScanProcess(File file) {
+            FileInfo fileInfo = FileInfo.getFileInfo(file);
+            mHeadIconFiles.add(fileInfo);
+            fileInfo.setType("image/jpeg");
+        }
+
+        @Override
+        public void onScanFinish() {
+            fileInfoGroupList.add(mHeadIconFiles);
+        }
+    };
+
+    FileUtil.ScanListener mQQThumbScanListener = new FileUtil.ScanListener() {
+        @Override
+        public void onScanStart() {
+
+        }
+
+        @Override
+        public void onScanProcess(File file) {
+            FileInfo fileInfo = FileInfo.getFileInfo(file);
+            mThumbFiles.add(fileInfo);
+            fileInfo.setType("image/jpeg");
+
+        }
+
+        @Override
+        public void onScanFinish() {
+            fileInfoGroupList.add(mThumbFiles);
+        }
+    };
+
+
+    FileUtil.ScanListener mChatPhotoScanListener = new FileUtil.ScanListener() {
+        @Override
+        public void onScanStart() {
+
+        }
+
+        @Override
+        public void onScanProcess(File file) {
+            FileInfo fileInfo = FileInfo.getFileInfo(file);
+            mChatPhotoFiles.add(fileInfo);
+            fileInfo.setType("image/jpeg");
+        }
+
+        @Override
+        public void onScanFinish() {
+            fileInfoGroupList.add(mChatPhotoFiles);
+        }
+    };
+
     @SuppressLint("StaticFieldLeak")
     private AsyncTask<String, Integer, List<FileInfo>> asyncTask = new AsyncTask<String, Integer, List<FileInfo>>() {
         @Override
         protected List<FileInfo> doInBackground(String... params) {
-
 //
-//            List<FileInfo> receiveFiles = new ArrayList<>();
-//            FileUtil.getFolderFiles(QQ_FILE_RECV, receiveFiles);
-//            fileInfoGroupList.add(receiveFiles);
+            FileUtil.scanFile(QQ_FILE_RECV, mReceiverScanListener);
+            publishProgress(20);
+
+            FileUtil.scanFile(QQ_SHORT_VIDEO, mShortScanListener);
+            publishProgress(40);
+
+            FileUtil.scanFile(QQ_USER_HEAD, mQQUserHeadScanListener);
+            publishProgress(60);
+
+            FileUtil.scanFile(QQ_THUMBNAILS, mQQThumbScanListener);
+            publishProgress(80);
+
+            FileUtil.scanFile(QQ_CHAT_DISK_CACHE, mChatPhotoScanListener);
+            publishProgress(100);
+
+//            FileUtil.getFolderFiles(QQ_FILE_RECV, mReceiveFiles);
+//            fileInfoGroupList.add(mReceiveFiles);
 //            publishProgress(20);
 //
 //            List<FileInfo> shortVideoFiles = new ArrayList<>();
@@ -182,7 +301,6 @@ public class QQCleanActivity extends BaseActivity implements View.OnClickListene
                 pb.setVisibility(View.GONE);
                 float calculateTotalSize = calculateTotalSize();
                 mNumChangeHeadView.setScanTotal(DataTypeUtil.getTextBySize(calculateTotalSize));
-                qqCleanAdapter.notifyDataSetChanged();
                 qqCleanAdapter.notifyDataSetChanged();
                 for (int i = 0; i < fileInfoGroupList.size(); i++) {
                     mExpandListview.expandGroup(i);
