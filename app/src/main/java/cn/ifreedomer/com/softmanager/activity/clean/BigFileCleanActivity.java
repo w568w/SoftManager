@@ -53,6 +53,7 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
     private long mBigTotalSize = 0;
     private long mScanTotalSize = 0;
     private int mScanMinSize = 10;
+    private boolean isExit = false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -93,7 +94,7 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
 
     private void initLogic() {
         mScanMinSize = (int) SPUtil.get(this, "scanMinSize", mScanMinSize);
-
+        FileUtil.isStopScan = false;
     }
 
     private void initListener() {
@@ -142,6 +143,7 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
         mFileInfoList.clear();
         mBigTotalSize = 0;
         GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+
             mAvailableExternalMemorySize = MemoryUtils.getTotalExternalMemorySize() - MemoryUtils.getAvailableExternalMemorySize();
             FileUtil.scanFile(Environment.getExternalStorageDirectory().getPath(), mScanListener);
         });
@@ -157,7 +159,6 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onScanProcess(File file) {
-
             mScanTotalSize = mScanTotalSize + file.length();
             long percent = mScanTotalSize * 100 / (mAvailableExternalMemorySize);
             if (file.length() > mScanMinSize * FileUtil.MB) {
@@ -222,5 +223,11 @@ public class BigFileCleanActivity extends BaseActivity implements View.OnClickLi
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FileUtil.isStopScan = true;
     }
 }

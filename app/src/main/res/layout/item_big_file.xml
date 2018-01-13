@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp80"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/dp80"
                 android:layout_marginRight="@dimen/dp30"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dp30">
+                android:paddingLeft="@dimen/dp20">
 
     <ImageView
         android:id="@+id/iv_icon"
@@ -14,6 +15,7 @@
         android:src="@mipmap/clean"/>
 
     <LinearLayout
+        android:layout_marginTop="@dimen/dp20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -28,11 +30,14 @@
             android:text="hello.mp3"/>
 
         <TextView
-            android:id="@+id/tv_size"
+            android:layout_marginTop="@dimen/dp10"
+            android:id="@+id/tv_path"
+            android:layout_marginRight="@dimen/dp80"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="hello.mp3"/>
     </LinearLayout>
+
 
     <CheckBox
         android:id="@+id/cb"
@@ -41,6 +46,14 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         />
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/cb"
+        android:text="hello.mp3"/>
 
     <View
         android:layout_width="match_parent"

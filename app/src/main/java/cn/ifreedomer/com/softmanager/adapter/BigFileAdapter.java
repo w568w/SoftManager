@@ -44,6 +44,7 @@ public class BigFileAdapter extends CommonAdapter<FileInfo> {
     protected void convert(ViewHolder holder, final FileInfo fileInfo, int position) {
         holder.setText(R.id.tv_name, fileInfo.getName());
         holder.setText(R.id.tv_size, DataTypeUtil.getTextBySize(fileInfo.getSize()));
+        holder.setText(R.id.tv_path, fileInfo.getPath());
         LogUtil.e(TAG, fileInfo.toString());
         int icon = R.mipmap.unknow_file;
         if (!TextUtils.isEmpty(fileInfo.getType())) {

@@ -28,6 +28,7 @@ public class FileUtil {
     public static final float B = 1.0f;
     public static final float KB = 1000.0f;
 
+    public static boolean isStopScan;
     public static void scanFile(String path, ScanListener scanListener) {
         if (scanListener != null) {
             scanListener.onScanStart();
@@ -47,6 +48,9 @@ public class FileUtil {
             }
 
             while (!folderList.isEmpty()) {
+                if (isStopScan) {
+                    return;
+                }
                 File curFile = folderList.removeFirst();
                 File[] listFiles = curFile.listFiles();
                 if (listFiles == null || listFiles.length == 0) {
