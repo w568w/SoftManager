@@ -104,4 +104,119 @@ public class PackageUtil {
 //    }
 
 
+
+    private void installToSystem(final String pkg, final String cmd1) {
+//        runWithWait(new Runnable() {
+//            public void run() {
+//                try {
+//                    String str = "";
+//                    Utils.kill(pkg);
+//                    Utils.remount("/system", InternalZipConstants.WRITE_MODE);
+//                    str = new Utils("").cmdRoot(cmd1);
+//                    System.out.println(str);
+//                    if (str.contains("In /system space not found!")) {
+//                        listAppsFragment.this.runToMain(new Runnable() {
+//                            public void run() {
+//                                listAppsFragment.this.showMessageInfo(listAppsFragment.this.getContext(), Utils.getText(R.string.warning), Utils.getText(R.string.no_space_in_system));
+//                                listAppsFragment.removeDialogLP(11);
+//                            }
+//                        });
+//                        return;
+//                    }
+//                    String system_app_dir = "/system/app/";
+//                    try {
+//                        if (new File("/system/priv-app").exists() && new File("/system/priv-app").list() != null) {
+//                            system_app_dir = "/system/priv-app/";
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (listAppsFragment.api >= 21) {
+//                        system_app_dir = "/system/priv-app/" + pkg + "/";
+//                    }
+//                    Utils.run_all("chmod 0644 " + system_app_dir + pkg + ".apk");
+//                    Utils.run_all("chown 0.0 " + system_app_dir + pkg + ".apk");
+//                    Utils.run_all("chown 0:0 " + system_app_dir + pkg + ".apk");
+//                    listAppsFragment.this.runToMain(new Runnable() {
+//                        public void run() {
+//                            Utils.showDialogYesNo(Utils.getText(R.string.warning), Utils.getText(R.string.system_app_change), new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    Utils.reboot();
+//                                }
+//                            }, null, null);
+//                            listAppsFragment.removeDialogLP(11);
+//                        }
+//                    });
+//                } catch (Exception e2) {
+//                    System.out.println("Move to system " + e2);
+//                    listAppsFragment.this.runToMain(new Runnable() {
+//                        public void run() {
+//                            listAppsFragment.this.showMessage(Utils.getText(R.string.warning), Utils.getText(R.string.unknown_error));
+//                            listAppsFragment.removeDialogLP(11);
+//                        }
+//                    });
+//                }
+//            }
+//        });
+    }
+
+    private void moveToSystem(final String pkg, final String cmd1) {
+
+
+
+//        runWithWait(new Runnable() {
+//            public void run() {
+//                try {
+//                    String str = "";
+//                    Utils.kill(pkg);
+//                    Utils.removePkgFromSystem(pkg);
+//                    str = new Utils("").cmdRoot(cmd1);
+//                    System.out.println(str);
+//                    if (str.contains("In /system space not found!")) {
+//                        listAppsFragment.this.runToMain(new Runnable() {
+//                            public void run() {
+//                                listAppsFragment.this.showMessageInfo(listAppsFragment.this.getContext(), Utils.getText(R.string.warning), Utils.getText(R.string.no_space_in_system));
+//                                listAppsFragment.removeDialogLP(11);
+//                            }
+//                        });
+//                        return;
+//                    }
+//                    String system_app_dir = "/system/app/";
+//                    try {
+//                        if (new File("/system/priv-app").exists() && new File("/system/priv-app").list() != null) {
+//                            system_app_dir = "/system/priv-app/";
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    Utils.run_all("chmod 0644 " + system_app_dir + pkg + ".apk");
+//                    Utils.run_all("chown 0.0 " + system_app_dir + pkg + ".apk");
+//                    Utils.run_all("chown 0:0 " + system_app_dir + pkg + ".apk");
+//                    listAppsFragment.this.runToMain(new Runnable() {
+//                        public void run() {
+//                            listAppsFragment.getConfig().edit().remove(listAppsFragment.pli.pkgName).commit();
+//                            listAppsFragment.plia.remove(listAppsFragment.pli.pkgName);
+//                            listAppsFragment.plia.notifyDataSetChanged();
+//                            Utils.showDialogYesNo(Utils.getText(R.string.warning), Utils.getText(R.string.system_app_change), new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    Utils.reboot();
+//                                }
+//                            }, null, null);
+//                            listAppsFragment.removeDialogLP(11);
+//                        }
+//                    });
+//                } catch (Exception e2) {
+//                    System.out.println("Move to system " + e2);
+//                    listAppsFragment.this.runToMain(new Runnable() {
+//                        public void run() {
+//                            listAppsFragment.this.showMessage(Utils.getText(R.string.warning), Utils.getText(R.string.unknown_error));
+//                            listAppsFragment.removeDialogLP(11);
+//                        }
+//                    });
+//                }
+//            }
+//        });
+    }
+
+
 }

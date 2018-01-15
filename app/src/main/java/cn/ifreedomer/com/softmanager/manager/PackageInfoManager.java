@@ -555,4 +555,9 @@ public class PackageInfoManager {
         }
         return appInfo.getComponent(componentName);
     }
+
+
+
+
+
 }

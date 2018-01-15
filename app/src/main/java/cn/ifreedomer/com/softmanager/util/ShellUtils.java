@@ -43,6 +43,7 @@ public class ShellUtils {
      * @see com.yzy.supercleanmaster.utils.ShellUtils#execCommand(String[], boolean, boolean)
      */
     public static CommandResult execCommand(String command, boolean isRoot) {
+        LogUtil.d("command = "+command);
         return execCommand(new String[]{command}, isRoot, true);
     }
 

@@ -8,8 +8,8 @@ android {
         applicationId "cn.ifreedomer.com.softmanager"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 19
-        versionName "1.1.9"
+        versionCode 20
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }
@@ -53,7 +53,7 @@ android {
     productFlavors {
         main {
             applicationId "cn.ifreedomer.com.softmanager"
-            manifestPlaceholders = [authority: "cn.ifreedomer.com.purification"]
+            manifestPlaceholders = [authority: "cn.ifreedomer.com.softmanager"]
             resValue "string", "app_name", "极速清理大师"
         }
 
@@ -64,15 +64,16 @@ android {
         }
 
         optimization {
-            applicationId "cn.ifreedomer.com.purification"
+            applicationId "cn.ifreedomer.com.optimization"
             manifestPlaceholders = [authority: "cn.ifreedomer.com.optimization"]
             resValue "string", "app_name", "安卓优化大师"
         }
 
-        optimization {
-            applicationId "cn.ifreedomer.com.simpleclean"
-            manifestPlaceholders = [authority: "cn.ifreedomer.com.simpleclean"]
-            resValue "string", "app_name", "极简清理"
+
+        box {
+            applicationId "cn.ifreedomer.com.box"
+            manifestPlaceholders = [authority: "cn.ifreedomer.com.box"]
+            resValue "string", "app_name", "系统优化工具箱"
         }
 
 

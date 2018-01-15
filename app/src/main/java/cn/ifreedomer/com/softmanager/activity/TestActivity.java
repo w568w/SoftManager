@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 
+import java.io.File;
 import java.util.Map;
 
 import butterknife.ButterKnife;
@@ -53,6 +54,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout activityTest;
     @InjectView(R.id.btn_load_action)
     Button btnLoadAction;
+    @InjectView(R.id.btn_moveToSystem)
+    Button btnMoveToSystem;
 
 
     @SuppressLint("HandlerLeak")
@@ -99,6 +102,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         btnLoadComponent.setOnClickListener(this);
         btnRecharge.setOnClickListener(this);
         btnLoadAction.setOnClickListener(this);
+        btnMoveToSystem.setOnClickListener(this);
+
     }
 
 
@@ -161,10 +166,126 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 Map<String, String> stringStringMap = DBActionUtils.loadActionMap(this);
                 Log.d(TAG, "stringStringMap = " + stringStringMap.toString());
                 break;
+            case R.id.btn_moveToSystem:
+                boolean b = PermissionManager.getInstance().checkOrRequestedRootPermission();
+                if (b) {
+                    moveToSystem("com.ifreedomer.testapk");
+                }
+                break;
             default:
                 break;
         }
     }
+
+    public void moveToSystem(String pkg) {
+        ShellUtils.CommandResult mount = ShellUtils.execCommand("mount", true);
+        LogUtil.d(TAG, "mount = " + mount.toString());
+        if (mount.result != 0) {
+            Toast.makeText(this, "errorCode = " + mount.result + "   errormsg" + mount.errorMsg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ShellUtils.CommandResult remount = ShellUtils.execCommand("mount -o remount,rw /dev/block/system /system", true);
+        LogUtil.d(TAG, "remount = " + remount.toString());
+        if (remount.result != 0) {
+            Toast.makeText(this, "errorCode = " + remount.result + "   errormsg" + remount.errorMsg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ShellUtils.CommandResult chmod = ShellUtils.execCommand("chmod 777 /data/app/", true);
+        LogUtil.d(TAG, "chmod = " + chmod.toString());
+        if (chmod.result != 0) {
+            Toast.makeText(this, "errorCode = " + chmod.result + "   errormsg" + chmod.errorMsg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ShellUtils.CommandResult chmodDalvik = ShellUtils.execCommand("chmod 777 /data/dalvik-cache", true);
+        LogUtil.d(TAG, "chmodDalvik = " + chmodDalvik.toString());
+        if (chmodDalvik.result != 0) {
+            Toast.makeText(this, "errorCode = " + chmodDalvik.result + "   errormsg" + chmodDalvik.errorMsg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String apkPath = getApkName(" /data/app/", pkg);
+        if (TextUtils.isEmpty(apkPath)) {
+            Toast.makeText(this, "没有找到 pkg 在data/app下面", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ShellUtils.CommandResult cpResult = ShellUtils.execCommand("cp " + apkPath + " /system/app", true);
+        LogUtil.d(TAG, "cpResult = " + cpResult.toString());
+
+        if (cpResult.result != 0) {
+            Toast.makeText(this, "errorCode = " + cpResult.result + "   errormsg" + cpResult.errorMsg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        String sysApkName = getApkName("/system/app/", pkg);
+
+
+        ShellUtils.CommandResult chmodSystem = ShellUtils.execCommand("chmod 664  " + sysApkName, true);
+        LogUtil.d(TAG, "chmodSystem = " + chmodSystem.toString());
+
+        if (chmodSystem.result != 0) {
+            Toast.makeText(this, "errorCode = " + chmodSystem.result + "   errormsg" + chmodSystem.errorMsg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!TextUtils.isEmpty(pkg)) {
+            ShellUtils.CommandResult removeAppDir = ShellUtils.execCommand("rm -rf /data/data/" + pkg, true);
+            LogUtil.d(TAG, "removeAppDir = " + removeAppDir.toString());
+
+
+            if (removeAppDir.result != 0) {
+                Toast.makeText(this, "errorCode = " + removeAppDir.result + "   errormsg" + removeAppDir.errorMsg, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+
+        String dataApkName = getApkName("/data/app/", pkg);
+        if (!TextUtils.isEmpty(dataApkName)) {
+            ShellUtils.CommandResult removeDataApk = ShellUtils.execCommand("rm  " + dataApkName, true);
+            LogUtil.d(TAG, "removeDataApk = " + removeDataApk.toString());
+
+            if (removeDataApk.result != 0) {
+                Toast.makeText(this, "errorCode = " + removeDataApk.result + "   errormsg" + removeDataApk.errorMsg, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
+
+        String dalvikCacheApkName = getApkName("/data/dalvik-cache/", pkg);
+        if (!TextUtils.isEmpty(dalvikCacheApkName)) {
+            ShellUtils.CommandResult rmDalvikDir = ShellUtils.execCommand("rm " + dalvikCacheApkName, true);
+            LogUtil.d(TAG, "rmDalvikDir = " + rmDalvikDir.toString());
+            if (rmDalvikDir.result != 0) {
+                Toast.makeText(this, "errorCode = " + rmDalvikDir.result + "   errormsg" + rmDalvikDir.errorMsg, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
+
+
+    }
+
+
+    private String getApkName(String folder, String pkg) {
+        File file = new File(folder);
+        File[] files = file.listFiles();
+        if (files == null || file.length() == 0) {
+            return "";
+        }
+        for (int i = 0; i < files.length; i++) {
+            File tempFile = files[i];
+            if (tempFile.getName().contains(pkg) && tempFile.getName().endsWith(".apk")) {
+                return folder + tempFile.getName();
+            }
+        }
+        return "";
+    }
+
+
 
 
     private void mountTest() {
