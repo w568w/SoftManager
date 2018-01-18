@@ -1,6 +1,7 @@
 package cn.ifreedomer.com.softmanager.manager;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -20,6 +21,7 @@ import android.os.StatFs;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +33,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import cn.ifreedomer.com.softmanager.LoadStateCallback;
 import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
 import cn.ifreedomer.com.softmanager.db.DBSoftUtil;
+import cn.ifreedomer.com.softmanager.listener.GenericListener;
 import cn.ifreedomer.com.softmanager.listener.LoadAllComponentListener;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
@@ -557,6 +560,238 @@ public class PackageInfoManager {
     }
 
 
+    public void moveToSystem(Activity context, String pkg, GenericListener genericListener) {
+        int mount = exec(context, "mount", genericListener);
+        if (mount != 0) {
+            return;
+        }
+
+        mount = exec(context, "mount -o remount,rw /dev/block/system /system", genericListener);
+        if (mount != 0) {
+            return;
+        }
+
+        mount = exec(context, "chmod 777 /data/app/", genericListener);
+        if (mount != 0) {
+            return;
+        }
+
+
+        mount = exec(context, "chmod 777 /data/dalvik-cache", genericListener);
+        if (mount != 0) {
+            return;
+        }
+
+
+        String apkPath = getApkName("/data/app/", pkg);
+        if (TextUtils.isEmpty(apkPath)) {
+            genericListener.onFailed(-1, "没找到此应用");
+            return;
+        }
+        mount = exec(context, "cp " + apkPath + " /system/app/" + pkg + ".apk", genericListener);
+        if (mount != 0) {
+            return;
+        }
+
+
+        String sysApkName = getApkName("/system/app/", pkg);
+        if (TextUtils.isEmpty(apkPath)) {
+            genericListener.onFailed(-1, "没找到此应用");
+            return;
+        }
+        exec(context, "chmod 664  " + sysApkName, genericListener);
+        if (mount != 0) {
+            return;
+        }
+
+        exec(context, "rm " + apkPath, genericListener);
+        String dalvikCacheApkName = getApkName("/data/dalvik-cache/", pkg);
+        if (!TextUtils.isEmpty(dalvikCacheApkName)) {
+            String substring = dalvikCacheApkName.substring(0, dalvikCacheApkName.lastIndexOf(".dex"));
+            LogUtil.d(TAG, "dalvikCacheApkName = " + substring);
+            exec(context, "rm " + dalvikCacheApkName, genericListener);
+        }
+
+        if (!TextUtils.isEmpty(pkg)) {
+            exec(context, "rm -rf data/data/" + pkg, genericListener);
+        }
+
+        if (genericListener != null) {
+            genericListener.onSuccess();
+        }
+
+
+//        ShellUtils.CommandResult mount = ShellUtils.execCommand("mount", true);
+//        LogUtil.d(TAG, "mount = " + mount.toString());
+//        if (mount.result != 0) {
+//            context.runOnUiThread(() -> {
+//                genericListener.onFailed(-1, mount.errorMsg);
+//                Toast.makeText(context, "errorCode = " + mount.result + "   errormsg" + mount.errorMsg, Toast.LENGTH_SHORT).show();
+//                return;
+//            });
+//        }
+//
+//        ShellUtils.CommandResult remount = ShellUtils.execCommand("mount -o remount,rw /dev/block/system /system", true);
+//        LogUtil.d(TAG, "remount = " + remount.toString());
+//        if (remount.result != 0) {
+//            genericListener.onFailed(-1, remount.errorMsg);
+//            context.runOnUiThread(() ->
+//            {
+//                genericListener.onFailed(-1, remount.errorMsg);
+//                Toast.makeText(context, "errorCode = " + remount.result + "   errormsg" + remount.errorMsg, Toast.LENGTH_SHORT).show();
+//            });
+//            return;
+//        }
+//
+//
+//        ShellUtils.CommandResult chmod = ShellUtils.execCommand("chmod 777 /data/app/", true);
+//        LogUtil.d(TAG, "chmod = " + chmod.toString());
+//        if (chmod.result != 0) {
+//            ShellUtils.CommandResult finalChmod = chmod;
+//            context.runOnUiThread(() ->
+//            {
+//                genericListener.onFailed(-1, finalChmod.errorMsg);
+//                Toast.makeText(context, "errorCode = " + finalChmod.result + "   errormsg" + finalChmod.errorMsg, Toast.LENGTH_SHORT).show();
+//            });
+//            return;
+//        }
+//
+//
+//        chmod = ShellUtils.execCommand("chmod 777 /data/", true);
+//        LogUtil.d(TAG, "data chmod = " + chmod.toString());
+//        if (chmod.result != 0) {
+//            ShellUtils.CommandResult finalChmod1 = chmod;
+//            context.runOnUiThread(() ->
+//            {
+//                genericListener.onFailed(-1, finalChmod1.errorMsg);
+//
+//                Toast.makeText(context, "errorCode = " + finalChmod1.result + "   errormsg" + finalChmod1.errorMsg, Toast.LENGTH_SHORT).show();
+//            });
+//            return;
+//        }
+//
+//        ShellUtils.CommandResult chmodDalvik = ShellUtils.execCommand("chmod 777 /data/dalvik-cache", true);
+//        LogUtil.d(TAG, "chmodDalvik = " + chmodDalvik.toString());
+//        if (chmodDalvik.result != 0) {
+//            context.runOnUiThread(() ->
+//            {
+//                genericListener.onFailed(-1, chmodDalvik.errorMsg);
+//
+//                Toast.makeText(context, "errorCode = " + chmodDalvik.result + "   errormsg" + chmodDalvik.errorMsg, Toast.LENGTH_SHORT).show();
+//
+//            });
+//            return;
+//        }
+//
+//        String apkPath = getApkName(" /data/app/", pkg);
+//        if (TextUtils.isEmpty(apkPath)) {
+//            Toast.makeText(context, "没有找到 pkg 在data/app下面", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        ShellUtils.CommandResult cpResult = ShellUtils.execCommand("cp " + apkPath + " /system/app/" + pkg + ".apk", true);
+//        LogUtil.d(TAG, "cpResult = " + cpResult.toString());
+//
+//        if (cpResult.result != 0) {
+//            context.runOnUiThread(() ->
+//            {
+//                genericListener.onFailed(-1, cpResult.errorMsg);
+//                Toast.makeText(context, "errorCode = " + cpResult.result + "   errormsg" + cpResult.errorMsg, Toast.LENGTH_SHORT).show();
+//
+//            });
+//
+//            return;
+//        }
+//
+//
+//        String sysApkName = getApkName("/system/app/", pkg);
+//
+//
+//        ShellUtils.CommandResult chmodSystem = ShellUtils.execCommand("chmod 664  " + sysApkName, true);
+//        LogUtil.d(TAG, "chmodSystem = " + chmodSystem.toString());
+//
+//        if (chmodSystem.result != 0) {
+//            context.runOnUiThread(() ->
+//            {
+//                genericListener.onFailed(-1, chmodSystem.errorMsg);
+//                Toast.makeText(context, "errorCode = " + chmodSystem.result + "   errormsg" + chmodSystem.errorMsg, Toast.LENGTH_SHORT).show();
+//            });
+//            return;
+//        }
+//
+//        if (!TextUtils.isEmpty(pkg)) {
+//            ShellUtils.CommandResult removeAppDir = ShellUtils.execCommand("rm -rf /data/data/" + pkg, true);
+//            LogUtil.d(TAG, "removeAppDir = " + removeAppDir.toString());
+//
+//
+//            if (removeAppDir.result != 0) {
+//                context.runOnUiThread(() ->
+//                {
+//                    genericListener.onFailed(-1, removeAppDir.errorMsg);
+//                    Toast.makeText(context, "errorCode = " + removeAppDir.result + "   errormsg" + removeAppDir.errorMsg, Toast.LENGTH_SHORT).show();
+//                });
+//                return;
+//            }
+//        }
+//
+//
+//        String dataApkName = getApkName("/data/app/", pkg);
+//        if (!TextUtils.isEmpty(dataApkName)) {
+//            ShellUtils.CommandResult removeDataApk = ShellUtils.execCommand("rm  " + dataApkName, true);
+//            LogUtil.d(TAG, "removeDataApk = " + removeDataApk.toString());
+//
+//            if (removeDataApk.result != 0) {
+//                context.runOnUiThread(() -> Toast.makeText(context, "errorCode = " + removeDataApk.result + "   errormsg" + removeDataApk.errorMsg, Toast.LENGTH_SHORT).show());
+//                return;
+//            }
+//
+//        }
+//
+//        String dalvikCacheApkName = getApkName("/data/dalvik-cache/", pkg);
+//        if (!TextUtils.isEmpty(dalvikCacheApkName)) {
+//            ShellUtils.CommandResult rmDalvikDir = ShellUtils.execCommand("rm " + dalvikCacheApkName, true);
+//            LogUtil.d(TAG, "rmDalvikDir = " + rmDalvikDir.toString());
+//            if (rmDalvikDir.result != 0) {
+//                context.runOnUiThread(() -> Toast.makeText(context, "errorCode = " + rmDalvikDir.result + "   errormsg" + rmDalvikDir.errorMsg, Toast.LENGTH_SHORT).show());
+//                return;
+//            }
+//
+//        }
+//
+//        context.runOnUiThread(() -> Toast.makeText(context, "移动成功.请重新启动,让配置生效", Toast.LENGTH_SHORT).show());
+
+    }
+
+
+    private int exec(Activity context, String command, GenericListener genericListener) {
+        ShellUtils.CommandResult rmDalvikDir = ShellUtils.execCommand(command, true);
+        if (rmDalvikDir.result != 0) {
+            context.runOnUiThread(() ->
+            {
+                genericListener.onFailed(-1, rmDalvikDir.errorMsg);
+                Toast.makeText(context, "errorCode = " + rmDalvikDir.result + "   errormsg" + rmDalvikDir.errorMsg, Toast.LENGTH_SHORT).show();
+                LogUtil.d(TAG, "errorCode = " + rmDalvikDir.result + "   errormsg" + rmDalvikDir.errorMsg);
+            });
+        }
+        return rmDalvikDir.result;
+    }
+
+
+    private String getApkName(String folder, String pkg) {
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("ls -l " + folder + " | grep " + pkg + " -iE", true);
+        if (commandResult.result == 0) {
+            String successMsg = commandResult.successMsg;
+            if (!TextUtils.isEmpty(successMsg)) {
+                String[] split = successMsg.split(" ");
+                for (int i = 0; i < split.length; i++) {
+                    if (split[i].contains(pkg)) {
+                        LogUtil.d(TAG, i + "=" + folder + split[i]);
+                        return folder + split[i];
+                    }
+                }
+            }
+        }
+        return "";
+    }
 
 
 

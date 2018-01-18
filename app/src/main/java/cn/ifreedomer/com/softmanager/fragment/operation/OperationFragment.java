@@ -63,6 +63,11 @@ public class OperationFragment extends Fragment {
             }
         });
 
+
+
+
+
+
     }
 
     private void initView() {

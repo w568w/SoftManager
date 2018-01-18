@@ -40,6 +40,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         </LinearLayout>
+
+
+
+
+
         <ImageView
             android:src="@mipmap/ic_delete_black_24dp"
             android:id="@+id/iv_uninstall"
@@ -50,6 +55,20 @@
             android:layout_alignParentRight="true"
             android:layout_width="40dp"
             android:layout_height="40dp"/>
+
+
+
+        <ImageView
+            android:src="@mipmap/ic_input_black_48dp"
+            android:layout_toLeftOf="@id/iv_uninstall"
+            android:id="@+id/iv_move"
+            android:alpha="0.5"
+            android:padding="5dp"
+            android:layout_marginRight="@dimen/dp5"
+            android:layout_centerVertical="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+
         <View
             android:layout_alignParentBottom="true"
             android:background="#eaeaea"
