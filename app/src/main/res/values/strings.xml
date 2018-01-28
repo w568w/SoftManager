@@ -225,4 +225,6 @@
     <string name="cannot_null">不能为空哦</string>
     <string name="not_number">输入不是数字.不要想搞我..</string>
     <string name="moving">正在移动...</string>
+    <string name="move_success">移动成功.请务必重启生效</string>
+    <string name="remove_failed">移动失败 errorCode=</string>
 </resources>

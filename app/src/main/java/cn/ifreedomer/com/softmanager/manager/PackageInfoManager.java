@@ -599,13 +599,13 @@ public class PackageInfoManager {
             genericListener.onFailed(-1, "没找到此应用");
             return;
         }
-        exec(context, "chmod 664  " + sysApkName, genericListener);
+        mount = exec(context, "chmod 777  " + sysApkName, genericListener);
         if (mount != 0) {
             return;
         }
 
         exec(context, "rm " + apkPath, genericListener);
-        String dalvikCacheApkName = getApkName("/data/dalvik-cache/", pkg);
+        String dalvikCacheApkName = getDalvikName("/data/dalvik-cache/", pkg);
         if (!TextUtils.isEmpty(dalvikCacheApkName)) {
             String substring = dalvikCacheApkName.substring(0, dalvikCacheApkName.lastIndexOf(".dex"));
             LogUtil.d(TAG, "dalvikCacheApkName = " + substring);
@@ -616,7 +616,10 @@ public class PackageInfoManager {
             exec(context, "rm -rf data/data/" + pkg, genericListener);
         }
 
+        LogUtil.d(TAG,"genericListener before");
         if (genericListener != null) {
+            LogUtil.d(TAG,"genericListener after");
+
             genericListener.onSuccess();
         }
 
@@ -791,6 +794,24 @@ public class PackageInfoManager {
             }
         }
         return "";
+    }
+
+    private String getDalvikName(String folder, String pkg) {
+        LogUtil.d(TAG,"getDalvikName");
+        String apkName = getApkName(folder, pkg);
+        LogUtil.d(TAG,"apkName = "+apkName);
+
+        if (TextUtils.isEmpty(apkName)) {
+            LogUtil.d(TAG,"dalvik apk is null");
+            return "";
+        }
+
+        String dexApk = "";
+        if (apkName.contains("classes.dex")){
+            dexApk = apkName.substring(0, apkName.lastIndexOf("classes.dex")+"classes.dex".length());
+        }
+        LogUtil.d(TAG, "dexApk = " + dexApk);
+        return dexApk;
     }
 
 

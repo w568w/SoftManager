@@ -2,6 +2,8 @@ package cn.ifreedomer.com.softmanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
 
@@ -78,19 +80,25 @@ public class AppAdapter extends CommonAdapter<AppInfo> {
     }
 
     public GenericListener genericListener = new GenericListener() {
-        public AppInfo appInfo;
 
         @Override
         public void onSuccess() {
-            if (appInfo != null) {
-                mDatas.remove(appInfo);
-                notifyDataSetChanged();
+            if (curAppInfo != null) {
+                mDatas.remove(curAppInfo);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    notifyDataSetChanged();
+                    Toast.makeText(mContext, R.string.move_success, Toast.LENGTH_LONG).show();
+                });
+
             }
         }
 
         @Override
         public void onFailed(int errorCode, String errorMsg) {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                Toast.makeText(mContext, mContext.getString(R.string.remove_failed) + errorCode + "  errorMsg = " + errorMsg, Toast.LENGTH_SHORT).show();
 
+            });
         }
     };
 }
