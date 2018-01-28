@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -70,18 +71,36 @@ public class ReceiverFragment extends Fragment implements TabLayout.OnTabSelecte
     private void initAllFragment() {
         CommonRecycleFragment mineFragment = new CommonRecycleFragment();
         List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
-        ReceiverAdapter mineAdapter = new ReceiverAdapter(getActivity(), R.layout.item_common_recycle, userApps);
+        List<AppInfo> userAppClone = new ArrayList<>();
+        userAppClone.addAll(userApps);
+
+        Collections.sort(userAppClone, (lhs, rhs) -> {
+            if (lhs.getReceiverList() != null && rhs.getReceiverList() == null) {
+                return -1;
+            }
+            if (lhs.getReceiverList() == null && rhs.getReceiverList() != null) {
+                return 1;
+            }
+            if (lhs.getReceiverList() == null && rhs.getReceiverList() == null) {
+                return 0;
+            }
+
+
+            return rhs.getReceiverList().size() - lhs.getReceiverList().size();
+        });
+
+        ReceiverAdapter mineAdapter = new ReceiverAdapter(getActivity(), R.layout.item_common_recycle, userAppClone);
         mineFragment.setAdapter(mineAdapter);
         mineFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
         fragmentList.add(mineFragment);
         mineAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (userApps == null || userApps.size() == 0 || userApps.get(position).getReceiverList() == null || userApps.get(position).getReceiverList().size() == 0) {
+                if (userAppClone == null || userAppClone.size() == 0 || userAppClone.get(position).getReceiverList() == null || userAppClone.get(position).getReceiverList().size() == 0) {
                     Toast.makeText(getActivity(), getString(R.string.no_content), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, PackageInfoManager.getInstance().getUserApps().get(position));
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, userAppClone.get(position));
                 startActivity(new Intent(getActivity(), ReceiverListActivity.class));
             }
 

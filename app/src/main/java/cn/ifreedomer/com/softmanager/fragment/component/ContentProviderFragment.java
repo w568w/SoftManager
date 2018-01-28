@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -68,8 +69,27 @@ public class ContentProviderFragment extends Fragment implements TabLayout.OnTab
 
     private void initAllFragment() {
         CommonRecycleFragment mineFragment = new CommonRecycleFragment();
+
         List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
-        ContentProviderAdapter mineAdapter = new ContentProviderAdapter(getActivity(), R.layout.item_common_recycle, userApps);
+        List<AppInfo> userAppClone = new ArrayList<>();
+        userAppClone.addAll(userApps);
+
+        Collections.sort(userAppClone, (lhs, rhs) -> {
+            if (lhs.getContentProviderList() != null && rhs.getContentProviderList() == null) {
+                return -1;
+            }
+            if (lhs.getContentProviderList() == null && rhs.getContentProviderList() != null) {
+                return 1;
+            }
+            if (lhs.getContentProviderList() == null && rhs.getContentProviderList() == null) {
+                return 0;
+            }
+
+
+            return rhs.getContentProviderList().size() - lhs.getContentProviderList().size();
+        });
+
+        ContentProviderAdapter mineAdapter = new ContentProviderAdapter(getActivity(), R.layout.item_common_recycle, userAppClone);
         mineFragment.setAdapter(mineAdapter);
         mineFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
         fragmentList.add(mineFragment);
@@ -86,11 +106,11 @@ public class ContentProviderFragment extends Fragment implements TabLayout.OnTab
         mineAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (userApps == null || userApps.size() == 0 || userApps.get(position).getContentProviderList() == null || userApps.get(position).getContentProviderList().size() == 0) {
+                if (userAppClone == null || userAppClone.size() == 0 || userAppClone.get(position).getReceiverList() == null || userAppClone.get(position).getReceiverList().size() == 0) {
                     Toast.makeText(getActivity(), getString(R.string.no_content), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, PackageInfoManager.getInstance().getUserApps().get(position));
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, userAppClone.get(position));
                 GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.SHOW_TYPE, ComponentListActivity.CONTENT_PROVIDER);
                 startActivity(new Intent(getActivity(), ComponentListActivity.class));
             }

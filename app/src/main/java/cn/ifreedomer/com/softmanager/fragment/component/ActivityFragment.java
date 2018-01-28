@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -82,17 +83,33 @@ public class ActivityFragment extends Fragment implements TabLayout.OnTabSelecte
 
     private void initAllFragment() {
         CommonRecycleFragment mineFragment = new CommonRecycleFragment();
-        ActivityAdapter mineAdapter = new ActivityAdapter(getActivity(), R.layout.item_common_recycle, PackageInfoManager.getInstance().getUserApps());
         List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
+        List<AppInfo> userAppClone = new ArrayList<>();
+        userAppClone.addAll(userApps);
+        Collections.sort(userAppClone, (lhs, rhs) -> {
+            if (lhs.getActivityList() != null && rhs.getActivityList() == null) {
+                return -1;
+            }
+            if (lhs.getActivityList() == null && rhs.getActivityList() != null) {
+                return 1;
+            }
+            if (lhs.getActivityList() == null && rhs.getActivityList() == null) {
+                return 0;
+            }
+
+
+            return rhs.getActivityList().size() - lhs.getActivityList().size();
+        });
+        ActivityAdapter mineAdapter = new ActivityAdapter(getActivity(), R.layout.item_common_recycle, userAppClone);
 
         mineAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (userApps == null || userApps.size() == 0 || userApps.get(position).getActivityList() == null || userApps.get(position).getActivityList().size() == 0) {
+                if (userAppClone == null || userAppClone.size() == 0 || userAppClone.get(position).getReceiverList() == null || userAppClone.get(position).getReceiverList().size() == 0) {
                     Toast.makeText(getActivity(), getString(R.string.no_content), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, PackageInfoManager.getInstance().getUserApps().get(position));
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, userAppClone.get(position));
                 GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.SHOW_TYPE, ComponentListActivity.ACTIVITY);
                 startActivity(new Intent(getActivity(), ComponentListActivity.class));
             }

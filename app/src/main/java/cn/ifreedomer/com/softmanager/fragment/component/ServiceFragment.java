@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -69,7 +70,27 @@ public class ServiceFragment extends Fragment implements TabLayout.OnTabSelected
     private void initAllFragment() {
         CommonRecycleFragment mineFragment = new CommonRecycleFragment();
         List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
-        ServiceAdapter mineAdapter = new ServiceAdapter(getActivity(), R.layout.item_common_recycle, userApps);
+
+        List<AppInfo> userAppClone = new ArrayList<>();
+        userAppClone.addAll(userApps);
+
+        Collections.sort(userAppClone, (lhs, rhs) -> {
+            if (lhs.getServiceList() != null && rhs.getServiceList() == null) {
+                return -1;
+            }
+            if (lhs.getServiceList() == null && rhs.getServiceList() != null) {
+                return 1;
+            }
+            if (lhs.getServiceList() == null && rhs.getServiceList() == null) {
+                return 0;
+            }
+
+
+            return rhs.getServiceList().size() - lhs.getServiceList().size();
+        });
+
+
+        ServiceAdapter mineAdapter = new ServiceAdapter(getActivity(), R.layout.item_common_recycle, userAppClone);
         mineFragment.setAdapter(mineAdapter);
         mineFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
         fragmentList.add(mineFragment);
@@ -86,11 +107,11 @@ public class ServiceFragment extends Fragment implements TabLayout.OnTabSelected
         mineAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (userApps == null || userApps.size() == 0 || userApps.get(position).getServiceList() == null || userApps.get(position).getServiceList().size() == 0) {
+                if (userAppClone == null || userAppClone.size() == 0 || userAppClone.get(position).getReceiverList() == null || userAppClone.get(position).getReceiverList().size() == 0) {
                     Toast.makeText(getActivity(), getString(R.string.no_content), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, PackageInfoManager.getInstance().getUserApps().get(position));
+                GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.APP_INFO, userAppClone.get(position));
                 GlobalDataManager.getInstance().getTempMap().put(ComponentListActivity.SHOW_TYPE, ComponentListActivity.SERVICE);
                 startActivity(new Intent(getActivity(), ComponentListActivity.class));
             }
