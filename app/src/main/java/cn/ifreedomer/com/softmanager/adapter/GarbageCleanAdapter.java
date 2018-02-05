@@ -129,7 +129,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 notifyDataSetChanged();
                 return;
             }
-            if (mGarbageInfoGroupList.size() <= groupPosition) {
+            if (mGarbageInfoGroupList.size() < groupPosition) {
                 return;
             }
             List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);

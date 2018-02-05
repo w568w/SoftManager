@@ -163,7 +163,7 @@
     <string name="external_space_aval_title">可用空间</string>
     <string name="need_root">查看权限需要root权限哦.</string>
     <string name="clear_text">本次共清理:</string>
-    <string name="pay_des">感谢您使用本应用,本软件为无广告免费应用,付费可开通高级功能以及支持作者开发更多功能，包括但不限于:  \n\t1.切断唤醒的推荐配置  \n\t2.免root实现权限管理 \n\t3.大文件扫描阈值设置 \n\t4.清理更顽固垃圾</string>
+    <string name="pay_des">感谢您使用本应用,本软件为无广告免费应用,付费可开通高级功能，包括但不限于:  \n\t1.切断唤醒的推荐配置  \n\t2.冰冻应用 \n\t3.大文件扫描阈值设置 \n\t4.清理更顽固垃圾</string>
     <string name="support">开通</string>
     <string name="use_alipay">使用支付宝</string>
     <string name="try_end">解锁高级功能</string>

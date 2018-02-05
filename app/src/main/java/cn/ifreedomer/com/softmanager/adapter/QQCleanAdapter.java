@@ -116,7 +116,7 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
                 notifyDataSetChanged();
                 return;
             }
-            if (mFileInfoGroupList.size() <= groupPosition) {
+            if (mFileInfoGroupList.size() < groupPosition) {
                 return;
             }
             List<FileInfo> garbageInfos = mFileInfoGroupList.get(groupPosition);
