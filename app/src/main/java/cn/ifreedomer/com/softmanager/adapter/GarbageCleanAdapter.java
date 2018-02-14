@@ -129,14 +129,15 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                 notifyDataSetChanged();
                 return;
             }
-            if (mGarbageInfoGroupList.size() < groupPosition) {
+            if (mGarbageInfoGroupList.size() > groupPosition) {
+                List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
+                for (int i = 0; i < garbageInfos.size(); i++) {
+                    garbageInfos.get(i).setChecked(cb.isChecked());
+                }
+                notifyDataSetChanged();
                 return;
             }
-            List<GarbageInfo> garbageInfos = mGarbageInfoGroupList.get(groupPosition);
-            for (int i = 0; i < garbageInfos.size(); i++) {
-                garbageInfos.get(i).setChecked(cb.isChecked());
-            }
-            notifyDataSetChanged();
+
         });
     }
 

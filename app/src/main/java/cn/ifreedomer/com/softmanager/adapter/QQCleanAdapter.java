@@ -116,14 +116,14 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
                 notifyDataSetChanged();
                 return;
             }
-            if (mFileInfoGroupList.size() < groupPosition) {
-                return;
+            if (mFileInfoGroupList.size() >groupPosition) {
+                List<FileInfo> garbageInfos = mFileInfoGroupList.get(groupPosition);
+                for (int i = 0; i < garbageInfos.size(); i++) {
+                    garbageInfos.get(i).setChecked(cb.isChecked());
+                }
+                notifyDataSetChanged();
             }
-            List<FileInfo> garbageInfos = mFileInfoGroupList.get(groupPosition);
-            for (int i = 0; i < garbageInfos.size(); i++) {
-                garbageInfos.get(i).setChecked(cb.isChecked());
-            }
-            notifyDataSetChanged();
+
 
         });
     }
