@@ -274,8 +274,11 @@ public class PackageInfoManager {
         Drawable appIcon = packInfo.applicationInfo.loadIcon(mContext.getPackageManager());
         ApplicationInfo info = packInfo.applicationInfo;
         appInfo.setAppIcon(appIcon);
+        String publicSourceDir = info.publicSourceDir;
         String sourceDir = info.sourceDir;
-        appInfo.setCodePath(sourceDir);
+
+        LogUtil.d(TAG,"sourcePath = "+sourceDir+"   publicSourceDir = "+publicSourceDir);
+        appInfo.setCodePath(publicSourceDir);
         int flags = packInfo.applicationInfo.flags;
         int uid = packInfo.applicationInfo.uid;
         appInfo.setUid(uid);
