@@ -50,7 +50,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return mTitleList.size();
+        return mGarbageInfoGroupList.size();
     }
 
     @Override

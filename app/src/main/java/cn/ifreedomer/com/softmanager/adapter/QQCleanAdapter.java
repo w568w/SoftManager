@@ -53,7 +53,7 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return mTitleList.size();
+        return mFileInfoGroupList.size();
     }
 
     @Override
