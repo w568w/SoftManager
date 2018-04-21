@@ -184,9 +184,9 @@ public class Terminal {
         Terminal.RootCommand("mount -o remount rw /system");
         Terminal.RootCommand("PATH='" + getSuCommand() + "';'mount' '-o' 'remount,rw' '' '/system'");
         String command = "rm " + appItem.getCodePath() + "\n";
-        command += "pm uninstall " + appItem.getPackname() + "\n";
-        int code = Terminal.RootCommand(command);
-        return code == 0;
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand(command, true);
+        LogUtil.d(TAG,"uninstallSystemApp ="+commandResult.toString());
+        return commandResult.result == 0;
     }
 
 
