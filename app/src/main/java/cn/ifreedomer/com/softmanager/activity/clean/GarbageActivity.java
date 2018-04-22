@@ -175,10 +175,13 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
             emptyList.add(garbageInfo);
             sendGarbageMsg(garbageInfo.getData().getTotalSize());
         }
-        mGarbageInfoGroupList.add(emptyList);
-        LogUtil.e(TAG, "getEmptyFileSize mGarbageInfoGroupList SIZE = " + mGarbageInfoGroupList.size());
+        runOnUiThread(() -> {
+            mGarbageInfoGroupList.add(emptyList);
+            LogUtil.e(TAG, "getEmptyFileSize mGarbageInfoGroupList SIZE = " + mGarbageInfoGroupList.size());
 
-        mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+        });
+
     }
 
     private void getADGarbageSize() {
@@ -200,11 +203,13 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
             adGarbageList.add(garbageInfo);
             sendGarbageMsg(garbageInfo.getData().getFileSize());
         }
+        runOnUiThread(() -> {
+            mGarbageInfoGroupList.add(adGarbageList);
+            LogUtil.e(TAG, "getADGarbageSize SIZE = " + mGarbageInfoGroupList.size());
+            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+        });
 
-        mGarbageInfoGroupList.add(adGarbageList);
-        LogUtil.e(TAG, "getADGarbageSize SIZE = " + mGarbageInfoGroupList.size());
 
-        mHandler.sendEmptyMessage(MSG_UPDATE_UI);
     }
 
     private float getSystemGabargeSize() {
@@ -262,10 +267,13 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
 //        if (appCahceList.size() <= 0) {
 //            return;
 //        }
+        runOnUiThread(() -> {
+            mGarbageInfoGroupList.add(appCahceList);
+            LogUtil.e(TAG, "getTotalAppCacheSize mGarbageInfoGroupList SIZE = " + mGarbageInfoGroupList.size());
+            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+        });
 
-        mGarbageInfoGroupList.add(appCahceList);
-        LogUtil.e(TAG, "getTotalAppCacheSize mGarbageInfoGroupList SIZE = " + mGarbageInfoGroupList.size());
-        mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+
 
     }
 

@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AdbLib/AdbLib.iml" filepath="$PROJECT_DIR$/AdbLib/AdbLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/SoftManager.iml" filepath="$PROJECT_DIR$/SoftManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SoftManager.iml" filepath="$PROJECT_DIR$/SoftManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/opsxlib/opsxlib.iml" filepath="$PROJECT_DIR$/opsxlib/opsxlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/opsxpro/opsxpro.iml" filepath="$PROJECT_DIR$/opsxpro/opsxpro.iml" />
