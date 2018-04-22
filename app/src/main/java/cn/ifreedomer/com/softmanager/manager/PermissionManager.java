@@ -101,12 +101,7 @@ public class PermissionManager {
      * @return 是否获取到了root
      */
     public boolean checkOrRequestedRootPermission() {
-        if (!mIsRequestedRoot) {
-            mIsRequestedRoot = true;
-            //申请root
-            mHasRootPermission = ShellUtils.checkRootPermission();
-        }
-        return mHasRootPermission;
+        return ShellUtils.checkRootPermission();
     }
 
     public void startSetting(Activity activity, String packageName) {
