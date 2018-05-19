@@ -62,7 +62,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = HomeActivity.class.getSimpleName();
     private static final String PERMISSION_TAG = "permission";
     @InjectView(R.id.toolbar)
-    Toolbar toolbar;
+    public Toolbar toolbar;
 
     @InjectView(R.id.frame_content)
     FrameLayout frameContent;
@@ -189,7 +189,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 if (mChannelState == Channel.OPEN && time < 0) {
                     GlobalDataManager.getInstance().setOpenRecharge(true);
                     mBuyId.setVisibility(View.VISIBLE);
-                    showPayDialog();
+//                    showPayDialog();
                 } else {
                     GlobalDataManager.getInstance().setOpenRecharge(false);
                 }

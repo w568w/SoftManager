@@ -2,6 +2,7 @@ package cn.ifreedomer.com.softmanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.widget.Toast;
 
 import com.zhy.adapter.recyclerview.CommonAdapter;
@@ -11,11 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
+import cn.ifreedomer.com.softmanager.fragment.soft.BackupFragment;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.AutoStartInfo;
-import cn.ifreedomer.com.softmanager.util.FileUtil;
+import cn.ifreedomer.com.softmanager.util.LogUtil;
 import cn.ifreedomer.com.softmanager.util.ShellUtils;
 import cn.ifreedomer.com.softmanager.util.Terminal;
 
@@ -26,9 +28,16 @@ import cn.ifreedomer.com.softmanager.util.Terminal;
  */
 
 public class BackupAdapter extends CommonAdapter<AppInfo> {
+    private static final String TAG = BackupAdapter.class.getSimpleName();
+    private BackupFragment backupFragment;
 
     public BackupAdapter(Context context, int layoutId, List<AppInfo> datas) {
         super(context, layoutId, datas);
+    }
+
+
+    public void setBackupFragment(BackupFragment homeActivity) {
+        this.backupFragment = homeActivity;
     }
 
 
@@ -36,22 +45,31 @@ public class BackupAdapter extends CommonAdapter<AppInfo> {
     public void convert(ViewHolder holder, final AppInfo appInfo, final int position) {
         holder.setText(R.id.tv_name, appInfo.getAppName());
         holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
+
         holder.setOnClickListener(R.id.btn_restore, v -> GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            ((Activity) mContext).runOnUiThread(() -> {
+                backupFragment.loadTv.setText(R.string.restoreing);
+                backupFragment.linLoading.setVisibility(View.VISIBLE);
+            });
             boolean isRestoreSuccess = Terminal.restoreApp(appInfo);
+            LogUtil.d(TAG, "isRestoreSuccess = " + isRestoreSuccess);
             if (!isRestoreSuccess) {
                 ((Activity) mContext).runOnUiThread(() -> {
+                    backupFragment.linLoading.setVisibility(View.GONE);
                     Toast.makeText(mContext, mContext.getString(R.string.restore_failed), Toast.LENGTH_SHORT).show();
                 });
                 return;
             }
-            //删除安装包
-            FileUtil.deleteFileByPath(appInfo.getBackupPath());
             //刷新数据
             mDatas.remove(appInfo);
+            LogUtil.d(TAG, "remove = ");
+
             PackageInfoManager.getInstance().getBackupList().remove(appInfo);
             PackageInfoManager.getInstance().getSystemApps().add(appInfo);
             ((Activity) mContext).runOnUiThread(() -> {
+                LogUtil.d(TAG, "show success ui = ");
                 notifyDataSetChanged();
+                backupFragment.linLoading.setVisibility(View.GONE);
                 Toast.makeText(mContext, mContext.getString(R.string.restore_sucess), Toast.LENGTH_SHORT).show();
             });
         }));

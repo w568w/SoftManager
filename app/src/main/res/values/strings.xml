@@ -227,4 +227,11 @@
     <string name="moving">正在移动...</string>
     <string name="move_success">移动成功.请务必重启生效</string>
     <string name="remove_failed">移动失败 errorCode=</string>
+    <string name="restoreing">正在还原,请耐心等待...</string>
+    <string name="delete_backup">删除缓存</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="cleaning">正在清空回收站,请稍等...</string>
+    <string name="confirm_clean_tip">确定要清空回收站吗?</string>
+    <string name="tip">提示</string>
 </resources>

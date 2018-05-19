@@ -12,9 +12,10 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,6 +32,9 @@ import cn.ifreedomer.com.softmanager.model.ReceiverInfo;
 
 
 public class Terminal {
+
+    public static final String WRITEABLE = "rw";
+    public static final String READABLE = "ro";
 
     private static final String TAG = "Terminal";
     private static String[] SU_OPTIONS = {"/system/bin/su", "/system/xbin/su", "/data/bin/su"};
@@ -181,11 +185,31 @@ public class Terminal {
     }
 
     public static boolean uninstallSystemApp(AppInfo appItem) {
-        Terminal.RootCommand("mount -o remount rw /system");
-        Terminal.RootCommand("PATH='" + getSuCommand() + "';'mount' '-o' 'remount,rw' '' '/system'");
-        String command = "rm " + appItem.getCodePath() + "\n";
-        ShellUtils.CommandResult commandResult = ShellUtils.execCommand(command, true);
-        LogUtil.d(TAG,"uninstallSystemApp ="+commandResult.toString());
+        LogUtil.d(TAG, "uninstallSystemApp =>" + appItem.toString());
+
+        boolean remount = remount(WRITEABLE);
+        if (!remount) {
+            MobclickAgent.onEvent(CleanApplication.INSTANCE, "uninstall_rw", SystemUtil.getSystemModel());
+            return false;
+        }
+
+
+        //把父文件置为777
+        File file = new File(appItem.getCodePath());
+        String parentPath = file.getParent();
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("chmod 777 " + parentPath, true);
+        LogUtil.d(TAG, "chmod parent = " + commandResult.toString());
+
+
+        commandResult = ShellUtils.execCommand("rm -r " + appItem.getCodePath() + "", true);
+        LogUtil.d(TAG, "remove  system app = " + commandResult.toString());
+
+//        remount = remount(READABLE);
+//        if (!remount) {
+//            MobclickAgent.onEvent(CleanApplication.INSTANCE, "uninstall_ro", SystemUtil.getSystemModel());
+//            return false;
+//        }
+
         return commandResult.result == 0;
     }
 
@@ -293,26 +317,21 @@ public class Terminal {
      * @return true:备份成功
      */
     public static boolean backupApp(AppInfo appinfoModel) {
-
-        String apkName = appinfoModel.getCodePath().substring(appinfoModel.getCodePath().lastIndexOf("/") + 1, appinfoModel.getCodePath().length());
-        File fileDir = new File(SYSTEM_BACKUP_PATH);
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
-        }
-        if (!apkName.endsWith(".apk")) {
-            apkName += ".apk";
-        }
-        apkName = SYSTEM_BACKUP_PATH + apkName;
-        LogUtil.d(TAG, "apkName = " + apkName + "   getCodePath=" + appinfoModel.getCodePath());
-        try {
-            FileInputStream fileInputStream = new FileInputStream(new File(appinfoModel.getCodePath()));
-            FileUtil.inputStream2File(fileInputStream, new File(apkName));
-            appinfoModel.setBackupPath(apkName);
-            return true;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        LogUtil.d(TAG, "backupApp =>" + appinfoModel.toString());
+        remount(WRITEABLE);
+        String codePath = appinfoModel.getCodePath();
+        String targetPath = SYSTEM_BACKUP_PATH + appinfoModel.getPackname() + ".apk";
+        boolean b = chmod777(codePath);
+        if (!b) {
             return false;
         }
+        boolean cat = cat(appinfoModel.getCodePath(), targetPath);
+        if (!cat) {
+            return false;
+        }
+        chmod777(targetPath);
+        return cat;
+
 
     }
 
@@ -324,24 +343,25 @@ public class Terminal {
      * @return true:备份成功
      */
     public static boolean restoreApp(AppInfo appItem) {
-        String apkName = appItem.getBackupPath().substring(appItem.getBackupPath().lastIndexOf("/") + 1, appItem.getBackupPath().length());
-        Terminal.RootCommand("mount -o remount rw /system");
-        Terminal.RootCommand("PATH='" + getSuCommand() + "';'mount' '-o' 'remount,rw' '' '/system'");
-        int result = 0;
-        String odexName = apkName.replace(".apk", ".odex");
-        if (new File(appItem.getBackupPath()).exists()) {
-            String cmd = "touch /system/app/" + odexName + "\n";
-            cmd += "chmod 0644 /system/app/" + odexName + "\n";
-            cmd += "cat " + appItem.getBackupPath() + " > " + "/system/app/" + odexName;
-            result = Terminal.RootCommand(cmd);
+        LogUtil.d(TAG, "restoreApp =>" + appItem.toString());
+
+        boolean remount = remount(WRITEABLE);
+        if (!remount) {
+            return false;
         }
-        String cmd = "touch /system/app/" + apkName + "\n";
-        cmd += "chmod 0644 /system/app/" + apkName + "\n";
-        LogUtil.d(TAG, "file exist = " + new File(appItem.getBackupPath()).exists());
-        cmd += "cat " + "/sdcard/systemAppBackup/" + apkName  + "  > " + "/system/app/" + apkName;
-        ShellUtils.CommandResult commandResult = ShellUtils.execCommand(cmd, true);
-        LogUtil.d(TAG, "resotre result = " + commandResult.toString());
-        return commandResult.result == 0;
+        String targetApk = "/system/app/" + appItem.getPackname() + ".apk";
+        boolean cat = cat(SYSTEM_BACKUP_PATH + appItem.getPackname() + ".apk", targetApk);
+        if (!cat) {
+            return false;
+        }
+
+        boolean install = install(targetApk);
+        if (install) {
+            File file = new File(SYSTEM_BACKUP_PATH + appItem.getPackname() + ".apk");
+            boolean delete = file.delete();
+            LogUtil.d(TAG, "delete success");
+        }
+        return install;
     }
 
 
@@ -479,6 +499,128 @@ public class Terminal {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+//    public static void removePkgFromSystem(String pkgName) {
+//        remount("/system", InternalZipConstants.WRITE_MODE);
+//        ArrayList<File> foldersSysApps = new ArrayList();
+//        foldersSysApps.add(new File("/system/app"));
+//        foldersSysApps.add(new File("/system/priv-app"));
+//        Iterator it = foldersSysApps.iterator();
+//        while (it.hasNext()) {
+//            File sys_folder = (File) it.next();
+//            File[] files = sys_folder.listFiles();
+//            if (files == null || files.length == 0) {
+//                System.out.println("LuckyPatcher: 0 packages found in " + sys_folder.getAbsolutePath());
+//            } else {
+//                File dalvik;
+//                for (File apkfile : files) {
+//                    if (apkfile.getAbsolutePath().endsWith(".apk")) {
+//                        try {
+//                            if (pkgName.equals(new FileApkListItem(listAppsFragment.getInstance(), apkfile, false).pkgName)) {
+//                                dalvik = getFileDalvikCacheName(apkfile.getAbsolutePath());
+//                                if (dalvik != null && dalvik.exists()) {
+//                                    run_all("rm '" + dalvik.getAbsolutePath() + "'");
+//                                    run_all("rm '" + changeExtension(dalvik.getAbsolutePath(), "art") + "'");
+//                                    run_all("rm '" + changeExtension(dalvik.getAbsolutePath(), "vdex") + "'");
+//                                }
+//                                run_all("chmod 777 '" + apkfile.getAbsolutePath() + "'");
+//                                run_all("rm '" + apkfile.getAbsolutePath() + "'");
+//                                run_all("rm '" + getPlaceForOdex(apkfile.getAbsolutePath(), false) + "'");
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//                for (File dir : files) {
+//                    if (dir.isDirectory()) {
+//                        try {
+//                            File[] filesDir = dir.listFiles();
+//                            if (!(filesDir == null || filesDir.length == 0)) {
+//                                for (File file : filesDir) {
+//                                    if (file.getAbsolutePath().endsWith(".apk")) {
+//                                        try {
+//                                            if (pkgName.equals(new FileApkListItem(listAppsFragment.getInstance(), file, false).pkgName)) {
+//                                                dalvik = getFileDalvikCacheName(file.getAbsolutePath());
+//                                                if (dalvik != null && dalvik.exists()) {
+//                                                    run_all("rm '" + dalvik.getAbsolutePath() + "'");
+//                                                    run_all("rm '" + changeExtension(dalvik.getAbsolutePath(), "art") + "'");
+//                                                    run_all("rm '" + changeExtension(dalvik.getAbsolutePath(), "vdex") + "'");
+//                                                }
+//                                                run_all("chmod 777 '" + file.getAbsolutePath() + "'");
+//                                                run_all("rm '" + file.getAbsolutePath() + "'");
+//                                                run_all("rm '" + getPlaceForOdex(file.getAbsolutePath(), false) + "'");
+//                                                run_all("rm -rf '" + dir.getAbsolutePath() + "'");
+//                                            }
+//                                        } catch (Exception e2) {
+//                                            e2.printStackTrace();
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        } catch (Exception e22) {
+//                            e22.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+
+//    public static boolean deleteFromSystem(final String file) {
+//        try {
+//            if (new File(file).exists()) {
+//                String path = new File(file).getParent();
+//                Process process = Runtime.getRuntime().exec("su");
+//                DataOutputStream os = new DataOutputStream(process.getOutputStream());
+//                os.writeBytes("mount -o rw,remount /system; \n");
+//                os.writeBytes("chmod 777 " + path + "; \n");
+//                os.writeBytes("chmod 777 " + file + "; \n");
+//                os.writeBytes("rm -r " + file + "; \n");
+//                os.writeBytes("mount -o ro,remount /system; \n");
+//                //   os.writeBytes("reboot \n");
+//                os.flush();
+//                os.close();
+//                process.waitFor();
+//                return true;
+//            }
+//        } catch (Throwable e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+
+
+    public static boolean remount(String io) {
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("mount -o " + io + ",remount /system;\n", true);
+        LogUtil.d(TAG, "remount " + io + "   result = " + commandResult.toString());
+        return commandResult.result == 0;
+    }
+
+
+    public static boolean chmod777(String path) {
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("chmod 777 " + path, true);
+        LogUtil.d(TAG, "chmod 777 " + path + "   =" + commandResult.toString());
+        return commandResult.result == 0;
+    }
+
+    public static boolean cat(String src, String target) {
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("cat " + src + " > " + target, true);
+        LogUtil.d(TAG, "cat " + src + "  > " + target + "   result = " + commandResult.toString());
+
+        return commandResult.result == 0;
+    }
+
+
+    public static boolean install(String apk) {
+        chmod777(apk);
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("pm install -r " + apk, true);
+        LogUtil.d(TAG, "install " + apk + "   =" + commandResult.toString());
+
+        return commandResult.result == 0;
     }
 
 

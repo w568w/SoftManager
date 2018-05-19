@@ -63,6 +63,7 @@
             android:layout_toLeftOf="@id/iv_uninstall"
             android:id="@+id/iv_move"
             android:alpha="0.5"
+            android:visibility="gone"
             android:padding="5dp"
             android:layout_marginRight="@dimen/dp5"
             android:layout_centerVertical="true"
