@@ -189,7 +189,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 if (mChannelState == Channel.OPEN && time < 0) {
                     GlobalDataManager.getInstance().setOpenRecharge(true);
                     mBuyId.setVisibility(View.VISIBLE);
-//                    showPayDialog();
+                    showPayDialog();
                 } else {
                     GlobalDataManager.getInstance().setOpenRecharge(false);
                 }

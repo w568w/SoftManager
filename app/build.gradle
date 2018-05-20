@@ -8,8 +8,8 @@ android {
         applicationId "cn.ifreedomer.com.softmanager"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 33
-        versionName "1.3.3"
+        versionCode 34
+        versionName "1.3.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
     }
@@ -49,90 +49,116 @@ android {
         noCompress 'jar', 'sh', 'db'
     }
 
-    flavorDimensions "mode"
-    productFlavors {
-        main {
-            applicationId "cn.ifreedomer.com.softmanager"
-            manifestPlaceholders = [authority: "cn.ifreedomer.com.softmanager"]
-            resValue "string", "app_name", "极速清理大师"
-        }
-
-        purification {
-            applicationId "cn.ifreedomer.com.purification"
-            manifestPlaceholders = [authority: "cn.ifreedomer.com.purification"]
-            resValue "string", "app_name", "安卓净化大师"
-        }
-
-        optimization {
-            applicationId "cn.ifreedomer.com.optimization"
-            manifestPlaceholders = [authority: "cn.ifreedomer.com.optimization"]
-            resValue "string", "app_name", "安卓优化大师"
-        }
-
-
-        box {
-            applicationId "cn.ifreedomer.com.box"
-            manifestPlaceholders = [authority: "cn.ifreedomer.com.box"]
-            resValue "string", "app_name", "系统优化工具箱"
-        }
-
-
-    }
-//
-//    // 友盟多渠道打包
+//    flavorDimensions "mode"
 //    productFlavors {
-//        wandoujia {
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
-//            dimension "mode"
-//        }
-//        _360 {
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "_360"]
-//
-//        }
-//        baidu {
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
-//
-//        }
-//        xiaomi {
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
-//
-//        }
-//        tencent {
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "tencent"]
-//
-//        }
-//        taobao {
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "taobao"]
-//
+//        main {
+//            applicationId "cn.ifreedomer.com.softmanager"
+//            manifestPlaceholders = [authority: "cn.ifreedomer.com.softmanager"]
+//            resValue "string", "app_name", "极速清理大师"
 //        }
 //
-//        vivo{
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "vivo"]
+//        purification {
+//            applicationId "cn.ifreedomer.com.purification"
+//            manifestPlaceholders = [authority: "cn.ifreedomer.com.purification"]
+//            resValue "string", "app_name", "安卓净化大师"
+//        }
+//
+//        optimization {
+//            applicationId "cn.ifreedomer.com.optimization"
+//            manifestPlaceholders = [authority: "cn.ifreedomer.com.optimization"]
+//            resValue "string", "app_name", "安卓优化大师"
 //        }
 //
 //
-//        huawei{
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "huawei"]
+//        box {
+//            applicationId "cn.ifreedomer.com.box"
+//            manifestPlaceholders = [authority: "cn.ifreedomer.com.box"]
+//            resValue "string", "app_name", "系统优化工具箱"
 //        }
 //
-//        meizu{
-//            dimension "mode"
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "meizu"]
-//        }
-//    }
 //
-//    productFlavors.all { flavor ->
-//        manifestPlaceholders = [authority: name]
-//        printf "flavor name="+name
 //    }
 
+    flavorDimensions "mode"
+
+// 友盟多渠道打包
+    productFlavors {
+        wandoujia {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+            dimension "mode"
+        }
+        _360 {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "_360"]
+
+        }
+        baidu {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+
+        }
+
+        system {
+            applicationId "cn.ifreedomer.com.system"
+            dimension "mode"
+            resValue "string", "app_name", "系统软件卸载大师"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "meizu"]
+        }
+
+        system_huawei {
+            applicationId "cn.ifreedomer.com.purification"
+            dimension "mode"
+            resValue "string", "app_name", "系统软件卸载大师"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "system_huawei"]
+        }
+
+        xiaomi {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+
+        }
+        tencent {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "tencent"]
+
+        }
+        taobao {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "taobao"]
+
+        }
+
+        vivo {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "vivo"]
+        }
+
+
+        huawei {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "huawei"]
+        }
+
+        meizu {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "meizu"]
+        }
+
+        coolapk {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "coolapk"]
+        }
+
+        anzhi {
+            dimension "mode"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "anzhi"]
+        }
+    }
+
+    productFlavors.all { flavor ->
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: name, authority: name]
+        printf "flavor name=" + name
+    }
 }
 
 dependencies {

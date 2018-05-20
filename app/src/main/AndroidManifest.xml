@@ -13,8 +13,6 @@
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.GET_APP_OPS_STATS"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -45,7 +43,7 @@
             android:value="5a1764a8b27b0a0485000971"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="tencent"/>
+            android:value="${UMENG_CHANNEL_VALUE}"/>
 
         <!-- <activity android:name=".activity.TestActivity"></activity> -->
         <activity

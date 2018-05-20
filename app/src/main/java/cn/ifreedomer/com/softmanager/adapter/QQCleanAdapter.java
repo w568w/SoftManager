@@ -66,7 +66,7 @@ public class QQCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        return mTitleList.get(groupPosition);
+        return mFileInfoGroupList.get(groupPosition);
     }
 
     @Override

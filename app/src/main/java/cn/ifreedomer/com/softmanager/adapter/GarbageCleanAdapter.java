@@ -65,7 +65,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        return mTitleList.get(groupPosition);
+        return mGarbageInfoGroupList.get(groupPosition);
     }
 
     @Override

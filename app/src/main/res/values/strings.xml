@@ -211,7 +211,7 @@
     <string name="app_not_install_tip">未安装</string>
     <string name="app_install_version_hight_tip">新版本</string>
     <string name="app_install_version_low_tip">低版本</string>
-    <string name="backup_failed">备份失败,应用暂未卸载</string>
+    <string name="backup_failed">备份失败</string>
     <string name="back_success">备份成功</string>
     <string name="backup">回收站</string>
     <string name="restore">还原</string>
