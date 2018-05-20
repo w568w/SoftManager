@@ -18,7 +18,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class ServiceManager {
-    private static final String BASE_URL = "http://www.ifreedomer.com/";
+    private static final String BASE_URL = "http://192.168.0.111:8080/";
     private static Retrofit sStringRetrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 支持RxJava
@@ -39,6 +39,12 @@ public class ServiceManager {
         return payInfoObservable;
     }
 
+
+    public static Observable<RespResult<PayInfo>> getPayInfo_V101(String imei,String channel) {
+        PayService payService = retrofit.create(PayService.class);
+        Observable<RespResult<PayInfo>> payInfoObservable = payService.getPayInfo_V101(imei,channel);
+        return payInfoObservable;
+    }
 
     public static Observable<RespResult<Authority>> getTime(String imei) {
         AuthorityService authorityService = retrofit.create(AuthorityService.class);

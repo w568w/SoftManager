@@ -14,5 +14,7 @@ import retrofit2.http.Query;
 public interface PayService {
     @GET("pay/getPayInfo")
     io.reactivex.Observable<RespResult<PayInfo>> getPayInfo(@Query("imei") String imei);
+    @GET("pay/getPayInfo_V101")
+    io.reactivex.Observable<RespResult<PayInfo>> getPayInfo_V101(@Query("imei") String imei,@Query("channel") String channel);
 
 }

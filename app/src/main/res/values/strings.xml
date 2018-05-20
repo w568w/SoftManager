@@ -1,6 +1,7 @@
 <resources>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">极速清理大师</string>
     <string name="system">系统</string>
     <string name="mine">我的</string>
     <string name="scanning_m_of_n">扫描中 %1$d/%2$d</string>

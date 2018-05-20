@@ -30,6 +30,7 @@ import cn.ifreedomer.com.softmanager.bean.RespResult;
 import cn.ifreedomer.com.softmanager.bean.json.PayInfo;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.network.requestservice.ServiceManager;
+import cn.ifreedomer.com.softmanager.util.ChannelUtil;
 import cn.ifreedomer.com.softmanager.util.HardwareUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -104,7 +105,7 @@ public class PayDialog extends Dialog implements View.OnClickListener {
 
 
     public void showPay() {
-        ServiceManager.getPayInfo(HardwareUtil.getImei()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(respResult -> {
+        ServiceManager.getPayInfo_V101(HardwareUtil.getImei(), ChannelUtil.getMeta(getContext(),"UMENG_CHANNEL")).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(respResult -> {
             if (respResult.getResultCode() != RespResult.SUCCESS) {
                 Toast.makeText(getContext(), respResult.getMsg(), Toast.LENGTH_SHORT).show();
                 return;
