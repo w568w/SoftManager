@@ -18,7 +18,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class ServiceManager {
-    private static final String BASE_URL = "http://192.168.0.111:8080/";
+    private static final String BASE_URL = "http://www.ifreedomer.com/";
     private static Retrofit sStringRetrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 支持RxJava
