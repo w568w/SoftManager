@@ -51,7 +51,6 @@ public class DisableActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receycle);
         ButterKnife.inject(this);
-        initView();
         initData();
     }
 
@@ -61,6 +60,7 @@ public class DisableActivity extends BaseActivity {
             mAllComponent.addAll(DBSoftUtil.getAll());
             runOnUiThread(() ->
                     {
+                        initView();
                         if (mAllComponent == null || mAllComponent.size() == 0) {
                             tvNoContent.setVisibility(View.VISIBLE);
                         } else {

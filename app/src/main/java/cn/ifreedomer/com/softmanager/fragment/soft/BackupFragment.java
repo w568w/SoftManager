@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -114,6 +115,10 @@ public class BackupFragment extends Fragment {
                             linLoading.setVisibility(View.VISIBLE);
                             loadTv.setText(R.string.cleaning);
                             LogUtil.d(TAG, "delete before");
+                            if (backupList==null){
+                                Toast.makeText(getActivity(), R.string.not_finish,Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             for (int i = 0; i < backupList.size(); i++) {
                                 File file = new File(backupList.get(i).getBackupPath());
                                 boolean delete = file.delete();

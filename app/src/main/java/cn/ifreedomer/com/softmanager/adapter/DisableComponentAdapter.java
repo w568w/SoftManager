@@ -15,6 +15,7 @@ import cn.ifreedomer.com.softmanager.bean.ComponentEntity;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
+import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
 
 /**
@@ -36,8 +37,10 @@ public class DisableComponentAdapter extends CommonAdapter<ComponentEntity> {
         int suffixBegin = componentEntityName.lastIndexOf(".") + 1;
         holder.setText(R.id.tv_name, componentEntityName.substring(suffixBegin, componentEntityName.length()));
         holder.setText(R.id.tv_category, componentEntityName);
-
-        holder.setImageDrawable(R.id.iv_icon, PackageInfoManager.getInstance().getAppInfo(componentEntity.getBelongPkg()).getAppIcon());
+        AppInfo appInfo = PackageInfoManager.getInstance().getAppInfo(componentEntity.getBelongPkg());
+        if (appInfo!=null){
+            holder.setImageDrawable(R.id.iv_icon, appInfo.getAppIcon());
+        }
         Switch aSwitch = holder.getView(R.id.cb);
         aSwitch.setChecked(componentEntity.isEnable());
         holder.getView(R.id.cb).setOnClickListener(v -> {

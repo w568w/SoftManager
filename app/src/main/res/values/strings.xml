@@ -234,4 +234,5 @@
     <string name="cleaning">正在清空回收站,请稍等...</string>
     <string name="confirm_clean_tip">确定要清空回收站吗?</string>
     <string name="tip">提示</string>
+    <string name="not_finish">应用还未加载完全，请稍后</string>
 </resources>
