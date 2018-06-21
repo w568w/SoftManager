@@ -32,7 +32,6 @@ import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
 import cn.ifreedomer.com.softmanager.model.AppInfo;
-import cn.ifreedomer.com.softmanager.util.DBUtil;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
@@ -73,15 +72,12 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
                     curModuleCount++;
                     if (curModuleCount >= MAX_MODULE_COUNT) {
                         mProgressBar.setVisibility(View.GONE);
+                        getTotalGarbageSize();
+                        sendEmptyMessage(MSG_UPDATE_TOTAL_SIZE);
                     }
                     break;
                 case MSG_UPDATE_TOTAL_SIZE:
-                    if (msg.obj == null) {
-                        return;
-                    }
-                    mTotalSize = mTotalSize - (float) msg.obj;
                     mGarbageHeadView.setScanTotal(DataTypeUtil.getTextBySize(mTotalSize));
-                    LogUtil.e(TAG, "mTotalSize:" + mTotalSize + "");
                     break;
                 case MSG_UPDATE_UI:
                     mGarbageCleanAdapter.notifyDataSetChanged();
@@ -125,9 +121,15 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
         mProgressBar.setVisibility(View.VISIBLE);
 
         LogUtil.e(TAG, "copy db");
-        DBUtil.copyDB(GarbageActivity.this);
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+
+                runOnUiThread(() -> scanGarbage());
+
+            }
+        });
         LogUtil.e(TAG, "scanGarbage");
-        scanGarbage();
 
     }
 
@@ -188,7 +190,6 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
                 emptyFileItemGarbageInfo.setType(GarbageInfo.TYPE_EMPTY_FILE);
                 emptyFileList.add(emptyFileItemGarbageInfo);
             }
-
             mHandler.sendEmptyMessage(MSG_MODULE_FINISH);
 
         });
@@ -214,7 +215,6 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
                     mHandler.sendEmptyMessage(MSG_MODULE_FINISH);
                     runOnUiThread(() -> {
                         adGarbageList.add(garbageInfo);
-                        LogUtil.e(TAG, "getADGarbageSize SIZE = " + groupList.size());
                         mHandler.sendEmptyMessage(MSG_UPDATE_UI);
                     });
                 }
@@ -240,6 +240,9 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
             AppInfo appInfo = totalApps.get(i);
             Log.d(TAG, totalApps.get(i) + "   cache size = " + appInfo.getCacheSize());
             float cacheSize = appInfo.getCacheSize();
+            if (this.getPackageName().equals(appInfo.getPackname())) {
+                continue;
+            }
             if (cacheSize > 0) {
                 AppCacheItem appCacheItem = new AppCacheItem();
                 GarbageInfo<AppCacheItem> garbageInfo = new GarbageInfo<>();
@@ -282,23 +285,22 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_clean:
+                getTotalGarbageSize();
                 mProgressBar.setVisibility(View.VISIBLE);
-
-                mHandler.sendEmptyMessage(MSG_UPDATE_TOTAL_SIZE);
 
                 mGarbageCleanAdapter.removeCheckFiles(new RemoveFinishCallback() {
                     @Override
                     public void finish() {
                         mProgressBar.setVisibility(View.GONE);
                         mHandler.sendEmptyMessage(MSG_CLEAN_SUCCESS);
+                        mHandler.sendEmptyMessage(MSG_UPDATE_TOTAL_SIZE);
+
                     }
 
                     @Override
-                    public void delete(long fileSize) {
-                        Message message = new Message();
-                        message.what = MSG_UPDATE_TOTAL_SIZE;
-                        message.obj = fileSize;
-                        mHandler.sendMessage(message);
+                    public void delete(float fileSize) {
+                        mTotalSize = mTotalSize - fileSize;
+
                     }
                 }, mHandler);
 
@@ -322,6 +324,6 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
     public interface RemoveFinishCallback {
         void finish();
 
-        void delete(long fileSize);
+        void delete(float fileSize);
     }
 }

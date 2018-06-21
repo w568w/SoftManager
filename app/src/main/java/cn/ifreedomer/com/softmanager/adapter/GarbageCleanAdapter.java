@@ -3,7 +3,6 @@ package cn.ifreedomer.com.softmanager.adapter;
 import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -12,11 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.activity.clean.GarbageActivity;
-import cn.ifreedomer.com.softmanager.bean.EmptyFolder;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
 import cn.ifreedomer.com.softmanager.bean.clean.AppCacheItem;
 import cn.ifreedomer.com.softmanager.bean.clean.ClearItem;
@@ -24,11 +23,9 @@ import cn.ifreedomer.com.softmanager.bean.clean.EmptyFileItem;
 import cn.ifreedomer.com.softmanager.bean.clean.GarbageGroupTitle;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
-import cn.ifreedomer.com.softmanager.model.AppInfo;
 import cn.ifreedomer.com.softmanager.util.DataTypeUtil;
 import cn.ifreedomer.com.softmanager.util.FileUtil;
 import cn.ifreedomer.com.softmanager.util.LogUtil;
-import cn.ifreedomer.com.softmanager.util.ShellUtils;
 
 /**
  * @author:eavawu
@@ -59,7 +56,7 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        LogUtil.e(TAG, "mTitleList size = " + mTitleList.size() + "   mGarbageInfoGroupList size = " + mGarbageInfoGroupList.size() + "   groupPosition = " + groupPosition);
+//        LogUtil.e(TAG, "mTitleList size = " + mTitleList.size() + "   mGarbageInfoGroupList size = " + mGarbageInfoGroupList.size() + "   groupPosition = " + groupPosition);
 
         if (mGarbageInfoGroupList.size() <= groupPosition) {
             return 0;
@@ -243,8 +240,13 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
 
     public void removeCheckFiles(GarbageActivity.RemoveFinishCallback removeFinishCallback,Handler handler) {
         for (int i = 0; i < mGarbageInfoGroupList.size(); i++) {
-            for (int j = 0; j < mGarbageInfoGroupList.get(i).size(); j++) {
-                GarbageInfo garbageInfo = mGarbageInfoGroupList.get(i).get(j);
+
+            Iterator<GarbageInfo> iterator = mGarbageInfoGroupList.get(i).iterator();
+            while (iterator.hasNext()) {
+                GarbageInfo garbageInfo = iterator.next();
+                if (!garbageInfo.isChecked()) {
+                    continue;
+                }
                 //删除App缓存
                 if (garbageInfo.getType() == GarbageInfo.TYPE_APP_CACHE) {
                     AppCacheItem appInfo = (AppCacheItem) garbageInfo.getData();
@@ -255,16 +257,20 @@ public class GarbageCleanAdapter extends BaseExpandableListAdapter {
                     File forile = new File(clearItem.getFilePath());
                     GlobalDataManager.getInstance().getThreadPool().execute(() -> forile.delete());
                 } else if (garbageInfo.getType() == GarbageInfo.TYPE_EMPTY_FILE) {
-                     EmptyFileItem emptyFolder = (EmptyFileItem) garbageInfo.getData();
-                    int finalJ = j;
+                    EmptyFileItem emptyFolder = (EmptyFileItem) garbageInfo.getData();
                     GlobalDataManager.getInstance().getThreadPool().execute(() -> FileUtil.deleteDir(new File(emptyFolder.getPath())));
                 }
-                mGarbageInfoGroupList.get(i).remove(j);
+                iterator.remove();
+                if (removeFinishCallback != null) {
+                    float size = garbageInfo.getData().getSize();
+                    removeFinishCallback.delete(size);
+
+                }
                 handler.sendEmptyMessage(GarbageActivity.MSG_UPDATE_UI);
             }
-        }
-        if (removeFinishCallback != null) {
-            removeFinishCallback.finish();
+            if (removeFinishCallback != null) {
+                removeFinishCallback.finish();
+            }
         }
     }
 

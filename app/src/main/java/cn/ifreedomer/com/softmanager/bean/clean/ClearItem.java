@@ -84,11 +84,11 @@ public class ClearItem extends BaseGarbage {
         this.filePath = filePath;
     }
 
-    public long getFileSize() {
+    public float getFileSize() {
         return getSize();
     }
 
-    public void setFileSize(long fileSize) {
+    public void setFileSize(float fileSize) {
         setSize(fileSize);
     }
 

@@ -6,13 +6,13 @@ package cn.ifreedomer.com.softmanager.bean.clean;
  */
 
 public class BaseGarbage {
-    protected long size;
+    protected float size;
 
-    public long getSize() {
+    public float getSize() {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(float size) {
         this.size = size;
     }
 }
