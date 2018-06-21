@@ -152,7 +152,7 @@ android {
         }
 
         coolapk {
-            resValue "string", "app_name", "极速清理大师"
+            resValue "string", "app_name", "系统软件卸载大师"
             dimension "mode"
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "coolapk"]
         }
