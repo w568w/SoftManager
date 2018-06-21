@@ -23,7 +23,9 @@ import cn.ifreedomer.com.softmanager.activity.BaseActivity;
 import cn.ifreedomer.com.softmanager.adapter.GarbageCleanAdapter;
 import cn.ifreedomer.com.softmanager.bean.EmptyFolder;
 import cn.ifreedomer.com.softmanager.bean.GarbageInfo;
+import cn.ifreedomer.com.softmanager.bean.clean.AppCacheItem;
 import cn.ifreedomer.com.softmanager.bean.clean.ClearItem;
+import cn.ifreedomer.com.softmanager.bean.clean.EmptyFileItem;
 import cn.ifreedomer.com.softmanager.bean.clean.GarbageGroupTitle;
 import cn.ifreedomer.com.softmanager.db.DBAppAdUtils;
 import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
@@ -40,10 +42,11 @@ import cn.ifreedomer.com.softmanager.widget.NumChangeHeadView;
 public class GarbageActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = GarbageActivity.class.getSimpleName();
     private static final int MSG_UPDATE_TOTAL_SIZE = 1;
-    private static final int MSG_UPDATE_UI = 2;
+    public static final int MSG_UPDATE_UI = 2;
     private static final int MSG_CLEAN_SUCCESS = 3;
     public static final int MSG_CLEAN_PROCESSING = 4;
     public static final int MSG_LOAD_GARBAGE_FINISH = 5;
+    private static final int MSG_MODULE_FINISH = 6;
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -54,24 +57,40 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
     @InjectView(R.id.pb)
     ProgressBar mProgressBar;
     private float mTotalSize = 0;
-    private List<List<GarbageInfo>> mGarbageInfoGroupList = new ArrayList<>();
+    private List<List<GarbageInfo>> groupList = new ArrayList<>();
+    private List<GarbageInfo> appCacheGarbageList = new ArrayList<>();
+    private List<GarbageInfo> emptyFileList = new ArrayList<>();
+    private List<GarbageInfo> adGarbageList = new ArrayList<>();
+    private int curModuleCount = 0;
+    private static final int MAX_MODULE_COUNT = 3;
     private List<GarbageGroupTitle> mTitleList = new ArrayList<>();
+
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case MSG_MODULE_FINISH:
+                    curModuleCount++;
+                    if (curModuleCount >= MAX_MODULE_COUNT) {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                    break;
                 case MSG_UPDATE_TOTAL_SIZE:
-                    mTotalSize = mTotalSize + (Float) msg.obj;
+                    if (msg.obj == null) {
+                        return;
+                    }
+                    mTotalSize = mTotalSize - (float) msg.obj;
                     mGarbageHeadView.setScanTotal(DataTypeUtil.getTextBySize(mTotalSize));
                     LogUtil.e(TAG, "mTotalSize:" + mTotalSize + "");
                     break;
                 case MSG_UPDATE_UI:
+                    mGarbageCleanAdapter.notifyDataSetChanged();
                     break;
                 case MSG_LOAD_GARBAGE_FINISH:
                     mGarbageHeadView.setScanningText(getString(R.string.app_scaned));
                     mProgressBar.setVisibility(View.GONE);
                     mGarbageCleanAdapter.notifyDataSetChanged();
-                    for (int i = 0; i < mGarbageInfoGroupList.size(); i++) {
+                    for (int i = 0; i < groupList.size(); i++) {
                         mExpandListview.expandGroup(i);
                     }
                     break;
@@ -101,31 +120,28 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
         initTitleBar();
         initExpandbleListView();
         initListener();
-        initGroupTitle();
-
+        initGroupInfo();
         //copy db file
         mProgressBar.setVisibility(View.VISIBLE);
-        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-            LogUtil.e(TAG, "copy db");
-            DBUtil.copyDB(GarbageActivity.this);
-            LogUtil.e(TAG, "scanGarbage");
-            scanGarbage();
-            mHandler.sendEmptyMessage(MSG_LOAD_GARBAGE_FINISH);
-        });
 
+        LogUtil.e(TAG, "copy db");
+        DBUtil.copyDB(GarbageActivity.this);
+        LogUtil.e(TAG, "scanGarbage");
+        scanGarbage();
 
     }
 
-    private void initGroupTitle() {
+    private void initGroupInfo() {
         GarbageGroupTitle garbageGroupTitle = new GarbageGroupTitle(getString(R.string.app_cache), GarbageInfo.TYPE_APP_CACHE);
         mTitleList.add(garbageGroupTitle);
         //填充group信息
         garbageGroupTitle = new GarbageGroupTitle(getString(R.string.empty_file), GarbageInfo.TYPE_EMPTY_FILE);
         mTitleList.add(garbageGroupTitle);
-
         mTitleList.add(new GarbageGroupTitle(getString(R.string.ad_garbage), GarbageInfo.TYPE_AD_GARBAGE));
-
-
+        //填充List信息
+        groupList.add(appCacheGarbageList);
+        groupList.add(emptyFileList);
+        groupList.add(adGarbageList);
     }
 
     private void initListener() {
@@ -136,7 +152,7 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
     private void initExpandbleListView() {
 
 //        mTitleList = new String[]{getString(R.string.app_cache), getString(R.string.empty_file), getString(R.string.ad_garbage)};
-        mGarbageCleanAdapter = new GarbageCleanAdapter(this, mTitleList, mGarbageInfoGroupList);
+        mGarbageCleanAdapter = new GarbageCleanAdapter(this, mTitleList, groupList);
         mGarbageHeadView = new NumChangeHeadView(this);
         mExpandListview.addHeaderView(mGarbageHeadView);
         mExpandListview.setAdapter(mGarbageCleanAdapter);
@@ -150,94 +166,68 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
 
 
     private void scanGarbage() {
-
         getTotalAppCacheSize();
         getEmptyFileSize();
         getADGarbageSize();
-
-        getUninstallCacheSize();
-        getSystemGabargeSize();
-
     }
 
 
     private void getEmptyFileSize() {
-//        LogUtil.e(TAG, "getEmptyFileSize");
 
-        EmptyFolder emptyFile = FileUtil.getEmptyFile();
+        GlobalDataManager.getInstance().getThreadPool().execute(() -> {
+            EmptyFolder emptyFolders = FileUtil.getEmptyFile();
+            if (emptyFolders == null || emptyFolders.getPathList() == null) {
+                return;
+            }
+            for (int i = 0; i < emptyFolders.getPathList().size(); i++) {
+                EmptyFileItem emptyFileItem = new EmptyFileItem();
+                emptyFileItem.setPath(emptyFolders.getPathList().get(i));
+                emptyFileItem.setSize(new File(emptyFolders.getPathList().get(i)).length());
+                GarbageInfo<EmptyFileItem> emptyFileItemGarbageInfo = new GarbageInfo<>();
+                emptyFileItemGarbageInfo.setData(emptyFileItem);
+                emptyFileItemGarbageInfo.setType(GarbageInfo.TYPE_EMPTY_FILE);
+                emptyFileList.add(emptyFileItemGarbageInfo);
+            }
 
-        //填充子信息
-        List<GarbageInfo> emptyList = new ArrayList<>();
-        GarbageInfo<EmptyFolder> garbageInfo = new GarbageInfo<>();
-        if (emptyFile.getPathList() != null && emptyFile.getPathList().size() != 0) {
-            garbageInfo.setData(emptyFile);
-            garbageInfo.setType(GarbageInfo.TYPE_EMPTY_FILE);
-            emptyList.add(garbageInfo);
-            sendGarbageMsg(garbageInfo.getData().getTotalSize());
-        }
-        runOnUiThread(() -> {
-            mGarbageInfoGroupList.add(emptyList);
-            LogUtil.e(TAG, "getEmptyFileSize mGarbageInfoGroupList SIZE = " + mGarbageInfoGroupList.size());
+            mHandler.sendEmptyMessage(MSG_MODULE_FINISH);
 
-            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
         });
-
     }
 
     private void getADGarbageSize() {
-        LogUtil.e(TAG, "getADGarbageSize 0 ");
-        List<GarbageInfo> adGarbageList = new ArrayList<>();
-        ArrayList<ClearItem> clearItems = DBAppAdUtils.get(this, getString(R.string.zh));
-//        LogUtil.e(TAG, "getADGarbageSize 1===> " + clearItems.size());
+        adGarbageList.clear();
+        GlobalDataManager.getInstance().getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<ClearItem> clearItems = DBAppAdUtils.get(GarbageActivity.this, getString(R.string.zh));
+                for (int i = 0; i < clearItems.size(); i++) {
+                    ClearItem clearItem = clearItems.get(i);
+                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), clearItems.get(i).getFilePath());
+                    if (!file.exists()) {
+                        continue;
+                    }
+                    clearItem.setFilePath(file.getPath());
+                    GarbageInfo<ClearItem> garbageInfo = new GarbageInfo<>();
+                    garbageInfo.setData(clearItem);
+                    garbageInfo.setType(GarbageInfo.TYPE_AD_GARBAGE);
+                    sendGarbageMsg(garbageInfo.getData().getFileSize());
+                    mHandler.sendEmptyMessage(MSG_MODULE_FINISH);
+                    runOnUiThread(() -> {
+                        adGarbageList.add(garbageInfo);
+                        LogUtil.e(TAG, "getADGarbageSize SIZE = " + groupList.size());
+                        mHandler.sendEmptyMessage(MSG_UPDATE_UI);
+                    });
+                }
 
-        for (int i = 0; i < clearItems.size(); i++) {
-            ClearItem clearItem = clearItems.get(i);
-            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), clearItems.get(i).getFilePath());
-            if (!file.exists()) {
-                continue;
             }
-            clearItem.setFilePath(file.getPath());
-            GarbageInfo<ClearItem> garbageInfo = new GarbageInfo<>();
-            garbageInfo.setData(clearItem);
-            garbageInfo.setType(GarbageInfo.TYPE_AD_GARBAGE);
-            adGarbageList.add(garbageInfo);
-            sendGarbageMsg(garbageInfo.getData().getFileSize());
-        }
-        runOnUiThread(() -> {
-            mGarbageInfoGroupList.add(adGarbageList);
-            LogUtil.e(TAG, "getADGarbageSize SIZE = " + mGarbageInfoGroupList.size());
-            mHandler.sendEmptyMessage(MSG_UPDATE_UI);
         });
 
 
     }
 
-    private float getSystemGabargeSize() {
-        return 0;
-    }
-
-    private float getUselessApkSize() {
-        return 0;
-    }
-
-    private Runnable getUninstallCacheSize() {
-        return new Runnable() {
-            @Override
-            public void run() {
-//                mTotalApps = new ArrayList<>();
-//                List<AppInfo> systemApps = PackageInfoManager.getInstance().getSystemApps();
-//                List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
-//                mTotalApps.addAll(systemApps);
-//                mTotalApps.addAll(userApps);
-//                for (int i = 0; i < mTotalApps.size(); i++) {
-//
-//                }
-            }
-        };
-    }
 
     private void getTotalAppCacheSize() {
-//        LogUtil.e(TAG, "getTotalAppCacheSize1");
+        appCacheGarbageList.clear();
         List<AppInfo> totalApps = new ArrayList<>();
         List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
 
@@ -245,36 +235,28 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
         if (PermissionManager.getInstance().checkOrRequestedRootPermission()) {
             totalApps.addAll(PackageInfoManager.getInstance().getSystemApps());
         }
-//        LogUtil.e(TAG, "getTotalAppCacheSize1-1");
 
-        List<GarbageInfo> appCahceList = new ArrayList<>();
         for (int i = 0; i < totalApps.size(); i++) {
             AppInfo appInfo = totalApps.get(i);
+            Log.d(TAG, totalApps.get(i) + "   cache size = " + appInfo.getCacheSize());
             float cacheSize = appInfo.getCacheSize();
             if (cacheSize > 0) {
-                GarbageInfo<AppInfo> garbageInfo = new GarbageInfo<>();
-                garbageInfo.setData(appInfo);
-                GarbageActivity.this.sendGarbageMsg(garbageInfo.getData().getCacheSize());
-                appCahceList.add(garbageInfo);
-
+                AppCacheItem appCacheItem = new AppCacheItem();
+                GarbageInfo<AppCacheItem> garbageInfo = new GarbageInfo<>();
+                garbageInfo.setData(appCacheItem);
+                appCacheItem.setPkgName(appInfo.getPackname());
+                appCacheItem.setPath(appInfo.getCodePath());
+                appCacheItem.setAppName(appInfo.getAppName());
+                appCacheItem.setSize((long) appInfo.getCacheSize());
+                appCacheItem.setAppIcon(appInfo.getAppIcon());
+                appCacheGarbageList.add(garbageInfo);
             }
-//            LogUtil.e(TAG, "getTotalAppCacheSize1-2  pos=" + i + "   appinfo=>" + appInfo.toString());
-
-
+            mHandler.sendEmptyMessage(MSG_MODULE_FINISH);
         }
-//        LogUtil.e(TAG, "getTotalAppCacheSize2");
-
-//        if (appCahceList.size() <= 0) {
-//            return;
-//        }
         runOnUiThread(() -> {
-            mGarbageInfoGroupList.add(appCahceList);
-            LogUtil.e(TAG, "getTotalAppCacheSize mGarbageInfoGroupList SIZE = " + mGarbageInfoGroupList.size());
+            LogUtil.e(TAG, "getTotalAppCacheSize groupList SIZE = " + groupList.size());
             mHandler.sendEmptyMessage(MSG_UPDATE_UI);
         });
-
-
-
     }
 
 
@@ -301,27 +283,45 @@ public class GarbageActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.btn_clean:
                 mProgressBar.setVisibility(View.VISIBLE);
-                GlobalDataManager.getInstance().getThreadPool().execute(() -> {
-                    mGarbageCleanAdapter.removeCheckedItems(mHandler);
-                    LogUtil.e("delete", "removeCheckedItems");
-                    resetData();
-                    LogUtil.e("delete", "resetData");
 
-                    scanGarbage();
-                    LogUtil.e("delete", "scanGarbage");
+                mHandler.sendEmptyMessage(MSG_UPDATE_TOTAL_SIZE);
 
-                    mHandler.sendEmptyMessage(MSG_CLEAN_SUCCESS);
-                    LogUtil.e("delete", "MSG_CLEAN_SUCCESS");
+                mGarbageCleanAdapter.removeCheckFiles(new RemoveFinishCallback() {
+                    @Override
+                    public void finish() {
+                        mProgressBar.setVisibility(View.GONE);
+                        mHandler.sendEmptyMessage(MSG_CLEAN_SUCCESS);
+                    }
 
-                });
+                    @Override
+                    public void delete(long fileSize) {
+                        Message message = new Message();
+                        message.what = MSG_UPDATE_TOTAL_SIZE;
+                        message.obj = fileSize;
+                        mHandler.sendMessage(message);
+                    }
+                }, mHandler);
+
+
                 break;
             default:
                 break;
         }
     }
 
-    private void resetData() {
-        mGarbageInfoGroupList.clear();
+    private void getTotalGarbageSize() {
         mTotalSize = 0;
+        for (int i = 0; i < groupList.size(); i++) {
+            for (int j = 0; j < groupList.get(i).size(); j++) {
+                mTotalSize = mTotalSize + groupList.get(i).get(j).getData().getSize();
+            }
+        }
+    }
+
+
+    public interface RemoveFinishCallback {
+        void finish();
+
+        void delete(long fileSize);
     }
 }

@@ -1,97 +1,96 @@
 package cn.ifreedomer.com.softmanager.bean.clean;
 
-public class ClearItem {
-	private String packageName;
-	private boolean isChecked;
-	private String filePath = "";
-	private long fileSize;
-	private boolean includeEBook;
-	private boolean includeAudio;
-	private boolean includeApk;
-	private String name;
-	private String md5Path;
-	private String md5PackageName;
-	
-	
-	public String getMd5Path() {
-		return md5Path;
-	}
+public class ClearItem extends BaseGarbage {
+    private String packageName;
+    private boolean isChecked;
+    private String filePath = "";
+    private boolean includeEBook;
+    private boolean includeAudio;
+    private boolean includeApk;
+    private String name;
+    private String md5Path;
+    private String md5PackageName;
 
-	public void setMd5Path(String md5Path) {
-		this.md5Path = md5Path;
-	}
 
-	public String getMd5PackageName() {
-		return md5PackageName;
-	}
+    public String getMd5Path() {
+        return md5Path;
+    }
 
-	public void setMd5PackageName(String md5PackageName) {
-		this.md5PackageName = md5PackageName;
-	}
+    public void setMd5Path(String md5Path) {
+        this.md5Path = md5Path;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getMd5PackageName() {
+        return md5PackageName;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setMd5PackageName(String md5PackageName) {
+        this.md5PackageName = md5PackageName;
+    }
 
-	public boolean isIncludeEBook() {
-		return includeEBook;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setIncludeEBook(boolean includeEBook) {
-		this.includeEBook = includeEBook;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean isIncludeAudio() {
-		return includeAudio;
-	}
+    public boolean isIncludeEBook() {
+        return includeEBook;
+    }
 
-	public void setIncludeAudio(boolean includeAudio) {
-		this.includeAudio = includeAudio;
-	}
+    public void setIncludeEBook(boolean includeEBook) {
+        this.includeEBook = includeEBook;
+    }
 
-	public boolean isIncludeApk() {
-		return includeApk;
-	}
+    public boolean isIncludeAudio() {
+        return includeAudio;
+    }
 
-	public void setIncludeApk(boolean includeApk) {
-		this.includeApk = includeApk;
-	}
+    public void setIncludeAudio(boolean includeAudio) {
+        this.includeAudio = includeAudio;
+    }
 
-	public String getPackageName() {
-		return packageName;
-	}
+    public boolean isIncludeApk() {
+        return includeApk;
+    }
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
+    public void setIncludeApk(boolean includeApk) {
+        this.includeApk = includeApk;
+    }
 
-	public boolean isChecked() {
-		return isChecked;
-	}
+    public String getPackageName() {
+        return packageName;
+    }
 
-	public void setChecked(boolean isChecked) {
-		this.isChecked = isChecked;
-	}
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
-	public String getFilePath() {
-		return filePath;
-	}
+    public boolean isChecked() {
+        return isChecked;
+    }
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
+    public void setChecked(boolean isChecked) {
+        this.isChecked = isChecked;
+    }
 
-	public long getFileSize() {
-		return fileSize;
-	}
+    public String getFilePath() {
+        return filePath;
+    }
 
-	public void setFileSize(long fileSize) {
-		this.fileSize = fileSize;
-	}
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public long getFileSize() {
+        return getSize();
+    }
+
+    public void setFileSize(long fileSize) {
+        setSize(fileSize);
+    }
 
     @Override
     public String toString() {
@@ -99,7 +98,7 @@ public class ClearItem {
                 "packageName='" + packageName + '\'' +
                 ", isEnable=" + isChecked +
                 ", filePath='" + filePath + '\'' +
-                ", fileSize=" + fileSize +
+                ", fileSize=" +  size+
                 ", includeEBook=" + includeEBook +
                 ", includeAudio=" + includeAudio +
                 ", includeApk=" + includeApk +

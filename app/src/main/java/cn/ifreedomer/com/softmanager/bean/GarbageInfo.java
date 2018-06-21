@@ -1,12 +1,14 @@
 package cn.ifreedomer.com.softmanager.bean;
 
+import cn.ifreedomer.com.softmanager.bean.clean.BaseGarbage;
+
 /**
  * @author:eavawu
  * @since: 31/10/2017.
  * TODO:
  */
 
-public class GarbageInfo<T> {
+public class GarbageInfo<T extends BaseGarbage> {
     public static final int TYPE_APP_CACHE = 0;
     public static final int TYPE_SYSTEM_GARBAGE = 3;
     public static final int TYPE_AD_GARBAGE = 2;
