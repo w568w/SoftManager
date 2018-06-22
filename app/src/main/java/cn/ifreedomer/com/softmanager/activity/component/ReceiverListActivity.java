@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -46,6 +47,10 @@ public class ReceiverListActivity extends BaseActivity {
 
     private void initData() {
         AppInfo appInfo = (AppInfo) GlobalDataManager.getInstance().getTempMap().get(APP_INFO);
+        if (appInfo == null) {
+            Toast.makeText(ReceiverListActivity.this, R.string.app_info_null,Toast.LENGTH_SHORT).show();;
+            return;
+        }
         rv.setAdapter(new ReceiverListAdapter(this, R.layout.item_receiver_detail, appInfo.getReceiverList(), appInfo));
         rv.setLayoutManager(new LinearLayoutManager(this));
 

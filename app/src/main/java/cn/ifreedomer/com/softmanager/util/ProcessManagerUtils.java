@@ -226,7 +226,11 @@ public class ProcessManagerUtils {
 
     public static int getProcessMemUsage(ActivityManager am, int pid) {
         Debug.MemoryInfo[] memInfo = am.getProcessMemoryInfo(new int[]{pid});
-        return memInfo[0].getTotalPss();
+        Debug.MemoryInfo memoryInfo = memInfo[0];
+        if (memoryInfo == null){
+            return 0;
+        }
+        return memoryInfo.getTotalPss();
     }
 
     /**

@@ -108,6 +108,9 @@ public class PermissionSetActivity extends BaseActivity {
 
     private List<PermissionWrap> getPermissionListByGroup(String group) {
         List<PermissionWrap> permissionWrapList = new ArrayList<>();
+        if (mCurAppInfo==null){
+            return permissionWrapList;
+        }
         List<PermissionDetail> permissionDetailList = mCurAppInfo.getPermissionDetailList();
         for (int i = 0; i < mCurAppInfo.getPermissionDetailList().size(); i++) {
             PermissionDetail permissionDetail = permissionDetailList.get(i);

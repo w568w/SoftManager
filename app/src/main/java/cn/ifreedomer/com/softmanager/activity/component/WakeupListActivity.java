@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,10 @@ public class WakeupListActivity extends BaseActivity {
         List<ComponentEntity> userComponentEntityList = new ArrayList<>();
         List<AppInfo> systemAppInfo = new ArrayList<>();
         List<ComponentEntity> systemComPonentEntityList = new ArrayList<>();
+        if (wakeupPathInfo==null){
+            Toast.makeText(WakeupListActivity.this, R.string.wakeup_path_null,Toast.LENGTH_SHORT).show();;
+            return;
+        }
         List<ComponentEntity> componentEntityList = wakeupPathInfo.getComponentEntityList();
         for (int i = 0; i < wakeupPathInfo.getWakeupPath().size(); i++) {
             AppInfo appInfo = wakeupPathInfo.getWakeupPath().get(i);

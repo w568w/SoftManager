@@ -235,4 +235,6 @@
     <string name="confirm_clean_tip">确定要清空回收站吗?</string>
     <string name="tip">提示</string>
     <string name="not_finish">应用还未加载完全，请稍后</string>
+    <string name="app_info_null">应用信息为空</string>
+    <string name="wakeup_path_null">唤醒路径信息为空</string>
 </resources>
