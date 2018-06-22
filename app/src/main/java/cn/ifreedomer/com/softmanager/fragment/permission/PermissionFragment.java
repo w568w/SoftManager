@@ -90,6 +90,9 @@ public class PermissionFragment extends Fragment {
     }
 
     private void initRv() {
+        if (rv == null) {
+            return;
+        }
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         List<AppInfo> userApps = PackageInfoManager.getInstance().getUserApps();
         mPermissionAdater = new PermissionAdater(getActivity(), R.layout.item_user_app, PackageInfoManager.getInstance().getUserApps());

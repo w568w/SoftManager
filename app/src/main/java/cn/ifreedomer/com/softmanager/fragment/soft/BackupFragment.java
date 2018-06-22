@@ -120,6 +120,9 @@ public class BackupFragment extends Fragment {
                                 return;
                             }
                             for (int i = 0; i < backupList.size(); i++) {
+                                if (backupList.get(i) == null) {
+                                    continue;
+                                }
                                 File file = new File(backupList.get(i).getBackupPath());
                                 boolean delete = file.delete();
                                 LogUtil.d(TAG, file.getAbsolutePath() + "  delete state = " + delete);
