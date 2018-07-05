@@ -45,6 +45,7 @@ public class SystemInstallFragment extends RecycleFragment {
                     }
                     boolean b = Terminal.uninstallSystemApp(appInfo);
                     if (b) {
+                        PackageInfoManager.getInstance().getSystemApps().remove(appInfo);
                         appAdapter.getDatas().remove(appInfo);
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getActivity(), getString(R.string.uninstall_success), Toast.LENGTH_SHORT).show();
