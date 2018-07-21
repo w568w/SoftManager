@@ -37,7 +37,6 @@ public class SystemInstallFragment extends RecycleFragment {
                     boolean isBackupSusccess = Terminal.backupApp(appInfo);
                     if (!isBackupSusccess) {
                         getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.backup_failed, Toast.LENGTH_SHORT).show());
-                        return;
                     } else {
                         PackageInfoManager.getInstance().getBackupList().add(appInfo);
                         getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.back_success, Toast.LENGTH_SHORT).show());
