@@ -234,8 +234,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 add(R.id.frame_content, cutWakeUpFragment).
                 add(R.id.frame_content, componentFragment).
                 add(R.id.frame_content, operationFragment).
-                hide(componentFragment).hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).hide(operationFragment).
-                show(cleanFragment).commitAllowingStateLoss();
+                hide(componentFragment).hide(cleanFragment).hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).hide(operationFragment).
+                show(softFragment).commitAllowingStateLoss();
         lastShowFragment = cleanFragment;
 
     }
@@ -252,7 +252,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.whiteColor));
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.clean_garbage));
+            getSupportActionBar().setTitle(getString(R.string.soft_manager));
         }
     }
 
