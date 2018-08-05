@@ -262,6 +262,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mBuyId = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.buy_iv);
         mSettingIv.setOnClickListener(this);
         mBuyId.setOnClickListener(this);
+        navigationView.setItemIconTintList(null);
+        navigationView.setItemTextColor(null);
 
     }
 
