@@ -238,4 +238,6 @@
     <string name="app_info_null">应用信息为空</string>
     <string name="wakeup_path_null">唤醒路径信息为空</string>
     <string name="back_failed_continue_uninstall">备份失败，是否继续卸载</string>
+    <string name="all_disable">全部禁止</string>
+    <string name="all_enable">全部允许</string>
 </resources>

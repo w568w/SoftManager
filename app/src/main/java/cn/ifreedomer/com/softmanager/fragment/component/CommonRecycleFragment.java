@@ -49,6 +49,14 @@ public class CommonRecycleFragment extends Fragment {
         this.mCommonAdapter = commonAdapter;
     }
 
+    public CommonAdapter getAdapter() {
+        return mCommonAdapter;
+    }
+
+    public void setmCommonAdapter(CommonAdapter mCommonAdapter) {
+        this.mCommonAdapter = mCommonAdapter;
+    }
+
     public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
     }
