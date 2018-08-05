@@ -608,7 +608,7 @@ public class Terminal {
     }
 
     public static boolean cat(String src, String target) {
-        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("cat " + src + " > " + target, true);
+        ShellUtils.CommandResult commandResult = ShellUtils.execCommand("cp " + src + " " + target, true);
         LogUtil.d(TAG, "cat " + src + "  > " + target + "   result = " + commandResult.toString());
 
         return commandResult.result == 0;

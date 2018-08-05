@@ -35,10 +35,34 @@ public class DialogUtil {
     }
 
 
+    public static void showDialog(String title,String content, Context context, DialogCallback dialogContentCallback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);    //设置对话框标题
+        builder.setMessage(content);
+        builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            if (dialogContentCallback != null) {
+                dialogContentCallback.onConfirm();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+            if (dialogContentCallback != null) {
+                dialogContentCallback.onCancel();
+            }
+
+        });
+        builder.show();
+    }
+
+
 
 
 
     public interface DialogContentCallback {
         void onEditContent(String content);
+    }
+
+    public interface DialogCallback{
+        void onConfirm();
+        void onCancel();
     }
 }

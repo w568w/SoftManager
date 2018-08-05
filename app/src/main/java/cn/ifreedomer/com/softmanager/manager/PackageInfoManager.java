@@ -27,6 +27,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -61,7 +62,7 @@ public class PackageInfoManager {
     private Method mGetPackageSizeInfoMethod;
     public static final int LOAD_APP_MESSAGE = 1;
     public static final int LOAD_COMPONENT_MESSAGE = 2;
-
+    public static String[] whiteList = {"android", "com.android.systemui"};
 
     private int loadAppPartCount = 0;
     private int loadComponentPartCount = 0;
@@ -96,7 +97,9 @@ public class PackageInfoManager {
                     if (loadAppPartCount == LOAD_APP_MAX_PART) {
                         isLoadFinish = true;
                         LogUtil.d(TAG, "loadAppPartCount loadAppPartCount=" + isLoadFinish);
-
+                        for (int i = 0; i < systemAppInfos.size(); i++) {
+                            Log.d(TAG, systemAppInfos.get(i).getAppName() + " = " + systemAppInfos.get(i).toString());
+                        }
                         for (LoadStateCallback loadStateCallbackItem : loadStateCallbackList) {
                             if (loadStateCallbackItem != null) {
                                 loadStateCallbackItem.loadFinish();
@@ -171,6 +174,9 @@ public class PackageInfoManager {
 
         PackageManager pm = mContext.getPackageManager();
         List<PackageInfo> packInfos = pm.getInstalledPackages(0);
+        removeWhiteList(packInfos);
+
+
         if (packInfos == null || packInfos.size() == 0) {
             return;
         }
@@ -252,6 +258,21 @@ public class PackageInfoManager {
 //            }
 //        });
 
+
+    }
+
+    private void removeWhiteList(List<PackageInfo> packInfos) {
+        //移除白名单
+//        Log.d(TAG,"before size = "+packInfos.size());
+        Iterator<PackageInfo> iterator = packInfos.iterator();
+        while (iterator.hasNext()) {
+            PackageInfo packageInfo = iterator.next();
+            for (int i = 0; i < whiteList.length; i++) {
+                if (packageInfo.packageName.equals(whiteList[i])) {
+                    iterator.remove();
+                }
+            }
+        }
 
     }
 

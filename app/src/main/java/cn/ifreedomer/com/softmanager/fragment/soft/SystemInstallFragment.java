@@ -10,6 +10,8 @@ import cn.ifreedomer.com.softmanager.manager.GlobalDataManager;
 import cn.ifreedomer.com.softmanager.manager.PackageInfoManager;
 import cn.ifreedomer.com.softmanager.R;
 import cn.ifreedomer.com.softmanager.manager.PermissionManager;
+import cn.ifreedomer.com.softmanager.model.AppInfo;
+import cn.ifreedomer.com.softmanager.util.DialogUtil;
 import cn.ifreedomer.com.softmanager.util.Terminal;
 
 /**
@@ -36,7 +38,19 @@ public class SystemInstallFragment extends RecycleFragment {
                     });
                     boolean isBackupSusccess = Terminal.backupApp(appInfo);
                     if (!isBackupSusccess) {
-                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.backup_failed, Toast.LENGTH_SHORT).show());
+                        getActivity().runOnUiThread(() -> DialogUtil.showDialog(getString(R.string.tip), getString(R.string.back_failed_continue_uninstall), getContext(), new DialogUtil.DialogCallback() {
+                            @Override
+                            public void onConfirm() {
+                                removeSystemApp(appInfo);
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        }));
+
+//                        getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.backup_failed, Toast.LENGTH_SHORT).show());
                         return;
                         
                     } else {
@@ -44,19 +58,7 @@ public class SystemInstallFragment extends RecycleFragment {
                         getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.back_success, Toast.LENGTH_SHORT).show());
 
                     }
-                    boolean b = Terminal.uninstallSystemApp(appInfo);
-                    if (b) {
-                        PackageInfoManager.getInstance().getSystemApps().remove(appInfo);
-                        appAdapter.getDatas().remove(appInfo);
-                        getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getActivity(), getString(R.string.uninstall_success), Toast.LENGTH_SHORT).show();
-                            appAdapter.notifyDataSetChanged();
-                        });
-                    } else {
-                        getActivity().runOnUiThread(() -> {
-                            Toast.makeText(getActivity(), R.string.uninstall_failed, Toast.LENGTH_SHORT).show();
-                        });
-                    }
+                    removeSystemApp(appInfo);
                 });
 
             } else {
@@ -64,6 +66,22 @@ public class SystemInstallFragment extends RecycleFragment {
                 Toast.makeText(getActivity(), getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void removeSystemApp(AppInfo appInfo) {
+        boolean b = Terminal.uninstallSystemApp(appInfo);
+        if (b) {
+            PackageInfoManager.getInstance().getSystemApps().remove(appInfo);
+            appAdapter.getDatas().remove(appInfo);
+            getActivity().runOnUiThread(() -> {
+                Toast.makeText(getActivity(), getString(R.string.uninstall_success), Toast.LENGTH_SHORT).show();
+                appAdapter.notifyDataSetChanged();
+            });
+        } else {
+            getActivity().runOnUiThread(() -> {
+                Toast.makeText(getActivity(), R.string.uninstall_failed, Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
 

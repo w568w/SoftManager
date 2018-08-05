@@ -192,6 +192,8 @@ public class ShellUtils {
      * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2013-5-16
      */
     public static class CommandResult {
+        public static final int SUCCESS = 0;
+        public static final int FAILED = 1;
 
         /**
          * result of command
