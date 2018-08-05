@@ -236,7 +236,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 add(R.id.frame_content, operationFragment).
                 hide(componentFragment).hide(cleanFragment).hide(softFragment).hide(hardwareFragment).hide(permissionFragment).hide(iceboxFragment).hide(cutWakeUpFragment).hide(operationFragment).
                 show(softFragment).commitAllowingStateLoss();
-        lastShowFragment = cleanFragment;
+        lastShowFragment = softFragment;
 
     }
 
